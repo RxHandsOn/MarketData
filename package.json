@@ -1,0 +1,23 @@
+{
+  "name": "quickstart-rx-typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "pretest": "tsc",
+    "test": "mocha output/test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.2.0",
+    "rx": "^4.0.7",
+    "systemjs": "^0.19.20",
+    "typescript": "^1.7.5"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3"
+  }
+}
