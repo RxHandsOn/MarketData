@@ -14,11 +14,14 @@
               transpiler: 'typescript',
               map: {
                   typescript: 'node_modules/typescript/lib/typescript.js',
-                  'rx.all' : 'node_modules/rx/dist/rx.all.js'
+                  '@reactivex/rxjs' : 'node_modules/@reactivex/rxjs/dist/cjs/Rx.js'
               },
               packages: {
                   "src": {
                       "defaultExtension": "ts"
+                  },
+                  "node_modules/@reactivex/rxjs/dist/cjs": {
+                      "defaultExtension": "js"
                   }
               },
               meta: {

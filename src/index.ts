@@ -1,6 +1,5 @@
 import Complex from './Complex'
-import * as rx from 'rx.all'
-//import * as DOM from "rx.DOM";
+import * as rx from '@reactivex/rxjs';
 
 class Dummy {
   constructor(public name : string) {}
@@ -16,7 +15,7 @@ let cpx = new Complex(1,1);
 
 console.log("Module works! " + cpx.real);
 
-rx.Observable.just("world").subscribe(s => console.log("Hello " + s));
+rx.Observable.of("world").subscribe(s => console.log("Hello " + s));
 rx.Observable
   .fromEvent(document, "keypress")
   .pluck("keyCode")

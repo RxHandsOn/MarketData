@@ -10,8 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@reactivex/rxjs": "^5.0.0-beta.2",
+    "es6-shim": "^0.34.4",
     "lodash": "^4.2.0",
-    "rx": "^4.0.7",
     "systemjs": "^0.19.20",
     "typescript": "^1.7.5"
   },
