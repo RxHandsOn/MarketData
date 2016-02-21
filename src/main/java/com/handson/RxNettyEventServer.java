@@ -15,6 +15,9 @@ import rx.functions.Func1;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 
+/**
+ * Strongly inspired from RxNetty's examples
+ */
 public class RxNettyEventServer {
 
     static final int DEFAULT_PORT = 8096;
@@ -42,12 +45,12 @@ public class RxNettyEventServer {
     }
 
     private Observable<Void> getIntervalObservable(final HttpServerResponse<ServerSentEvent> response) {
-        return Observable.interval(interval, TimeUnit.MILLISECONDS)
-                .flatMap(interval1 -> {
-                    System.out.println("Writing SSE event for interval: " + interval1);
-                    ByteBuf data = response.getAllocator().buffer().writeBytes(("hello " + interval1 + "\n").getBytes());
-                    ServerSentEvent event = new ServerSentEvent(data);
-                    return response.writeAndFlush(event);
+        return getEvents()
+                .flatMap(event -> {
+                    System.out.println("Writing SSE event for interval: " + event);
+                    ByteBuf data = response.getAllocator().buffer().writeBytes(("hello " + event + "\n").getBytes());
+                    ServerSentEvent sse = new ServerSentEvent(data);
+                    return response.writeAndFlush(sse);
                 }).materialize()
                 .takeWhile(notification -> {
                     if (notification.isOnError()) {
@@ -57,6 +60,11 @@ public class RxNettyEventServer {
                     return !notification.isOnError();
                 })
                 .map((Func1<Notification<Void>, Void>) notification -> null);
+    }
+
+    protected Observable<Double> getEvents() {
+        return new RandomSequenceGenerator(1.3, 1.2).create(1, TimeUnit.SECONDS);
+        //return Observable.interval(interval, TimeUnit.MILLISECONDS);
     }
 
     public static void main(String[] args) {
