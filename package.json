@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "pretest": "tsc",
-    "test": "mocha output/test"
+    "test": "mocha output/test",
+    "postinstall": "tsd install"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
-    "sinon": "^1.17.3"
+    "sinon": "^1.17.3",
+    "tsd": "^0.6.5"
   }
 }
