@@ -1,4 +1,4 @@
-package com.handson.forex;
+package com.handson.market;
 
 
 import com.handson.infra.RandomSequenceGenerator;
@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ForexServer extends RxNettyEventServer<Double> {
 
-    static final int DEFAULT_PORT = 8096;
-    static final int DEFAULT_INTERVAL = 1000;
+    public static final int PORT = 8096;
+    private static final int DEFAULT_INTERVAL = 1000;
 
     private final int interval;
     private final TimeUnit intervalUnit;
@@ -26,11 +26,11 @@ public class ForexServer extends RxNettyEventServer<Double> {
 
     @Override
     protected Observable<Double> getEvents() {
-        System.out.println("Creating a forex stream limited to only one subscription");
-        return SubscriptionLimiter.limitSubscriptions(1, new RandomSequenceGenerator(1.3, 1.2).create(interval, intervalUnit));
+        System.out.println("Creating a market stream limited to only one subscription");
+        return SubscriptionLimiter.limitSubscriptions(1, new RandomSequenceGenerator(1.2, 1.3).create(interval, intervalUnit));
     }
 
     public static void main(String[] args) {
-        new ForexServer(DEFAULT_PORT, DEFAULT_INTERVAL, TimeUnit.MILLISECONDS).createServer().startAndWait();
+        new ForexServer(PORT, DEFAULT_INTERVAL, TimeUnit.MILLISECONDS).createServer().startAndWait();
     }
 }

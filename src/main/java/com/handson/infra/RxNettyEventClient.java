@@ -16,7 +16,7 @@ import java.util.Map;
 public class RxNettyEventClient {
 
     static final int DEFAULT_NO_OF_EVENTS = 100;
-    static final int DEFAULT_PORT = 8096;
+    static final int DEFAULT_PORT = 8098;
 
 
     private final int port;
@@ -39,7 +39,7 @@ public class RxNettyEventClient {
 
         List<ServerSentEvent> events = new ArrayList<>();
         for (ServerSentEvent event : eventIterable) {
-            System.out.println(event);
+            //System.out.println(event);
             events.add(event);
         }
 

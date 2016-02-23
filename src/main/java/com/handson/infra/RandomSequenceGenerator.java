@@ -25,6 +25,13 @@ public class RandomSequenceGenerator {
                 .scan(init, (previous, i) -> computeNextNumber(previous));
     }
 
+    public Observable<Integer> createIntegerSequence(long interval, TimeUnit timeUnit) {
+        double range = max - min;
+        return Observable
+                .interval(interval, timeUnit)
+                .map(i ->  ((Double)(random.nextDouble() * range  + min)).intValue());
+    }
+
     public double computeNextNumber(double previous) {
         double range = (max - min) / 10;
         double scaled = (random.nextDouble() - 0.5) * range;

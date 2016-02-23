@@ -42,8 +42,8 @@ public abstract class RxNettyEventServer<T> {
     private Observable<Void> getIntervalObservable(final HttpServerResponse<ServerSentEvent> response) {
         return events
                 .flatMap(event -> {
-                    System.out.println("Writing SSE event for interval: " + event);
-                    ByteBuf data = response.getAllocator().buffer().writeBytes(("hello " + event + "\n").getBytes());
+                    System.out.println("Writing SSE event: " + event);
+                    ByteBuf data = response.getAllocator().buffer().writeBytes(( event + "\n").getBytes());
                     ServerSentEvent sse = new ServerSentEvent(data);
                     return response.writeAndFlush(sse);
                 }).materialize()
