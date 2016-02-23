@@ -7,7 +7,7 @@
     "postinstall": "tsd install",
     "pretest": "tsc",
     "test": "mocha output/test/javascript",
-    "start": "npm test && http-server -o"
+    "start": "npm test && http-server -o -P http://localhost:8096"
   },
   "author": "",
   "license": "ISC",
