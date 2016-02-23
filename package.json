@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "pretest": "tsc",
-    "test": "mocha output/test",
+    "test": "mocha output/test/javascript",
     "postinstall": "tsd install"
   },
   "author": "",

@@ -1,4 +1,4 @@
-import Complex from "../src/complex";
+import Complex from "../../main/javascript/Complex";
 import { expect } from 'chai';
 
 describe("Complex numbers", () => {
