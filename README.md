@@ -10,9 +10,11 @@ First step is to retrieve the dependencies:
 
     npm install
 
-Then you can run the tests witht he following command:
+Then you can run the tests with the following command:
 
     npm test
 
 ### In the browser
-Run a static server (such as [http-server](https://www.npmjs.com/package/http-server)) and open index.html.
+You can have a look at the result with the following command:
+
+    npm start
