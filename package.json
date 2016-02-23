@@ -1,0 +1,26 @@
+{
+  "name": "quickstart-rx-typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "postinstall": "tsd install",
+    "pretest": "tsc",
+    "test": "mocha output/test/javascript"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@reactivex/rxjs": "5.0.0-beta.2",
+    "es6-shim": "0.34.4",
+    "lodash": "4.5.1",
+    "systemjs": "0.19.22",
+    "typescript": "1.7.5"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "mocha": "2.4.5",
+    "sinon": "1.17.3",
+    "tsd": "0.6.5"
+  }
+}

@@ -11,3 +11,7 @@ buildNumber.properties
 # idea
 *.iml
 .idea/
+
+node_modules
+output
+typings

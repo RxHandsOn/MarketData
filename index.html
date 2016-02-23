@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <script type="text/javascript" src="node_modules/systemjs/dist/system.js">
+
+    </script>
+    <script type="text/javascript">
+        System.config({
+              //defaultJSExtensions: true,
+              defaultExtension: 'ts',
+              transpiler: 'typescript',
+              map: {
+                  typescript: 'node_modules/typescript/lib/typescript.js',
+                  '@reactivex/rxjs' : 'node_modules/@reactivex/rxjs/dist/cjs/Rx.js'
+              },
+              packages: {
+                  "src": {
+                      "defaultExtension": "ts"
+                  },
+                  "node_modules/@reactivex/rxjs/dist/cjs": {
+                      "defaultExtension": "js"
+                  }
+              },
+              meta: {
+                  '*.ts': {
+                    format: 'es6'
+                  }
+              }
+          });
+          System.import('src/main/javascript/index');
+    </script>
+  </head>
+  <body>
+    <p>
+      Press any key
+    </p>
+    <div id="container"></div>
+
+    </div>
+
+  </body>
+</html>

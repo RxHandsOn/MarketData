@@ -1,0 +1,24 @@
+import Complex from './Complex'
+import * as rx from '@reactivex/rxjs';
+
+class Dummy {
+  constructor(public name : string) {}
+}
+
+
+
+let obj = new Dummy("hello!");
+
+console.log("Hello " + obj.name);
+
+let cpx = new Complex(1,1);
+
+console.log("Module works! " + cpx.real);
+
+rx.Observable.of("world").subscribe(s => console.log("Hello " + s));
+rx.Observable
+  .fromEvent(document, "keypress")
+  .pluck("keyCode")
+  .subscribe(code => {
+    document.getElementById("container").innerHTML = "Code " + code;
+  });
