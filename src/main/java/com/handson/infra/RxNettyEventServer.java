@@ -1,4 +1,4 @@
-package com.handson;
+package com.handson.infra;
 
 import io.reactivex.netty.RxNetty;
 import io.reactivex.netty.pipeline.PipelineConfigurators;

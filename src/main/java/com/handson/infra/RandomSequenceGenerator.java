@@ -1,4 +1,4 @@
-package com.handson;
+package com.handson.infra;
 
 
 import rx.Observable;
@@ -26,7 +26,7 @@ public class RandomSequenceGenerator {
     }
 
     public double computeNextNumber(double previous) {
-        double range = (max - min) / 100;
+        double range = (max - min) / 10;
         double scaled = (random.nextDouble() - 0.5) * range;
         double shifted = previous + scaled;
         if (shifted < min || shifted > max) {

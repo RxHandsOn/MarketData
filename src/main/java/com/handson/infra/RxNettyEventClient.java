@@ -1,4 +1,4 @@
-package com.handson;
+package com.handson.infra;
 
 import io.netty.buffer.ByteBuf;
 import io.reactivex.netty.RxNetty;
@@ -7,8 +7,6 @@ import io.reactivex.netty.protocol.http.client.HttpClient;
 import io.reactivex.netty.protocol.http.client.HttpClientRequest;
 import io.reactivex.netty.protocol.http.client.HttpClientResponse;
 import io.reactivex.netty.protocol.http.sse.ServerSentEvent;
-import rx.Observable;
-import rx.functions.Func1;
 
 import java.util.ArrayList;
 import java.util.List;

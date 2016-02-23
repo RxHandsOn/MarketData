@@ -1,5 +1,6 @@
-package com.handson;
+package com.handson.infra;
 
+import com.handson.infra.RandomSequenceGenerator;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
