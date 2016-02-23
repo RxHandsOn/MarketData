@@ -1,7 +1,8 @@
 {
-  "name": "quickstart-rx-typescript",
+  "name": "MarketData",
   "version": "1.0.0",
   "description": "",
+  "repository": "https://github.com/RxHandsOn/MarketData",
   "main": "src/index.js",
   "scripts": {
     "postinstall": "tsd install",
