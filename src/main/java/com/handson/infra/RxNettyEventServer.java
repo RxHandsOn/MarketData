@@ -1,12 +1,9 @@
 package com.handson.infra;
 
+import io.netty.buffer.ByteBuf;
 import io.reactivex.netty.RxNetty;
 import io.reactivex.netty.pipeline.PipelineConfigurators;
 import io.reactivex.netty.protocol.http.server.HttpServer;
-
-import java.util.concurrent.TimeUnit;
-
-import io.netty.buffer.ByteBuf;
 import io.reactivex.netty.protocol.http.server.HttpServerResponse;
 import io.reactivex.netty.protocol.http.sse.ServerSentEvent;
 import rx.Notification;
@@ -18,20 +15,18 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 /**
  * Strongly inspired from RxNetty's examples
  */
-public class RxNettyEventServer {
+public abstract class RxNettyEventServer<T> {
 
-    static final int DEFAULT_PORT = 8096;
-    static final int DEFAULT_INTERVAL = 1000;
 
     private final int port;
-    private final int interval;
+    private Observable<T> events;
 
-    public RxNettyEventServer(int port, int interval) {
+    public RxNettyEventServer(int port) {
         this.port = port;
-        this.interval = interval;
     }
 
     public HttpServer<ByteBuf, ServerSentEvent> createServer() {
+        initializeObservable();
         HttpServer<ByteBuf, ServerSentEvent> server = RxNetty.createHttpServer(port,
                 (request, response) -> {
                     response.getHeaders().set(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
@@ -45,7 +40,7 @@ public class RxNettyEventServer {
     }
 
     private Observable<Void> getIntervalObservable(final HttpServerResponse<ServerSentEvent> response) {
-        return getEvents()
+        return events
                 .flatMap(event -> {
                     System.out.println("Writing SSE event for interval: " + event);
                     ByteBuf data = response.getAllocator().buffer().writeBytes(("hello " + event + "\n").getBytes());
@@ -62,14 +57,11 @@ public class RxNettyEventServer {
                 .map((Func1<Notification<Void>, Void>) notification -> null);
     }
 
-    protected Observable<Double> getEvents() {
-        return new RandomSequenceGenerator(1.3, 1.2).create(1, TimeUnit.SECONDS);
-        //return Observable.interval(interval, TimeUnit.MILLISECONDS);
+    private void initializeObservable() {
+        events = getEvents();
     }
 
-    public static void main(String[] args) {
-        new RxNettyEventServer(DEFAULT_PORT, DEFAULT_INTERVAL).createServer().startAndWait();
-    }
+    protected abstract Observable<T> getEvents();
 
 
 }
