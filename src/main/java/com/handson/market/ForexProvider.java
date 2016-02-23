@@ -8,17 +8,17 @@ import rx.Observable;
 
 import java.util.concurrent.TimeUnit;
 
-public class ForexServer extends RxNettyEventServer<Double> {
+public class ForexProvider extends RxNettyEventServer<Double> {
 
     public static final int PORT = 8096;
-    private static final int DEFAULT_INTERVAL = 1000;
+    private static final int DEFAULT_INTERVAL = 100;
 
     private final int interval;
     private final TimeUnit intervalUnit;
 
 
 
-    public ForexServer(int port, int interval, TimeUnit intervalUnit) {
+    public ForexProvider(int port, int interval, TimeUnit intervalUnit) {
         super(port);
         this.interval = interval;
         this.intervalUnit = intervalUnit;
@@ -31,6 +31,6 @@ public class ForexServer extends RxNettyEventServer<Double> {
     }
 
     public static void main(String[] args) {
-        new ForexServer(PORT, DEFAULT_INTERVAL, TimeUnit.MILLISECONDS).createServer().startAndWait();
+        new ForexProvider(PORT, DEFAULT_INTERVAL, TimeUnit.MILLISECONDS).createServer().startAndWait();
     }
 }

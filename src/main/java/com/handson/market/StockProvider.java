@@ -7,7 +7,7 @@ import rx.Observable;
 
 import java.util.concurrent.TimeUnit;
 
-public class StockServer extends RxNettyEventServer<String> {
+public class StockProvider extends RxNettyEventServer<String> {
 
     public static final int PORT = 8098;
     private static final int DEFAULT_INTERVAL = 1000;
@@ -28,7 +28,7 @@ public class StockServer extends RxNettyEventServer<String> {
 
 
 
-    public StockServer(int port, int interval, TimeUnit intervalUnit) {
+    public StockProvider(int port, int interval, TimeUnit intervalUnit) {
         super(port);
         this.interval = interval;
         this.intervalUnit = intervalUnit;
@@ -61,6 +61,6 @@ public class StockServer extends RxNettyEventServer<String> {
     }
 
     public static void main(String[] args) {
-        new StockServer(PORT, DEFAULT_INTERVAL, TimeUnit.MILLISECONDS).createServer().startAndWait();
+        new StockProvider(PORT, DEFAULT_INTERVAL, TimeUnit.MILLISECONDS).createServer().startAndWait();
     }
 }

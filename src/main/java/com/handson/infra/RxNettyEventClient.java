@@ -7,43 +7,33 @@ import io.reactivex.netty.protocol.http.client.HttpClient;
 import io.reactivex.netty.protocol.http.client.HttpClientRequest;
 import io.reactivex.netty.protocol.http.client.HttpClientResponse;
 import io.reactivex.netty.protocol.http.sse.ServerSentEvent;
+import rx.Observable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
-public class RxNettyEventClient {
+public class RxNettyEventClient implements Client {
 
-    static final int DEFAULT_NO_OF_EVENTS = 100;
     static final int DEFAULT_PORT = 8098;
 
 
     private final int port;
-    private final int noOfEvents;
 
-    public RxNettyEventClient(int port, int noOfEvents) {
+    public RxNettyEventClient(int port) {
         this.port = port;
-        this.noOfEvents = noOfEvents;
     }
 
-    public List<ServerSentEvent> readServerSideEvents() {
+    public Observable<String> readServerSideEvents() {
         HttpClient<ByteBuf, ServerSentEvent> client =
                 RxNetty.createHttpClient("localhost", port, PipelineConfigurators.<ByteBuf>clientSseConfigurator());
 
-        Iterable<ServerSentEvent> eventIterable = client.submit(HttpClientRequest.createGet("/hello")).
+        return client.submit(HttpClientRequest.createGet("/hello")).
                 flatMap(response -> {
                     printResponseHeader(response);
                     return response.getContent();
-                }).take(noOfEvents).doOnNext(serverSentEvent -> System.out.println(serverSentEvent.contentAsString())).toBlocking().toIterable();
-
-        List<ServerSentEvent> events = new ArrayList<>();
-        for (ServerSentEvent event : eventIterable) {
-            //System.out.println(event);
-            events.add(event);
-        }
-
-        return events;
+                }).map(serverSentEvent -> serverSentEvent.contentAsString());
     }
 
     private static void printResponseHeader(HttpClientResponse<ServerSentEvent> response) {
@@ -57,7 +47,7 @@ public class RxNettyEventClient {
     }
 
     public static void main(String[] args) {
-        new RxNettyEventClient(DEFAULT_PORT, DEFAULT_NO_OF_EVENTS).readServerSideEvents();
+        new RxNettyEventClient(DEFAULT_PORT).readServerSideEvents().toBlocking().forEach(System.out::println);
     }
 
 }
