@@ -9,13 +9,14 @@
     "postinstall": "typings install",
     "pretest": "tsc",
     "test": "mocha output/test/javascript",
-    "start": "npm test && http-server -o -P http://localhost:8096"
+    "start": "npm test && http-server -o"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@reactivex/rxjs": "5.0.0-beta.2",
     "es6-shim": "0.34.4",
+    "eventsource": "0.2.0",
     "lodash": "4.5.1",
     "systemjs": "0.19.22",
     "typescript": "1.8.2"

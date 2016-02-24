@@ -6,7 +6,6 @@ class Dummy {
 }
 
 
-
 let obj = new Dummy("hello!");
 
 console.log("Hello " + obj.name);
@@ -22,3 +21,8 @@ rx.Observable
   .subscribe(code => {
     document.getElementById("container").innerHTML = "Code " + code;
   });
+
+const eventSource = new EventSource('http://localhost:8096');
+eventSource.addEventListener('message', (e: any) => {
+    console.log(`Message from server: ${e.data}`);
+});
