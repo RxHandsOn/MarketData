@@ -3,11 +3,9 @@ package com.handson.rx;
 
 import com.handson.infra.Client;
 import org.junit.Test;
-import rx.Observable;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
-import rx.subjects.Subject;
 import rx.subjects.TestSubject;
 
 import java.util.List;
@@ -28,7 +26,7 @@ public class ForexServerTest {
         TestSubject<String> testSubject = TestSubject.create(scheduler);
         when(client.readServerSideEvents()).thenReturn(testSubject);
         TestSubscriber<Double> testSubscriber = new TestSubscriber<>();
-        forexServer.getEvents().subscribe(testSubscriber);
+        forexServer.getEvents(null).subscribe(testSubscriber);
         // when
         testSubject.onNext("1.4");
         scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
@@ -47,7 +45,7 @@ public class ForexServerTest {
         TestSubject<String> testSubject = TestSubject.create(scheduler);
         when(client.readServerSideEvents()).thenReturn(testSubject);
         TestSubscriber<Double> testSubscriber = new TestSubscriber<>();
-        forexServer.getEvents().subscribe(testSubscriber);
+        forexServer.getEvents(null).subscribe(testSubscriber);
         // when
         for (int i = 0; i < 10; i++) {
             testSubject.onNext("1." + i, i);

@@ -2,12 +2,12 @@ package com.handson.market;
 
 
 import com.handson.infra.RandomSequenceGenerator;
-import com.handson.infra.RxNettyEventServer;
+import com.handson.infra.RxNettyEventBroadcaster;
 import rx.Observable;
 
 import java.util.concurrent.TimeUnit;
 
-public class StockProvider extends RxNettyEventServer<String> {
+public class StockProvider extends RxNettyEventBroadcaster<String> {
 
     public static final int PORT = 8098;
     private static final int DEFAULT_INTERVAL = 1000;
@@ -35,7 +35,7 @@ public class StockProvider extends RxNettyEventServer<String> {
     }
 
     @Override
-    protected Observable<String> getEvents() {
+    protected Observable<String> initializeEventStream() {
         Observable<String> googleStock
                 = new RandomSequenceGenerator(GOOGLE_MIN, GOOGLE_MAX)
                     .create(interval, intervalUnit)

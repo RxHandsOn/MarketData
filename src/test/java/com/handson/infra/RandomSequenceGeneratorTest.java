@@ -30,6 +30,6 @@ public class RandomSequenceGeneratorTest {
         int previous = 4;
         double next = generator.computeNextNumber(previous);
         // then
-        assertThat(next).isBetween(previous - (max-min)/100, previous + (max-min)/100);
+        assertThat(next).isBetween(previous - (max-min)/10, previous + (max-min)/10);
     }
 }

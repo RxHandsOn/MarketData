@@ -2,13 +2,13 @@ package com.handson.market;
 
 
 import com.handson.infra.RandomSequenceGenerator;
-import com.handson.infra.RxNettyEventServer;
+import com.handson.infra.RxNettyEventBroadcaster;
 import com.handson.infra.SubscriptionLimiter;
 import rx.Observable;
 
 import java.util.concurrent.TimeUnit;
 
-public class ForexProvider extends RxNettyEventServer<Double> {
+public class ForexProvider extends RxNettyEventBroadcaster<Double> {
 
     public static final int PORT = 8096;
     private static final int DEFAULT_INTERVAL = 100;
@@ -25,7 +25,7 @@ public class ForexProvider extends RxNettyEventServer<Double> {
     }
 
     @Override
-    protected Observable<Double> getEvents() {
+    protected Observable<Double> initializeEventStream() {
         System.out.println("Creating a market stream limited to only one subscription");
         return SubscriptionLimiter.limitSubscriptions(1, new RandomSequenceGenerator(1.2, 1.3).create(interval, intervalUnit));
     }

@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.reactivex.netty.RxNetty;
 import io.reactivex.netty.pipeline.PipelineConfigurators;
 import io.reactivex.netty.protocol.http.server.HttpServer;
+import io.reactivex.netty.protocol.http.server.HttpServerRequest;
 import io.reactivex.netty.protocol.http.server.HttpServerResponse;
 import io.reactivex.netty.protocol.http.sse.ServerSentEvent;
 import rx.Notification;
@@ -19,28 +20,26 @@ public abstract class RxNettyEventServer<T> {
 
 
     private final int port;
-    private Observable<T> events;
 
     public RxNettyEventServer(int port) {
         this.port = port;
     }
 
     public HttpServer<ByteBuf, ServerSentEvent> createServer() {
-        initializeObservable();
         HttpServer<ByteBuf, ServerSentEvent> server = RxNetty.createHttpServer(port,
                 (request, response) -> {
                     response.getHeaders().set(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
                     response.getHeaders().set(CACHE_CONTROL, "no-cache");
                     response.getHeaders().set(CONNECTION, "keep-alive");
                     response.getHeaders().set(CONTENT_TYPE, "text/event-stream");
-                    return getIntervalObservable(response);
+                    return getIntervalObservable(request, response);
                 }, PipelineConfigurators.<ByteBuf>serveSseConfigurator());
         System.out.println("HTTP Server Sent Events server started...");
         return server;
     }
 
-    private Observable<Void> getIntervalObservable(final HttpServerResponse<ServerSentEvent> response) {
-        return events
+    private Observable<Void> getIntervalObservable(HttpServerRequest<?> request, final HttpServerResponse<ServerSentEvent> response) {
+        return getEvents(request)
                 .flatMap(event -> {
                     System.out.println("Writing SSE event: " + event);
                     ByteBuf data = response.getAllocator().buffer().writeBytes(( event + "\n").getBytes());
@@ -57,11 +56,8 @@ public abstract class RxNettyEventServer<T> {
                 .map((Func1<Notification<Void>, Void>) notification -> null);
     }
 
-    private void initializeObservable() {
-        events = getEvents();
-    }
 
-    protected abstract Observable<T> getEvents();
+    protected abstract Observable<T> getEvents(HttpServerRequest request);
 
 
 }

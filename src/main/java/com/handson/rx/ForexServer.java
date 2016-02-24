@@ -2,6 +2,7 @@ package com.handson.rx;
 
 import com.handson.infra.Client;
 import com.handson.infra.RxNettyEventServer;
+import io.reactivex.netty.protocol.http.server.HttpServerRequest;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -20,7 +21,7 @@ public class ForexServer extends RxNettyEventServer<Double> {
     }
 
     @Override
-    protected Observable<Double> getEvents() {
+    protected Observable<Double> getEvents(HttpServerRequest request) {
         return client.readServerSideEvents().map(Double::parseDouble).sample(1, TimeUnit.SECONDS, scheduler);
     }
 }

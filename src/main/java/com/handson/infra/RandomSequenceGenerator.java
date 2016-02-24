@@ -11,6 +11,7 @@ public class RandomSequenceGenerator {
     private final double min;
     private final double max;
     private final Random random;
+    private double bias = 0.3;
 
     public RandomSequenceGenerator(double min, double max) {
         this.min = min;
@@ -33,11 +34,12 @@ public class RandomSequenceGenerator {
     }
 
     public double computeNextNumber(double previous) {
-        double range = (max - min) / 10;
-        double scaled = (random.nextDouble() - 0.5) * range;
+        double range = (max - min) / 20;
+        double scaled = (random.nextDouble() - 0.5 + bias) * range;
         double shifted = previous + scaled;
         if (shifted < min || shifted > max) {
             shifted = previous - scaled;
+            bias = -bias;
         }
         return shifted;
     }

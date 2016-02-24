@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class RxNettyEventClient implements Client {
 
-    static final int DEFAULT_PORT = 8098;
+    static final int DEFAULT_PORT = 8096;
 
 
     private final int port;
