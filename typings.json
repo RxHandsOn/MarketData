@@ -1,0 +1,10 @@
+{
+  "name": "MarketData",
+  "ambientDependencies": {
+    "mocha": "github:DefinitelyTyped/DefinitelyTyped/mocha/mocha.d.ts#e69fe60f2d6377ea4fae539493997b098f52cad1",
+    "assertion-error": "github:DefinitelyTyped/DefinitelyTyped/assertion-error/assertion-error.d.ts#e69fe60f2d6377ea4fae539493997b098f52cad1",
+    "chai": "github:DefinitelyTyped/DefinitelyTyped/chai/chai.d.ts#e69fe60f2d6377ea4fae539493997b098f52cad1",
+    "sinon": "github:DefinitelyTyped/DefinitelyTyped/sinon/sinon.d.ts#e69fe60f2d6377ea4fae539493997b098f52cad1",
+    "es6-shim": "github:DefinitelyTyped/DefinitelyTyped/es6-shim/es6-shim.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f"
+  }
+}

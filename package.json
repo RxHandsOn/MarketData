@@ -5,7 +5,8 @@
   "repository": "https://github.com/RxHandsOn/MarketData",
   "main": "src/index.js",
   "scripts": {
-    "postinstall": "tsd install",
+    "clean": "rm -vfr node_modules output typings",
+    "postinstall": "typings install",
     "pretest": "tsc",
     "test": "mocha output/test/javascript",
     "start": "npm test && http-server -o -P http://localhost:8096"
@@ -17,13 +18,13 @@
     "es6-shim": "0.34.4",
     "lodash": "4.5.1",
     "systemjs": "0.19.22",
-    "typescript": "1.7.5"
+    "typescript": "1.8.2"
   },
   "devDependencies": {
     "chai": "3.5.0",
     "http-server": "0.9.0",
     "mocha": "2.4.5",
     "sinon": "1.17.3",
-    "tsd": "0.6.5"
+    "typings": "0.6.8"
   }
 }
