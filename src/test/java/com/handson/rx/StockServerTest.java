@@ -41,6 +41,9 @@ public class StockServerTest {
         when(forexEventStreamClient.readServerSideEvents()).thenReturn(forexSourceSubject);
     }
 
+    /**
+     * Test 2
+     */
     @Test
     public void should_filter_quotes_for_requested_stock() {
         // given
@@ -59,6 +62,9 @@ public class StockServerTest {
         assertThat(events.get(0).code).isEqualTo("GOOGLE");
     }
 
+    /**
+     * Test 3
+     */
     @Test
     public void should_generate_one_quote_in_euro_for_one_quote_in_dollar() {
         // given
@@ -77,6 +83,9 @@ public class StockServerTest {
         assertThat(events.get(0).quote).isEqualTo(1000);
     }
 
+    /**
+     * Test 7
+     */
     @Test
     public void should_generate_quotes_in_euro_using_latest_known_foreign_exchange_rate() {
         // given

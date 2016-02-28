@@ -33,6 +33,9 @@ public class ForexServerTest {
         when(eventStreamClient.readServerSideEvents()).thenReturn(forexSourceSubject);
     }
 
+    /**
+     * Test 1
+     */
     @Test
     public void should_forward_forex_data() {
         // given

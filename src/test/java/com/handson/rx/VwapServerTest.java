@@ -37,6 +37,9 @@ public class VwapServerTest {
         when(tradeEventStreamClient.readServerSideEvents()).thenReturn(tradeSourceSubject);
     }
 
+    /**
+     * Test 4
+     */
     @Test
     public void should_generate_one_google_vwap_event_when_a_google_trade_is_done() {
         // given
@@ -57,6 +60,9 @@ public class VwapServerTest {
         assertThat(vwap.volume).isEqualTo(10);
     }
 
+    /**
+     * Test 5
+     */
     @Test
     public void should_add_all_google_trades_to_generate_vwap_events() {
         // given
@@ -77,6 +83,9 @@ public class VwapServerTest {
         assertThat(vwap.volume).isEqualTo(20);
     }
 
+    /**
+     * Test 6
+     */
     @Test
     public void should_generate_at_most_one_event_per_sec() {
         // given
