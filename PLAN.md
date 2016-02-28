@@ -17,7 +17,7 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
 # Exercice 3 -  combinaison cotations / taux de changes
  Le but maintenant est de faire en sorte que les cotations transmises par la classe **StockServer** soient exprimées 
  en euros, et non en dollars.  
- A chaque cotation du flux stockEventStreamClient.readServerSideEvents(), il faut appliquer un tau de change venant du 
+ A chaque cotation du flux stockEventStreamClient.readServerSideEvents(), il faut appliquer un taux de change venant du 
  flux forexEventStreamClient.readServerSideEvents().  
  Test d'acceptance: Test 3 dans **StockServerTest**  
  Opérateurs Rx: map, take & flatMap !!  
