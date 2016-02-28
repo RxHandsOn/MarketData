@@ -1,9 +1,7 @@
 package com.handson.rx;
 
-import com.handson.infra.Client;
-import com.handson.infra.RxNettyEventClient;
-import com.handson.market.ForexProvider;
-import rx.schedulers.Schedulers;
+import com.handson.infra.EventStreamClient;
+import com.handson.infra.RxNettyEventEventStreamClient;
 
 import java.io.IOException;
 
@@ -11,11 +9,19 @@ import java.io.IOException;
 public class Application {
 
     public static void main(String[] args) throws IOException {
-        Client forexClient = new RxNettyEventClient(ForexProvider.PORT);
-        ForexServer forexServer = new ForexServer(8080, forexClient, Schedulers.immediate());
+        EventStreamClient forexEventStreamClient = new RxNettyEventEventStreamClient(8096);
+        ForexServer forexServer = new ForexServer(8080, forexEventStreamClient);
         forexServer.createServer().start();
         System.out.println("Press any key to exit");
-        new RxNettyEventClient(8080).readServerSideEvents().toBlocking().forEach(System.out::println);
+        new RxNettyEventEventStreamClient(8080).readServerSideEvents().toBlocking().forEach(System.out::println);
         System.in.read();
+
+        // TODO
+        // changer frequences par stock
+        // cache dernier prix
+        // serveur vwap
+        // marge / flatmap
+
+
     }
 }

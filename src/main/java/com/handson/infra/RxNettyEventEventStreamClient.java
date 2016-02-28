@@ -9,23 +9,23 @@ import io.reactivex.netty.protocol.http.client.HttpClientResponse;
 import io.reactivex.netty.protocol.http.sse.ServerSentEvent;
 import rx.Observable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 import java.util.Map;
 
 
-public class RxNettyEventClient implements Client {
+public class RxNettyEventEventStreamClient implements EventStreamClient {
 
-    static final int DEFAULT_PORT = 8096;
 
 
     private final int port;
+    private final Observable<String> serverSideEvents;
 
-    public RxNettyEventClient(int port) {
+    public RxNettyEventEventStreamClient(int port) {
         this.port = port;
+        this.serverSideEvents = initializeStream();
     }
 
-    public Observable<String> readServerSideEvents() {
+    private Observable<String> initializeStream() {
         HttpClient<ByteBuf, ServerSentEvent> client =
                 RxNetty.createHttpClient("localhost", port, PipelineConfigurators.<ByteBuf>clientSseConfigurator());
 
@@ -34,6 +34,10 @@ public class RxNettyEventClient implements Client {
                     printResponseHeader(response);
                     return response.getContent();
                 }).map(serverSentEvent -> serverSentEvent.contentAsString());
+    }
+
+    public Observable<String> readServerSideEvents() {
+        return serverSideEvents;
     }
 
     private static void printResponseHeader(HttpClientResponse<ServerSentEvent> response) {
@@ -46,8 +50,10 @@ public class RxNettyEventClient implements Client {
         }
     }
 
-    public static void main(String[] args) {
-        new RxNettyEventClient(DEFAULT_PORT).readServerSideEvents().toBlocking().forEach(System.out::println);
+    public static void main(String[] args) throws IOException {
+        Observable<String> fx = new RxNettyEventEventStreamClient(8098).readServerSideEvents();
+
+        fx.toBlocking().forEach(System.out::println);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.handson.infra;
 
-import com.handson.infra.RandomSequenceGenerator;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,5 +30,18 @@ public class RandomSequenceGeneratorTest {
         double next = generator.computeNextNumber(previous);
         // then
         assertThat(next).isBetween(previous - (max-min)/10, previous + (max-min)/10);
+    }
+
+    @Test
+    public void should_generate_a_number_with_a_limited_number_of_digits() {
+        // given
+        double min = 3;
+        double max = 5;
+        RandomSequenceGenerator generator = new RandomSequenceGenerator(min, max);
+        // when
+        int previous = 4;
+        Double next = generator.computeNextNumber(previous);
+        // then
+        assertThat(next.toString().length()).isLessThan(7);
     }
 }

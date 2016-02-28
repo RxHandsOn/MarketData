@@ -41,6 +41,9 @@ public class RandomSequenceGenerator {
             shifted = previous - scaled;
             bias = -bias;
         }
+
+        shifted = ((Long)Math.round(shifted * 10000)).doubleValue() /10000;
+
         return shifted;
     }
 

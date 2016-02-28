@@ -4,33 +4,26 @@ package com.handson.market;
 import com.handson.infra.RandomSequenceGenerator;
 import com.handson.infra.RxNettyEventBroadcaster;
 import com.handson.infra.SubscriptionLimiter;
+import com.handson.dto.Quote;
 import rx.Observable;
 
 import java.util.concurrent.TimeUnit;
 
-public class ForexProvider extends RxNettyEventBroadcaster<Double> {
 
-    public static final int PORT = 8096;
-    private static final int DEFAULT_INTERVAL = 100;
+public class ForexProvider extends RxNettyEventBroadcaster<Quote> {
 
-    private final int interval;
-    private final TimeUnit intervalUnit;
+    private static final int INTERVAL = 500;
 
-
-
-    public ForexProvider(int port, int interval, TimeUnit intervalUnit) {
+    public ForexProvider(int port) {
         super(port);
-        this.interval = interval;
-        this.intervalUnit = intervalUnit;
     }
 
     @Override
-    protected Observable<Double> initializeEventStream() {
+    protected Observable<Quote> initializeEventStream() {
+        // TODO à déplacer sur les services pour le front
         System.out.println("Creating a market stream limited to only one subscription");
-        return SubscriptionLimiter.limitSubscriptions(1, new RandomSequenceGenerator(1.2, 1.3).create(interval, intervalUnit));
-    }
-
-    public static void main(String[] args) {
-        new ForexProvider(PORT, DEFAULT_INTERVAL, TimeUnit.MILLISECONDS).createServer().startAndWait();
+        return SubscriptionLimiter
+                .limitSubscriptions(1, new RandomSequenceGenerator(1.2, 1.3).create(INTERVAL, TimeUnit.MILLISECONDS))
+                .map(q -> new Quote("EUR/USD", q));
     }
 }

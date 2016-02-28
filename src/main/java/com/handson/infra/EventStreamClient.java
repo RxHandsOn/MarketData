@@ -2,7 +2,7 @@ package com.handson.infra;
 
 import rx.Observable;
 
-public interface Client {
+public interface EventStreamClient {
 
     Observable<String> readServerSideEvents();
 }

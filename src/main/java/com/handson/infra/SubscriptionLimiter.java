@@ -15,6 +15,7 @@ public class SubscriptionLimiter {
         return Observable.create(subscriber -> {
             synchronized (state) {
                 if (state.getNumberOfSubscriptions() == maxNumber) {
+                    System.out.println("Subscription not allowed");
                     subscriber.onError(new RuntimeException("Number of subscription limited to " + maxNumber));
                 } else {
                     Subscription subscription = source.subscribe(subscriber);

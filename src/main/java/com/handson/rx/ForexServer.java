@@ -1,27 +1,31 @@
 package com.handson.rx;
 
-import com.handson.infra.Client;
+import com.handson.dto.Quote;
+import com.handson.infra.EventStreamClient;
 import com.handson.infra.RxNettyEventServer;
-import io.reactivex.netty.protocol.http.server.HttpServerRequest;
 import rx.Observable;
 import rx.Scheduler;
 
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.Map;
 
 public class ForexServer extends RxNettyEventServer<Double> {
 
 
-    private final Client client;
-    private final Scheduler scheduler;
+    private final EventStreamClient forexEventStreamClient;
 
-    public ForexServer(int port, Client client, Scheduler scheduler) {
+    public ForexServer(int port, EventStreamClient eventStreamClient) {
         super(port);
-        this.client = client;
-        this.scheduler = scheduler;
+        this.forexEventStreamClient = eventStreamClient;
     }
 
     @Override
-    protected Observable<Double> getEvents(HttpServerRequest request) {
-        return client.readServerSideEvents().map(Double::parseDouble).sample(1, TimeUnit.SECONDS, scheduler);
+    protected Observable<Double> getEvents(Map<String, List<String>> parameters) {
+        //return forexClient.readServerSideEvents().map(Double::parseDouble);
+        /* TODO etape 1 - map  avec quote  */
+        return forexEventStreamClient
+                .readServerSideEvents()
+                .map(Quote::fromJson)
+                .map(q -> q.quote);
     }
 }

@@ -11,6 +11,9 @@ import rx.Notification;
 import rx.Observable;
 import rx.functions.Func1;
 
+import java.util.List;
+import java.util.Map;
+
 import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 
 /**
@@ -39,7 +42,8 @@ public abstract class RxNettyEventServer<T> {
     }
 
     private Observable<Void> getIntervalObservable(HttpServerRequest<?> request, final HttpServerResponse<ServerSentEvent> response) {
-        return getEvents(request)
+        Map<String, List<String>> parameters = request.getQueryParameters();
+        return getEvents(parameters)
                 .flatMap(event -> {
                     System.out.println("Writing SSE event: " + event);
                     ByteBuf data = response.getAllocator().buffer().writeBytes(( event + "\n").getBytes());
@@ -57,7 +61,7 @@ public abstract class RxNettyEventServer<T> {
     }
 
 
-    protected abstract Observable<T> getEvents(HttpServerRequest request);
+    protected abstract Observable<T> getEvents(Map<String, List<String>> queryParameters);
 
 
 }
