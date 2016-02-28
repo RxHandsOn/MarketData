@@ -1,5 +1,6 @@
 package com.handson.dto;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Vwap {
@@ -18,12 +19,12 @@ public class Vwap {
     }
 
     public static Vwap fromJson(String input) {
-        return new GsonBuilder().create().fromJson(input, Vwap.class);
+        return new Gson().fromJson(input, Vwap.class);
     }
 
 
     public String toJson() {
-        return new GsonBuilder().create().toJson(this);
+        return new Gson().toJson(this);
     }
 
     @Override

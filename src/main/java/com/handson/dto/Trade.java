@@ -1,5 +1,6 @@
 package com.handson.dto;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Trade {
@@ -18,12 +19,12 @@ public class Trade {
     }
 
     public static Trade fromJson(String input) {
-        return new GsonBuilder().create().fromJson(input, Trade.class);
+        return new Gson().fromJson(input, Trade.class);
     }
 
 
     public String toJson() {
-        return new GsonBuilder().create().toJson(this);
+        return new Gson().toJson(this);
     }
 
     @Override

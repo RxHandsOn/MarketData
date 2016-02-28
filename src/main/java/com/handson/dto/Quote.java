@@ -1,5 +1,6 @@
 package com.handson.dto;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Quote {
@@ -16,12 +17,11 @@ public class Quote {
     }
 
     public static Quote fromJson(String input) {
-        return new GsonBuilder().create().fromJson(input, Quote.class);
+        return new Gson().fromJson(input, Quote.class);
     }
 
     public String toJson() {
-        // TODO update GSON version
-        return new GsonBuilder().create().toJson(this);
+        return new Gson().toJson(this);
     }
 
     @Override
