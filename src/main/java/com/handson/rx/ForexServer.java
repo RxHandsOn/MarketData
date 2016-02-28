@@ -8,6 +8,7 @@ import rx.Scheduler;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class ForexServer extends RxNettyEventServer<Double> {
 
@@ -21,8 +22,8 @@ public class ForexServer extends RxNettyEventServer<Double> {
 
     @Override
     protected Observable<Double> getEvents(Map<String, List<String>> parameters) {
-        //return forexClient.readServerSideEvents().map(Double::parseDouble);
-        /* TODO etape 1 - map  avec quote  */
+        // return Observable.never();
+        /* TODO etape 1 - map avec quote */
         return forexEventStreamClient
                 .readServerSideEvents()
                 .map(Quote::fromJson)
