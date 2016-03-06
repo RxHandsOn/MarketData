@@ -7,5 +7,5 @@ install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - cd $TRAVIS_BUILD_DIR/marketdata-web && npm install
 script:
-  - mvn install
+  - cd $TRAVIS_BUILD_DIR && mvn install
   - cd $TRAVIS_BUILD_DIR/marketdata-web && npm test
