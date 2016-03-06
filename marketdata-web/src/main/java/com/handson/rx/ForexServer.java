@@ -22,11 +22,8 @@ public class ForexServer extends RxNettyEventServer<Double> {
 
     @Override
     protected Observable<Double> getEvents(Map<String, List<String>> parameters) {
-        // return Observable.never();
-        /* TODO etape 1 - map avec quote */
-        return forexEventStreamClient
-                .readServerSideEvents()
+        return forexEventStreamClient.readServerSideEvents()
                 .map(Quote::fromJson)
-                .map(q -> q.quote);
+                .map(quote -> quote.quote);
     }
 }

@@ -3,6 +3,7 @@ package com.handson.rx;
 
 import com.handson.dto.Quote;
 import com.handson.infra.EventStreamClient;
+import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
 import rx.observers.TestSubscriber;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -103,5 +105,27 @@ public class StockServerTest {
         assertThat(events.get(0).quote).isEqualTo(1000);
     }
 
+    /**
+     * Test 7-bis
+     */
+    @Test
+    public void should_generate_one_quote_in_euro_for_one_quote_in_dollar_for_multiple_values() {
+        // given
+        TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
+        Map<String, List<String>> parameters
+                = Collections.singletonMap("STOCK", Arrays.asList("GOOGLE"));
+        stockServer.getEvents(parameters).subscribe(testSubscriber);
+        // when
+        quoteSourceSubject.onNext(new Quote("GOOGLE", 1300).toJson(), 90);
+        forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson(), 100);
+        forexSourceSubject.onNext(new Quote("EUR/USD", 1.4).toJson(), 190);
+        quoteSourceSubject.onNext(new Quote("GOOGLE", 2800).toJson(), 200);
+        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
 
+        // then
+        List<Quote> events = testSubscriber.getOnNextEvents();
+        assertThat(events).hasSize(2);
+        assertThat(events.get(0).quote).isEqualTo(1000);
+        assertThat(events.get(1).quote).isCloseTo(2000, offset(0.001));
+    }
 }

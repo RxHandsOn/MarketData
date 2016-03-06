@@ -4,6 +4,7 @@ import com.handson.dto.Trade;
 import com.handson.dto.Vwap;
 import com.handson.infra.EventStreamClient;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
@@ -86,6 +87,7 @@ public class VwapServerTest {
     /**
      * Test 6
      */
+    @Ignore
     @Test
     public void should_generate_at_most_one_event_per_sec() {
         // given

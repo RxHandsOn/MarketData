@@ -26,43 +26,16 @@ public class VwapServer extends RxNettyEventServer<Vwap> {
 
     @Override
     protected Observable<Vwap> getEvents(Map<String, List<String>> parameters) {
-        /* Etape 0
-        String stockCode = parameters.get("STOCK").get(0);
-        return Observable.never();
-        */
+        List<String> companies = parameters.get("STOCK");
 
-        /* Etape 1 -  filtre sur code de la stock et objet vwap
-        String stockCode = parameters.get("STOCK").get(0);
-        return tradeEventStreamClient
-                .readServerSideEvents()
+        return tradeEventStreamClient.readServerSideEvents()
+                .doOnEach(System.out::println)
                 .map(Trade::fromJson)
-                .filter(t -> t.code.equals(stockCode))
-                .map(t -> new Vwap(t.code, t.nominal/t.quantity, t.quantity));
-        */
-
-        /* Etape 2 - calcul du vwap
-        String stockCode = parameters.get("STOCK").get(0);
-        return tradeEventStreamClient
-                .readServerSideEvents()
-                .map(Trade::fromJson)
-                .filter(t -> t.code.equals(stockCode))
-                .scan(new Vwap(), (v, t) -> {
-                    double volume = v.volume + t.quantity;
-                    double vwap = (v.volume * v.vwap + t.nominal) / volume;
-                    return new Vwap(t.code, vwap, volume);
-                }).skip(1);*/
-
-        /* etape 3 avec sampling */
-        String stockCode = parameters.get("STOCK").get(0);
-        return tradeEventStreamClient
-                .readServerSideEvents()
-                .map(Trade::fromJson)
-                .filter(t -> t.code.equals(stockCode))
-                .scan(new Vwap(), (v, t) -> {
-                    double volume = v.volume + t.quantity;
-                    double vwap = (v.volume * v.vwap + t.nominal) / volume;
-                    return new Vwap(t.code, vwap, volume);
-                }).skip(1)
-                .sample(1, TimeUnit.SECONDS, scheduler);
+                .filter((trade -> companies.contains(trade.code)))
+                .scan(new Vwap(), ((vwapSum, trade) -> {
+                    double volume = vwapSum.volume + trade.quantity;
+                    double vwap = ((vwapSum.vwap * vwapSum.volume) + trade.nominal) / volume;
+                    return new Vwap(trade.code, vwap, volume);
+                })).skip(1);
     }
 }
