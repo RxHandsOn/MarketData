@@ -5,6 +5,7 @@ import com.handson.dto.Quote;
 import com.handson.dto.Trade;
 import com.handson.dto.Vwap;
 import com.handson.infra.EventStreamClient;
+import com.handson.infra.HttpRequest;
 import com.handson.infra.RxNettyEventServer;
 import rx.Observable;
 import rx.Scheduler;
@@ -25,14 +26,14 @@ public class VwapServer extends RxNettyEventServer<Vwap> {
     }
 
     @Override
-    protected Observable<Vwap> getEvents(Map<String, List<String>> parameters) {
+    protected Observable<Vwap> getEvents(HttpRequest request) {
         /* Etape 0
-        String stockCode = parameters.get("STOCK").get(0);
+        String stockCode = request.getParameter("STOCK");
         return Observable.never();
         */
 
         /* Etape 1 -  filtre sur code de la stock et objet vwap
-        String stockCode = parameters.get("STOCK").get(0);
+        String stockCode = request.getParameter("STOCK");
         return tradeEventStreamClient
                 .readServerSideEvents()
                 .map(Trade::fromJson)
@@ -41,7 +42,7 @@ public class VwapServer extends RxNettyEventServer<Vwap> {
         */
 
         /* Etape 2 - calcul du vwap
-        String stockCode = parameters.get("STOCK").get(0);
+        String stockCode = request.getParameter("STOCK");
         return tradeEventStreamClient
                 .readServerSideEvents()
                 .map(Trade::fromJson)
@@ -53,7 +54,7 @@ public class VwapServer extends RxNettyEventServer<Vwap> {
                 }).skip(1);*/
 
         /* etape 3 avec sampling */
-        String stockCode = parameters.get("STOCK").get(0);
+        String stockCode = request.getParameter("STOCK");
         return tradeEventStreamClient
                 .readServerSideEvents()
                 .map(Trade::fromJson)

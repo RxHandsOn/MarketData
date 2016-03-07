@@ -28,7 +28,7 @@ public abstract class RxNettyEventBroadcaster<T> extends RxNettyEventServer {
 
     protected abstract Observable<T> initializeEventStream();
 
-    public Observable<T> getEvents(Map parameters) {
+    public Observable<T> getEvents(HttpRequest request) {
         return events;
     }
 

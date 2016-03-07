@@ -3,6 +3,7 @@ package com.handson.rx;
 
 import com.handson.dto.Quote;
 import com.handson.infra.EventStreamClient;
+import com.handson.infra.HttpRequest;
 import org.junit.Before;
 import org.junit.Test;
 import rx.observers.TestSubscriber;
@@ -48,9 +49,8 @@ public class StockServerTest {
     public void should_filter_quotes_for_requested_stock() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        Map<String, List<String>> parameters
-                = Collections.singletonMap("STOCK", Arrays.asList("GOOGLE"));
-        stockServer.getEvents(parameters).subscribe(testSubscriber);
+        HttpRequest request = createRequest("STOCK", "GOOGLE");
+        stockServer.getEvents(request).subscribe(testSubscriber);
         // when
         quoteSourceSubject.onNext(new Quote("GOOGLE", 705.8673).toJson());
         forexSourceSubject.onNext(new Quote("EUR/USD", 1).toJson());
@@ -69,9 +69,8 @@ public class StockServerTest {
     public void should_generate_one_quote_in_euro_for_one_quote_in_dollar() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        Map<String, List<String>> parameters
-                = Collections.singletonMap("STOCK", Arrays.asList("GOOGLE"));
-        stockServer.getEvents(parameters).subscribe(testSubscriber);
+        HttpRequest request = createRequest("STOCK", "GOOGLE");
+        stockServer.getEvents(request).subscribe(testSubscriber);
         // when
         quoteSourceSubject.onNext(new Quote("GOOGLE", 1300).toJson());
         forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson());
@@ -90,9 +89,8 @@ public class StockServerTest {
     public void should_generate_quotes_in_euro_using_latest_known_foreign_exchange_rate() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        Map<String, List<String>> parameters
-                = Collections.singletonMap("STOCK", Arrays.asList("GOOGLE"));
-        stockServer.getEvents(parameters).subscribe(testSubscriber);
+        HttpRequest request = createRequest("STOCK", "GOOGLE");
+        stockServer.getEvents(request).subscribe(testSubscriber);
         // when
         forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson(), 90);
         quoteSourceSubject.onNext(new Quote("GOOGLE", 1300).toJson(), 100);
@@ -103,5 +101,7 @@ public class StockServerTest {
         assertThat(events.get(0).quote).isEqualTo(1000);
     }
 
-
+    public HttpRequest createRequest(String name, String value) {
+        return new HttpRequest(Collections.singletonMap(name, Arrays.asList(value)));
+    }
 }

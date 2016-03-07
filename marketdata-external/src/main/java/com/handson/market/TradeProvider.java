@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 public class TradeProvider extends RxNettyEventBroadcaster<Trade> {
 
-    public static final int PORT = 8097;
     private static final int INTERVAL = 50;
     private final StockQuoteProvider stockQuoteProvider;
 
@@ -24,7 +23,7 @@ public class TradeProvider extends RxNettyEventBroadcaster<Trade> {
     @Override
     protected Observable<Trade> initializeEventStream() {
         Observable<Quote> quotes
-                = stockQuoteProvider.getEvents(Collections.emptyMap());
+                = stockQuoteProvider.getEvents(null);
         Observable<Integer> quantities
                 = new RandomSequenceGenerator(10, 1000).createIntegerSequence(INTERVAL, TimeUnit.MILLISECONDS).share();
 

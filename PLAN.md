@@ -3,7 +3,8 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
 
 # Exercice 1 -  transformation simple
  Le but est de rendre opérationnel la classe **ForexServer** pour quelle propage les taux de change euro / dollar 
- sous forme de **Double** provenant du service ForexProvider (via forexEventStreamClient.readServerSideEvents())  
+ sous forme de **Double** provenant du service ForexProvider (via forexEventStreamClient.readServerSideEvents()).  
+ La méthode **Quote::fromJson** pourra être utilisée pour parser les données brutes obtenues et créer des DTOs **Quote**.  
  Test d'acceptance: Test 1 dans **ForexServerTest**  
  Opérateurs Rx: map  
  

@@ -42,8 +42,8 @@ public abstract class RxNettyEventServer<T> {
     }
 
     private Observable<Void> getIntervalObservable(HttpServerRequest<?> request, final HttpServerResponse<ServerSentEvent> response) {
-        Map<String, List<String>> parameters = request.getQueryParameters();
-        return getEvents(parameters)
+        HttpRequest simpleRequest = new HttpRequest(request.getQueryParameters());
+        return getEvents(simpleRequest)
                 .flatMap(event -> {
                     System.out.println("Writing SSE event: " + event);
                     ByteBuf data = response.getAllocator().buffer().writeBytes(( event + "\n").getBytes());
@@ -61,7 +61,7 @@ public abstract class RxNettyEventServer<T> {
     }
 
 
-    protected abstract Observable<T> getEvents(Map<String, List<String>> queryParameters);
+    protected abstract Observable<T> getEvents(HttpRequest request);
 
 
 }

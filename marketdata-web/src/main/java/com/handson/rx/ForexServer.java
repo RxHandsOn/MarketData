@@ -2,6 +2,7 @@ package com.handson.rx;
 
 import com.handson.dto.Quote;
 import com.handson.infra.EventStreamClient;
+import com.handson.infra.HttpRequest;
 import com.handson.infra.RxNettyEventServer;
 import rx.Observable;
 import rx.Scheduler;
@@ -21,7 +22,7 @@ public class ForexServer extends RxNettyEventServer<Double> {
     }
 
     @Override
-    protected Observable<Double> getEvents(Map<String, List<String>> parameters) {
+    protected Observable<Double> getEvents(HttpRequest request) {
         // return Observable.never();
         /* TODO etape 1 - map avec quote */
         return forexEventStreamClient

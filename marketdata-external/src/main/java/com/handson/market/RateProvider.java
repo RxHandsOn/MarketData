@@ -1,5 +1,6 @@
 package com.handson.market;
 
+import com.handson.infra.HttpRequest;
 import com.handson.infra.RxNettyEventServer;
 import rx.Observable;
 
@@ -27,13 +28,13 @@ public class RateProvider extends RxNettyEventServer<Double> {
     }
 
     @Override
-    protected Observable<Double> getEvents(Map<String, List<String>> queryParameters) {
-        List<String> maturityValues = queryParameters.get("MATURITY");
+    protected Observable<Double> getEvents(HttpRequest request) {
+        String maturity = request.getParameter("MATURITY");
         Maturity rateMaturity;
-        if (maturityValues == null || maturityValues.isEmpty()) {
+        if (maturity == null) {
             rateMaturity = Maturity.M_SPOT;
         } else {
-            rateMaturity = Maturity.valueOf(maturityValues.get(0));
+            rateMaturity = Maturity.valueOf(maturity);
         }
         return Observable.just(rateMaturity.value);
     }

@@ -2,6 +2,7 @@ package com.handson.rx;
 
 import com.handson.dto.Quote;
 import com.handson.infra.EventStreamClient;
+import com.handson.infra.HttpRequest;
 import com.handson.infra.RxNettyEventServer;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
@@ -22,17 +23,17 @@ public class StockServer extends RxNettyEventServer<Quote> {
     }
 
     @Override
-    protected Observable<Quote> getEvents(Map<String, List<String>> parameters) {
+    protected Observable<Quote> getEvents(HttpRequest request) {
 
         /* Etape initiale
-        String stockCode = parameters.get("STOCK").get(0);
+        String stockCode = request.getParameter("STOCK");
         return stockClient
             .readServerSideEvents()
             .map(Quote::fromJson);
         */
 
         /* Etape 1 : filtre sur code de la stock
-        String stockCode = parameters.get("STOCK").get(0);
+        String stockCode = request.getParameter("STOCK");
 
         return stockEventStreamClient
                 .readServerSideEvents()
@@ -42,7 +43,7 @@ public class StockServer extends RxNettyEventServer<Quote> {
 
 
         /* Etape 2 : application du forex
-        String stockCode = parameters.get("STOCK").get(0);
+        String stockCode = request.getParameter("STOCK");
 
         Observable<Quote> quotes = stockEventStreamClient
                 .readServerSideEvents()
@@ -61,7 +62,7 @@ public class StockServer extends RxNettyEventServer<Quote> {
         */
 
         /* Etape 3 : application forex avec mise en cache */
-        String stockCode = parameters.get("STOCK").get(0);
+        String stockCode = request.getParameter("STOCK");
 
         Observable<Quote> quotes = stockEventStreamClient
                 .readServerSideEvents()
