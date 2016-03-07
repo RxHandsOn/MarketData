@@ -50,4 +50,22 @@ public class ForexServerTest {
         assertThat(events.get(0)).isEqualTo(1.4);
     }
 
+    /**
+     * Test 2
+     */
+    @Test
+    public void should_forward_only_one_forex_data() {
+        // given
+        TestSubscriber<Double> testSubscriber = new TestSubscriber<>();
+        forexServer.getEvents(null).subscribe(testSubscriber);
+        // when
+        forexSourceSubject.onNext(new Quote("EUR/USD", 1.4).toJson());
+        forexSourceSubject.onNext(new Quote("EUR/USD", 1.42).toJson());
+        scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
+        // then
+        List<Double> events = testSubscriber.getOnNextEvents();
+        assertThat(events).hasSize(1);
+        assertThat(events.get(0)).isEqualTo(1.4);
+    }
+
 }

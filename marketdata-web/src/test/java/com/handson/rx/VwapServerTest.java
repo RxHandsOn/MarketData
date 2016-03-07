@@ -39,7 +39,7 @@ public class VwapServerTest {
     }
 
     /**
-     * Test 4
+     * Test 5
      */
     @Test
     public void should_generate_one_google_vwap_event_when_a_google_trade_is_done() {
@@ -61,7 +61,7 @@ public class VwapServerTest {
     }
 
     /**
-     * Test 5
+     * Test 6
      */
     @Test
     public void should_add_all_google_trades_to_generate_vwap_events() {
@@ -83,7 +83,7 @@ public class VwapServerTest {
     }
 
     /**
-     * Test 6
+     * Test 7
      */
     @Test
     public void should_generate_at_most_one_event_per_sec() {

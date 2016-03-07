@@ -8,22 +8,31 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
  Test d'acceptance: Test 1 dans **ForexServerTest**  
  Opérateurs Rx: map  
  
+ # Exercice 2 - on ne prend que le premier !
+ Toujours dans la classe **ForexServer**, il faut maintenant modifier le code pour qu'à chaque souscription on ne 
+ renvoie qu'une seule valeur.
+ Test d'acceptance: Test 2 dans **ForexServerTest**  
+ Opérateurs Rx: take  
+ 
 
-# Exercice 2 -  premier filtre
+# Exercice 3 -  premier filtre
  Dans la classe **StockServer**, faire en sorte de prendre en compte le paramètre HTTP "STOCK" pour filtrer les 
  cotations et ne pas tout envoyer au navigateur. 
  Test d'acceptance: Test 2 dans **StockServerTest**  
  Opérateurs Rx: filter  
 
-# Exercice 3 -  combinaison cotations / taux de changes
+# Exercice 4 -  combinaison cotations / taux de changes
  Le but maintenant est de faire en sorte que les cotations transmises par la classe **StockServer** soient exprimées 
  en euros, et non en dollars.  
  A chaque cotation du flux stockEventStreamClient.readServerSideEvents(), il faut appliquer un taux de change venant du 
  flux forexEventStreamClient.readServerSideEvents().  
+ Attention, il ne faut pas générer plus de cotations sur une stock que ce que l'on a en entrée. En gros si le taux 
+ de change fluctue alors que le cours de l'action en dollar ne varie pas, il ne faut pas générer d'événement.
+ 
  Test d'acceptance: Test 3 dans **StockServerTest**  
  Opérateurs Rx: map, take & flatMap !!  
 
-# Exercice 4 -  gestion d'état et calcul d'un prix vwap
+# Exercice 5 -  gestion d'état et calcul d'un prix vwap
  On va maintenant consommer un flux de transactions pour calculer pour un titre, le volume d'actions échangées 
  ainsi qu'un prix vwap, c'est à dire une moyenne pondérée du prix.  
  En gros si 10 actions google ont été vendu à 7000$ puis 20 actions à 15200$, alors le prix vwap est égale à 
@@ -31,7 +40,7 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
  Test d'acceptance: Test 4 et Test 5 dans **VwapServerTest**  
  Opérateurs Rx: map, filter, skip & scan 
 
-# Exercice 5 -  échantillonage
+# Exercice 6 -  échantillonage
  Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface 
  web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de 
  messages envoyés sur le web.  

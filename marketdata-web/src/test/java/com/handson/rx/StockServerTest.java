@@ -43,7 +43,7 @@ public class StockServerTest {
     }
 
     /**
-     * Test 2
+     * Test 3
      */
     @Test
     public void should_filter_quotes_for_requested_stock() {
@@ -63,7 +63,7 @@ public class StockServerTest {
     }
 
     /**
-     * Test 3
+     * Test 4
      */
     @Test
     public void should_generate_one_quote_in_euro_for_one_quote_in_dollar() {
@@ -83,7 +83,7 @@ public class StockServerTest {
     }
 
     /**
-     * Test 7
+     * Test 8
      */
     @Test
     public void should_generate_quotes_in_euro_using_latest_known_foreign_exchange_rate() {
