@@ -18,6 +18,12 @@ public class Vwap {
         this.volume = volume;
     }
 
+    public Vwap addTrade(Trade t) {
+        double volume = this.volume + t.quantity;
+        double vwap = (this.volume * this.vwap + t.nominal) / volume;
+        return new Vwap(t.code, vwap, volume);
+    }
+
     public static Vwap fromJson(String input) {
         return new Gson().fromJson(input, Vwap.class);
     }

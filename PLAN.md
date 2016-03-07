@@ -2,51 +2,54 @@
 Depuis votre IDE, lancer la classe Market puis la classe Application avant d'afficher la page index.html dans un navigateur.
 
 # Exercice 1 -  transformation simple
- Le but est de rendre opérationnel la classe **ForexServer** pour quelle propage les taux de change euro / dollar 
+ Le but est de rendre opérationnel la classe **ForexServer** pour quelle propage les taux de change euro / dollar
  sous forme de **Double** provenant du service ForexProvider (via forexEventStreamClient.readServerSideEvents()).  
  La méthode **Quote::fromJson** pourra être utilisée pour parser les données brutes obtenues et créer des DTOs **Quote**.  
  Test d'acceptance: Test 1 dans **ForexServerTest**  
  Opérateurs Rx: map  
- 
+
  # Exercice 2 - on ne prend que le premier !
- Toujours dans la classe **ForexServer**, il faut maintenant modifier le code pour qu'à chaque souscription on ne 
+ Toujours dans la classe **ForexServer**, il faut maintenant modifier le code pour qu'à chaque souscription on ne
  renvoie qu'une seule valeur.
  Test d'acceptance: Test 2 dans **ForexServerTest**  
  Opérateurs Rx: take  
- 
+
 
 # Exercice 3 -  premier filtre
- Dans la classe **StockServer**, faire en sorte de prendre en compte le paramètre HTTP "STOCK" pour filtrer les 
- cotations et ne pas tout envoyer au navigateur. 
- Test d'acceptance: Test 2 dans **StockServerTest**  
+ Dans la classe **StockServer**, faire en sorte de prendre en compte le paramètre HTTP "STOCK" pour filtrer les
+ cotations et ne pas tout envoyer au navigateur.
+ Test d'acceptance: Test 3 dans **StockServerTest**  
  Opérateurs Rx: filter  
 
 # Exercice 4 -  combinaison cotations / taux de changes
- Le but maintenant est de faire en sorte que les cotations transmises par la classe **StockServer** soient exprimées 
+ Le but maintenant est de faire en sorte que les cotations transmises par la classe **StockServer** soient exprimées
  en euros, et non en dollars.  
- A chaque cotation du flux stockEventStreamClient.readServerSideEvents(), il faut appliquer un taux de change venant du 
+ A chaque cotation du flux stockEventStreamClient.readServerSideEvents(), il faut appliquer un taux de change venant du
  flux forexEventStreamClient.readServerSideEvents().  
- Attention, il ne faut pas générer plus de cotations sur une stock que ce que l'on a en entrée. En gros si le taux 
+ Attention, il ne faut pas générer plus de cotations sur une stock que ce que l'on a en entrée. En gros si le taux
  de change fluctue alors que le cours de l'action en dollar ne varie pas, il ne faut pas générer d'événement.
- 
- Test d'acceptance: Test 3 dans **StockServerTest**  
+
+ Test d'acceptance: Test 4 dans **StockServerTest**  
  Opérateurs Rx: map, take & flatMap !!  
 
 # Exercice 5 -  gestion d'état et calcul d'un prix vwap
- On va maintenant consommer un flux de transactions pour calculer pour un titre, le volume d'actions échangées 
+ On va maintenant consommer un flux de transactions pour calculer pour un titre, le volume d'actions échangées
  ainsi qu'un prix vwap, c'est à dire une moyenne pondérée du prix.  
- En gros si 10 actions google ont été vendu à 7000$ puis 20 actions à 15200$, alors le prix vwap est égale à 
- (7000 + 15200) / (10 + 20) = 740$  
- Test d'acceptance: Test 4 et Test 5 dans **VwapServerTest**  
- Opérateurs Rx: map, filter, skip & scan 
+ En gros si 10 actions google ont été vendu à 7000$ puis 20 actions à 15200$, alors le prix vwap est égale à
+ (7000 + 15200) / (10 + 20) = 740$    
+Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**
+
+
+ Test d'acceptance: Test 5 et Test 6 dans **VwapServerTest**  
+ Opérateurs Rx: map, filter, skip & scan
 
 # Exercice 6 -  échantillonage
- Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface 
- web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de 
+ Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface
+ web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de
  messages envoyés sur le web.  
  Attention il y a un piège, pour que le test passe il faut penser au scheduler...
- Test d'acceptance: Test 6  
- Opérateurs Rx: sample 
+ Test d'acceptance: Test 7  
+ Opérateurs Rx: sample
 
 TODO - idées pour la suite    
 Typescript : tendance rouge/vert si ça monte ou ça descend  (skip, zip)
@@ -55,6 +58,3 @@ Typescript : plus grosse progression / baisse (combineLatest)
 Java: cache stock / forex  
 Typescript: partage d'un flux sse avec publish/refCount    
 Typescript: gestion des reconnections avec retryWhen  
-
-
-

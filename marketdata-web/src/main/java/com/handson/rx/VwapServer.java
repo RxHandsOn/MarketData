@@ -59,11 +59,8 @@ public class VwapServer extends RxNettyEventServer<Vwap> {
                 .readServerSideEvents()
                 .map(Trade::fromJson)
                 .filter(t -> t.code.equals(stockCode))
-                .scan(new Vwap(), (v, t) -> {
-                    double volume = v.volume + t.quantity;
-                    double vwap = (v.volume * v.vwap + t.nominal) / volume;
-                    return new Vwap(t.code, vwap, volume);
-                }).skip(1)
+                .scan(new Vwap(), (v, t) -> v.addTrade(t))
+                .skip(1)
                 .sample(1, TimeUnit.SECONDS, scheduler);
     }
 }
