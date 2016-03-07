@@ -8,7 +8,7 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
  Test d'acceptance: Test 1 dans **ForexServerTest**  
  Opérateurs Rx: map  
 
- # Exercice 2 - on ne prend que le premier !
+# Exercice 2 - on ne prend que le premier !
  Toujours dans la classe **ForexServer**, il faut maintenant modifier le code pour qu'à chaque souscription on ne
  renvoie qu'une seule valeur.
  Test d'acceptance: Test 2 dans **ForexServerTest**  
