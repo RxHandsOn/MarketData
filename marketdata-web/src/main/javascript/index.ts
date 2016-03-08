@@ -48,13 +48,11 @@ const yRange = d3.scale.linear().range([height - margins.bottom, margins.top])
 const xAxis = d3.svg.axis()
     .scale(xRange)
     .tickSize(5)
-    .tickSubdivide(true)
     .tickFormat(d3.time.format("%X"));
 const yAxis = d3.svg.axis()
     .scale(yRange)
     .tickSize(5)
-    .orient("left")
-    .tickSubdivide(true);
+    .orient("left");
 
 const xAxisElement = svg.append("g")
     .attr("class", "x axis")
@@ -87,8 +85,8 @@ yAxisElement.append("text")
 
 // Define our line series
 const lineFunc = d3.svg.line()
-    .x(function(d) { return xRange(d.x); })
-    .y(function(d) { return yRange(d.y); })
+    .x((d:[number, number]) => xRange(new Date(d[0])))
+    .y((d:[number, number]) => yRange(d[1]))
     .interpolate("linear");
 
 svg.append("defs").append("clipPath")
