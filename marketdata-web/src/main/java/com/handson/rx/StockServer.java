@@ -26,14 +26,14 @@ public class StockServer extends RxNettyEventServer<Quote> {
     protected Observable<Quote> getEvents(HttpRequest request) {
 
         /* Etape initiale
-        String stockCode = request.getParameter("STOCK");
+        String stockCode = request.getParameter("code");
         return stockClient
             .readServerSideEvents()
             .map(Quote::fromJson);
         */
 
         /* Etape 1 : filtre sur code de la stock
-        String stockCode = request.getParameter("STOCK");
+        String stockCode = request.getParameter("code");
 
         return stockEventStreamClient
                 .readServerSideEvents()
@@ -43,7 +43,7 @@ public class StockServer extends RxNettyEventServer<Quote> {
 
 
         /* Etape 2 : application du forex
-        String stockCode = request.getParameter("STOCK");
+        String stockCode = request.getParameter("code");
 
         Observable<Quote> quotes = stockEventStreamClient
                 .readServerSideEvents()
@@ -62,7 +62,7 @@ public class StockServer extends RxNettyEventServer<Quote> {
         */
 
         /* Etape 3 : application forex avec mise en cache */
-        String stockCode = request.getParameter("STOCK");
+        String stockCode = request.getParameter("code");
 
         Observable<Quote> quotes = stockEventStreamClient
                 .readServerSideEvents()

@@ -33,7 +33,7 @@ public class StockQuoteProvider extends RxNettyEventBroadcaster<Quote> {
         Observable<Quote> googleStock
                 = new RandomSequenceGenerator(GOOGLE_MIN, GOOGLE_MAX)
                     .create(200, TimeUnit.MILLISECONDS)
-                    .map(s -> new Quote("GOOGLE", s));
+                    .map(s -> new Quote("GOOGL", s));
         Observable<Quote> ibmStock
                 = new RandomSequenceGenerator(IBM_MIN, IBM_MAX)
                     .create(705, TimeUnit.MILLISECONDS)
@@ -45,7 +45,7 @@ public class StockQuoteProvider extends RxNettyEventBroadcaster<Quote> {
         Observable<Quote> appleStock
                 = new RandomSequenceGenerator(APPLE_MIN, APPLE_MAX)
                     .create(253, TimeUnit.MILLISECONDS)
-                    .map(s -> new Quote("APPLE", s));
+                    .map(s -> new Quote("AAPL", s));
         Observable<Quote> microsoftStock
                 = new RandomSequenceGenerator(MICROSOFT_MIN, MICROSOFT_MAX)
                     .create(407, TimeUnit.MILLISECONDS)

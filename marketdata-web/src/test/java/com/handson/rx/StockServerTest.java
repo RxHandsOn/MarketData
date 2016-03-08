@@ -49,17 +49,17 @@ public class StockServerTest {
     public void should_filter_quotes_for_requested_stock() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("STOCK", "GOOGLE");
+        HttpRequest request = createRequest("code", "GOOGL");
         stockServer.getEvents(request).subscribe(testSubscriber);
         // when
-        quoteSourceSubject.onNext(new Quote("GOOGLE", 705.8673).toJson());
+        quoteSourceSubject.onNext(new Quote("GOOGL", 705.8673).toJson());
         forexSourceSubject.onNext(new Quote("EUR/USD", 1).toJson());
         quoteSourceSubject.onNext(new Quote("APPLE", 98.18).toJson());
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
         // then
         List<Quote> events = testSubscriber.getOnNextEvents();
         assertThat(events).hasSize(1);
-        assertThat(events.get(0).code).isEqualTo("GOOGLE");
+        assertThat(events.get(0).code).isEqualTo("GOOGL");
     }
 
     /**
@@ -69,10 +69,10 @@ public class StockServerTest {
     public void should_generate_one_quote_in_euro_for_one_quote_in_dollar() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("STOCK", "GOOGLE");
+        HttpRequest request = createRequest("code", "GOOGL");
         stockServer.getEvents(request).subscribe(testSubscriber);
         // when
-        quoteSourceSubject.onNext(new Quote("GOOGLE", 1300).toJson());
+        quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson());
         forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson());
         forexSourceSubject.onNext(new Quote("EUR/USD", 1.4).toJson());
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
@@ -83,17 +83,17 @@ public class StockServerTest {
     }
 
     /**
-     * Test 8
+     * Test 7
      */
     @Test
     public void should_generate_quotes_in_euro_using_latest_known_foreign_exchange_rate() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("STOCK", "GOOGLE");
+        HttpRequest request = createRequest("code", "GOOGL");
         stockServer.getEvents(request).subscribe(testSubscriber);
         // when
         forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson(), 90);
-        quoteSourceSubject.onNext(new Quote("GOOGLE", 1300).toJson(), 100);
+        quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson(), 100);
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
         // then
         List<Quote> events = testSubscriber.getOnNextEvents();

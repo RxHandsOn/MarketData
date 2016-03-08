@@ -45,17 +45,17 @@ public class VwapServerTest {
     public void should_generate_one_google_vwap_event_when_a_google_trade_is_done() {
         // given
         TestSubscriber<Vwap> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("STOCK", "GOOGLE");
+        HttpRequest request = createRequest("code", "GOOGL");
         vwapServer.getEvents(request).subscribe(testSubscriber);
         // when
-        tradeSourceSubject.onNext(new Trade("GOOGLE", 10, 7058.673).toJson());
+        tradeSourceSubject.onNext(new Trade("GOOGL", 10, 7058.673).toJson());
         tradeSourceSubject.onNext(new Trade("APPLE", 10, 981.8).toJson());
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
         // then
         List<Vwap> events = testSubscriber.getOnNextEvents();
         assertThat(events).hasSize(1);
         Vwap vwap = events.get(0);
-        assertThat(vwap.code).isEqualTo("GOOGLE");
+        assertThat(vwap.code).isEqualTo("GOOGL");
         assertThat(vwap.vwap).isEqualTo(705.8673);
         assertThat(vwap.volume).isEqualTo(10);
     }
@@ -67,17 +67,17 @@ public class VwapServerTest {
     public void should_add_all_google_trades_to_generate_vwap_events() {
         // given
         TestSubscriber<Vwap> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("STOCK", "GOOGLE");
+        HttpRequest request = createRequest("code", "GOOGL");
         vwapServer.getEvents(request).subscribe(testSubscriber);
         // when
-        tradeSourceSubject.onNext(new Trade("GOOGLE", 10, 7058).toJson());
-        tradeSourceSubject.onNext(new Trade("GOOGLE", 10, 7062).toJson());
+        tradeSourceSubject.onNext(new Trade("GOOGL", 10, 7058).toJson());
+        tradeSourceSubject.onNext(new Trade("GOOGL", 10, 7062).toJson());
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
         // then
         List<Vwap> events = testSubscriber.getOnNextEvents();
         assertThat(events).isNotEmpty();
         Vwap vwap = events.get(events.size()-1);
-        assertThat(vwap.code).isEqualTo("GOOGLE");
+        assertThat(vwap.code).isEqualTo("GOOGL");
         assertThat(vwap.vwap).isEqualTo(706);
         assertThat(vwap.volume).isEqualTo(20);
     }
@@ -89,18 +89,18 @@ public class VwapServerTest {
     public void should_generate_at_most_one_event_per_sec() {
         // given
         TestSubscriber<Vwap> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("STOCK", "GOOGLE");
+        HttpRequest request = createRequest("code", "GOOGL");
         vwapServer.getEvents(request).subscribe(testSubscriber);
         // when
         for (int i = 1; i < 11; i++) {
-            tradeSourceSubject.onNext(new Trade("GOOGLE", 10, 7000).toJson(), i * 50);
+            tradeSourceSubject.onNext(new Trade("GOOGL", 10, 7000).toJson(), i * 50);
         }
         scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
         // then
         List<Vwap> events = testSubscriber.getOnNextEvents();
         assertThat(events).hasSize(1);
         Vwap vwap = events.get(0);
-        assertThat(vwap.code).isEqualTo("GOOGLE");
+        assertThat(vwap.code).isEqualTo("GOOGL");
         assertThat(vwap.vwap).isEqualTo(700);
         assertThat(vwap.volume).isEqualTo(100);
     }
