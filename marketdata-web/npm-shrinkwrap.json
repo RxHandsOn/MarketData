@@ -240,6 +240,11 @@
       "from": "cryptiles@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/cryptiles/-/cryptiles-2.0.5.tgz"
     },
+    "d3": {
+      "version": "3.5.16",
+      "from": "d3@latest",
+      "resolved": "https://registry.npmjs.org/d3/-/d3-3.5.16.tgz"
+    },
     "dashdash": {
       "version": "1.13.0",
       "from": "dashdash@>=1.10.1 <2.0.0",
