@@ -3,12 +3,12 @@ package com.handson.market;
 
 import com.handson.dto.Stock;
 import com.handson.infra.HttpRequest;
-import com.handson.infra.RxNettyReqReplyServer;
+import com.handson.infra.RxNettyRequestReplyServer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class StaticDataProvider extends RxNettyReqReplyServer {
+public class StaticDataProvider extends RxNettyRequestReplyServer {
 
     private final Map<String, Stock> stocks;
 

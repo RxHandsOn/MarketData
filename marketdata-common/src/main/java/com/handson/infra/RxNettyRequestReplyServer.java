@@ -5,13 +5,13 @@ import io.reactivex.netty.RxNetty;
 import io.reactivex.netty.protocol.http.server.HttpServer;
 
 
-public abstract class RxNettyReqReplyServer {
+public abstract class RxNettyRequestReplyServer {
 
     private final int port;
 
     private final String paramName;
 
-    public RxNettyReqReplyServer(int port, String paramName) {
+    public RxNettyRequestReplyServer(int port, String paramName) {
         this.port = port;
         this.paramName = paramName;
     }
