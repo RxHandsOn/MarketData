@@ -7,6 +7,7 @@
   "scripts": {
     "clean": "rm -vfr node_modules output typings",
     "postinstall": "typings install",
+    "lockDeps": "npm shrinkwrap --dev",
     "pretest": "tsc",
     "test": "mocha output/test/javascript",
     "start": "npm test && http-server -o"
