@@ -16,8 +16,8 @@ public class Application {
 
         EventStreamClient stockEventStreamClient = new RxNettyEventEventStreamClient(8097);
 
-        StockServer stockServer = new StockServer(8081, stockEventStreamClient, forexEventStreamClient);
-        stockServer.createServer().start();
+        StockQuoteServer stockQuoteServer = new StockQuoteServer(8081, stockEventStreamClient, forexEventStreamClient);
+        stockQuoteServer.createServer().start();
 
         EventStreamClient tradeEventStreamClient = new RxNettyEventEventStreamClient(8098);
         VwapServer vwapServer = new VwapServer(8082, tradeEventStreamClient, Schedulers.immediate());

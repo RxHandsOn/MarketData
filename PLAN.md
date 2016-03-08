@@ -16,20 +16,20 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
 
 
 # Exercice 3 -  premier filtre
- Dans la classe **StockServer**, faire en sorte de prendre en compte le paramètre HTTP "STOCK" pour filtrer les
+ Dans la classe **StockQuoteServer**, faire en sorte de prendre en compte le paramètre HTTP "STOCK" pour filtrer les
  cotations et ne pas tout envoyer au navigateur.
- Test d'acceptance: Test 3 dans **StockServerTest**  
+ Test d'acceptance: Test 3 dans **StockQuoteServerTest**  
  Opérateurs Rx: filter  
 
 # Exercice 4 -  combinaison cotations / taux de changes
- Le but maintenant est de faire en sorte que les cotations transmises par la classe **StockServer** soient exprimées
+ Le but maintenant est de faire en sorte que les cotations transmises par la classe **StockQuoteServer** soient exprimées
  en euros, et non en dollars.  
  A chaque cotation du flux stockEventStreamClient.readServerSideEvents(), il faut appliquer un taux de change venant du
  flux forexEventStreamClient.readServerSideEvents().  
  Attention, il ne faut pas générer plus de cotations sur une stock que ce que l'on a en entrée. En gros si le taux
  de change fluctue alors que le cours de l'action en dollar ne varie pas, il ne faut pas générer d'événement.
 
- Test d'acceptance: Test 4 dans **StockServerTest**  
+ Test d'acceptance: Test 4 dans **StockQuoteServerTest**  
  Opérateurs Rx: map, take & flatMap !!  
 
 # Exercice 5 -  gestion d'état et calcul d'un prix vwap

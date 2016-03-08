@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 
-public class StockServer extends RxNettyEventServer<Quote> {
+public class StockQuoteServer extends RxNettyEventServer<Quote> {
 
     private final EventStreamClient stockEventStreamClient;
     private final EventStreamClient forexEventStreamClient;
 
-    public StockServer(int port, EventStreamClient stockEventStreamClient, EventStreamClient forexEventStreamClient) {
+    public StockQuoteServer(int port, EventStreamClient stockEventStreamClient, EventStreamClient forexEventStreamClient) {
         super(port);
         this.stockEventStreamClient = stockEventStreamClient;
         this.forexEventStreamClient = forexEventStreamClient;

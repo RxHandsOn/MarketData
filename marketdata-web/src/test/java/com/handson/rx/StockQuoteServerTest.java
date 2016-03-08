@@ -14,19 +14,18 @@ import rx.subjects.TestSubject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class StockServerTest {
+public class StockQuoteServerTest {
 
     private EventStreamClient stockEventStreamClient;
     private EventStreamClient forexEventStreamClient;
     private TestScheduler scheduler;
-    private StockServer stockServer;
+    private StockQuoteServer stockQuoteServer;
     private TestSubject<String> quoteSourceSubject;
     private TestSubject<String> forexSourceSubject;
 
@@ -35,7 +34,7 @@ public class StockServerTest {
         stockEventStreamClient = mock(EventStreamClient.class);
         forexEventStreamClient = mock(EventStreamClient.class);
         scheduler = Schedulers.test();
-        stockServer = new StockServer(42, stockEventStreamClient, forexEventStreamClient);
+        stockQuoteServer = new StockQuoteServer(42, stockEventStreamClient, forexEventStreamClient);
         quoteSourceSubject = TestSubject.create(scheduler);
         when(stockEventStreamClient.readServerSideEvents()).thenReturn(quoteSourceSubject);
         forexSourceSubject = TestSubject.create(scheduler);
@@ -50,7 +49,7 @@ public class StockServerTest {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
         HttpRequest request = createRequest("code", "GOOGL");
-        stockServer.getEvents(request).subscribe(testSubscriber);
+        stockQuoteServer.getEvents(request).subscribe(testSubscriber);
         // when
         quoteSourceSubject.onNext(new Quote("GOOGL", 705.8673).toJson());
         forexSourceSubject.onNext(new Quote("EUR/USD", 1).toJson());
@@ -70,7 +69,7 @@ public class StockServerTest {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
         HttpRequest request = createRequest("code", "GOOGL");
-        stockServer.getEvents(request).subscribe(testSubscriber);
+        stockQuoteServer.getEvents(request).subscribe(testSubscriber);
         // when
         quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson());
         forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson());
@@ -90,7 +89,7 @@ public class StockServerTest {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
         HttpRequest request = createRequest("code", "GOOGL");
-        stockServer.getEvents(request).subscribe(testSubscriber);
+        stockQuoteServer.getEvents(request).subscribe(testSubscriber);
         // when
         forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson(), 90);
         quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson(), 100);
