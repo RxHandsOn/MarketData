@@ -21,6 +21,9 @@ public class StaticDataProvider extends RxNettyRequestReplyServer {
         stocks.put("AAPL", new Stock("AAPL", "Apple Inc.", "NASDAQ"));
         stocks.put("HPQ", new Stock("HPQ", "HP Inc", "NYSE"));
         stocks.put("MSFT", new Stock("MSFT", "Microsoft Corporation", "NASDAQ"));
+        stocks.put("CRM", new Stock("CRM", "salesforce.com, inc.", "NYSE"));
+        stocks.put("ADBE", new Stock("ADBE", "Adobe Systems Incorporated", "NASDAQ"));
+        stocks.put("ORCL", new Stock("ORCL", "Oracle Corporation", "NYSE"));
 
     }
 

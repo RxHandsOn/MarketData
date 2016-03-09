@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 public class StockQuoteServerTest {
 
-    private EventStreamClient stockEventStreamClient;
+    private EventStreamClient stockQuoteEventStreamClient;
     private EventStreamClient forexEventStreamClient;
     private TestScheduler scheduler;
     private StockQuoteServer stockQuoteServer;
@@ -31,12 +31,12 @@ public class StockQuoteServerTest {
 
     @Before
     public void setUpServer() {
-        stockEventStreamClient = mock(EventStreamClient.class);
+        stockQuoteEventStreamClient = mock(EventStreamClient.class);
         forexEventStreamClient = mock(EventStreamClient.class);
         scheduler = Schedulers.test();
-        stockQuoteServer = new StockQuoteServer(42, stockEventStreamClient, forexEventStreamClient);
+        stockQuoteServer = new StockQuoteServer(42, stockQuoteEventStreamClient, forexEventStreamClient);
         quoteSourceSubject = TestSubject.create(scheduler);
-        when(stockEventStreamClient.readServerSideEvents()).thenReturn(quoteSourceSubject);
+        when(stockQuoteEventStreamClient.readServerSideEvents()).thenReturn(quoteSourceSubject);
         forexSourceSubject = TestSubject.create(scheduler);
         when(forexEventStreamClient.readServerSideEvents()).thenReturn(forexSourceSubject);
     }

@@ -7,18 +7,15 @@ import com.handson.infra.RxNettyEventServer;
 import rx.Observable;
 import rx.subjects.ReplaySubject;
 
-import java.util.List;
-import java.util.Map;
-
 
 public class StockQuoteServer extends RxNettyEventServer<Quote> {
 
-    private final EventStreamClient stockEventStreamClient;
+    private final EventStreamClient stockQuoteEventStreamClient;
     private final EventStreamClient forexEventStreamClient;
 
-    public StockQuoteServer(int port, EventStreamClient stockEventStreamClient, EventStreamClient forexEventStreamClient) {
+    public StockQuoteServer(int port, EventStreamClient stockQuoteEventStreamClient, EventStreamClient forexEventStreamClient) {
         super(port);
-        this.stockEventStreamClient = stockEventStreamClient;
+        this.stockQuoteEventStreamClient = stockQuoteEventStreamClient;
         this.forexEventStreamClient = forexEventStreamClient;
     }
 
@@ -35,7 +32,7 @@ public class StockQuoteServer extends RxNettyEventServer<Quote> {
         /* Etape 1 : filtre sur code de la stock
         String stockCode = request.getParameter("code");
 
-        return stockEventStreamClient
+        return stockQuoteEventStreamClient
                 .readServerSideEvents()
                 .map(Quote::fromJson)
                 .filter(q -> q.code.equals(stockCode));
@@ -45,7 +42,7 @@ public class StockQuoteServer extends RxNettyEventServer<Quote> {
         /* Etape 2 : application du forex
         String stockCode = request.getParameter("code");
 
-        Observable<Quote> quotes = stockEventStreamClient
+        Observable<Quote> quotes = stockQuoteEventStreamClient
                 .readServerSideEvents()
                 .map(Quote::fromJson)
                 .filter(q -> q.code.equals(stockCode))
@@ -64,7 +61,7 @@ public class StockQuoteServer extends RxNettyEventServer<Quote> {
         /* Etape 3 : application forex avec mise en cache */
         String stockCode = request.getParameter("code");
 
-        Observable<Quote> quotes = stockEventStreamClient
+        Observable<Quote> quotes = stockQuoteEventStreamClient
                 .readServerSideEvents()
                 .map(Quote::fromJson)
                 .filter(q -> q.code.equals(stockCode))
