@@ -14,14 +14,28 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
  Test d'acceptance: Test 2 dans **ForexServerTest**  
  Opérateurs Rx: take  
 
-
 # Exercice 3 -  premier filtre
  Dans la classe **StockQuoteServer**, faire en sorte de prendre en compte le paramètre HTTP "STOCK" pour filtrer les
  cotations et ne pas tout envoyer au navigateur.
  Test d'acceptance: Test 3 dans **StockQuoteServerTest**  
  Opérateurs Rx: filter  
 
-# Exercice 4 -  combinaison cotations / taux de changes
+# Exercice 4 -  première combinaison avec flatmap
+C'est bien de pouvoir filtrer, faut-il encore savoir ce que l'on a sous la main... L'idée de cet exercice est de récupérer
+les informations sur les stocks qui sont actives, celles pour lesquelles il y a eu au moins une cotation depuis la souscription.  
+Dans la classe **StockServer**, pour chaque cotation, venant de **quoteEventStreamClient.readServerSideEvents()**, demander à partir du code de la cotation les infos sur la stock correspondante à l'aide de **stockClient.request()**.  
+**Quote::fromJson** et **Stock::fromJson** pourront être utilisées pour parser les données brutes et créer des DTOs.  
+Test d'acceptance: Test 4 dans **StockServerTest**  
+Opérateurs Rx: map & flatmap   
+
+# Exercice 5 - pas de doublons
+On reprend l'exercice précédent et cette fois-ci on utilise l'opérateur distinct pour ne pas envoyer plusieurs fois les informations
+sur une même stock.  
+Test d'acceptance: Test 5 dans **StockServerTest**  
+Opérateurs Rx: distinct & map
+
+
+# Exercice 6 -  combinaison cotations / taux de changes
  Le but maintenant est de faire en sorte que les cotations transmises par la classe **StockQuoteServer** soient exprimées
  en euros, et non en dollars.  
  A chaque cotation du flux stockEventStreamClient.readServerSideEvents(), il faut appliquer un taux de change venant du
@@ -29,10 +43,10 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
  Attention, il ne faut pas générer plus de cotations sur une stock que ce que l'on a en entrée. En gros si le taux
  de change fluctue alors que le cours de l'action en dollar ne varie pas, il ne faut pas générer d'événement.
 
- Test d'acceptance: Test 4 dans **StockQuoteServerTest**  
+ Test d'acceptance: Test 6 dans **StockQuoteServerTest**  
  Opérateurs Rx: map, take & flatMap !!  
 
-# Exercice 5 -  gestion d'état et calcul d'un prix vwap
+# Exercice 7 -  gestion d'état et calcul d'un prix vwap
  On va maintenant consommer un flux de transactions pour calculer pour un titre, le volume d'actions échangées
  ainsi qu'un prix vwap, c'est à dire une moyenne pondérée du prix.  
  En gros si 10 actions google ont été vendu à 7000$ puis 20 actions à 15200$, alors le prix vwap est égale à
@@ -40,16 +54,18 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
 Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**
 
 
- Test d'acceptance: Test 5 et Test 6 dans **VwapServerTest**  
+ Test d'acceptance: Test 7 et Test 8 dans **VwapServerTest**  
  Opérateurs Rx: map, filter, skip & scan
 
-# Exercice 6 -  échantillonage
+# Exercice 8 -  échantillonage
  Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface
  web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de
  messages envoyés sur le web.  
  Attention il y a un piège, pour que le test passe il faut penser au scheduler...
- Test d'acceptance: Test 7  
+ Test d'acceptance: Test 9  
  Opérateurs Rx: sample
+
+# Exercice 9 - TODO cache "last value" sur le forex
 
 TODO - idées pour la suite    
 Typescript : tendance rouge/vert si ça monte ou ça descend  (skip, zip)

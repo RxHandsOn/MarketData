@@ -53,6 +53,9 @@ public class StockServerTest {
                 );
     }
 
+    /**
+     * Test 4
+     */
     @Test
     public void should_send_a_stock_message_when_receiving_a_quote() {
         // given
@@ -67,6 +70,9 @@ public class StockServerTest {
         assertThat(events.get(0).companyName).isEqualTo("Alphabet Inc");
     }
 
+    /**
+     * test 5
+     */
     @Test
     public void should_send_a_stock_message_only_once_when_receiving_two_quotes_for_the_same_stock() {
         // given

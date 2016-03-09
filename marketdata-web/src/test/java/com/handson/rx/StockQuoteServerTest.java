@@ -62,7 +62,7 @@ public class StockQuoteServerTest {
     }
 
     /**
-     * Test 4
+     * Test 6
      */
     @Test
     public void should_generate_one_quote_in_euro_for_one_quote_in_dollar() {
@@ -82,7 +82,7 @@ public class StockQuoteServerTest {
     }
 
     /**
-     * Test 7
+     * Test 10
      */
     @Test
     public void should_generate_quotes_in_euro_using_latest_known_foreign_exchange_rate() {
