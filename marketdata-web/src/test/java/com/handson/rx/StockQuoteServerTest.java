@@ -91,6 +91,7 @@ public class StockQuoteServerTest {
         HttpRequest request = createRequest("code", "GOOGL");
         stockQuoteServer.getEvents(request).subscribe(testSubscriber);
         // when
+        forexSourceSubject.onNext(new Quote("EUR/USD", 1.2).toJson(), 80);
         forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson(), 90);
         quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson(), 100);
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);

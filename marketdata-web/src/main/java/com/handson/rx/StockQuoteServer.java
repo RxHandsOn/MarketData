@@ -5,6 +5,7 @@ import com.handson.infra.EventStreamClient;
 import com.handson.infra.HttpRequest;
 import com.handson.infra.RxNettyEventServer;
 import rx.Observable;
+import rx.subjects.BehaviorSubject;
 import rx.subjects.ReplaySubject;
 
 
@@ -72,7 +73,7 @@ public class StockQuoteServer extends RxNettyEventServer<Quote> {
                 .map(Quote::fromJson)
                 .doOnNext(System.out::println);
 
-        ReplaySubject<Quote> eurUsdCached = ReplaySubject.create();
+        BehaviorSubject<Quote> eurUsdCached = BehaviorSubject.create();
         eurUsd.subscribe(eurUsdCached);
 
         return quotes.flatMap(q ->
