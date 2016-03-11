@@ -52,25 +52,29 @@ Opérateurs Rx: distinct & map
  En gros si 10 actions google ont été vendu à 7000$ puis 20 actions à 15200$, alors le prix vwap est égale à
  (7000 + 15200) / (10 + 20) = 740$    
 Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**
-
-
- Test d'acceptance: Test 7 et Test 8 dans **VwapServerTest**  
- Opérateurs Rx: map, filter, skip & scan
+Test d'acceptance: Test 7 et Test 8 dans **VwapServerTest**  
+Opérateurs Rx: map, filter, skip & scan
 
 # Exercice 8 -  échantillonage
  Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface
  web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de
  messages envoyés sur le web.  
  Attention il y a un piège, pour que le test passe il faut penser au scheduler...
- Test d'acceptance: Test 9  
+ Test d'acceptance: Test 9 dans **VwapServerTest**
  Opérateurs Rx: sample
 
-# Exercice 9 - TODO cache "last value" sur le forex
+
+TODO : exos javascript avant
+
+# Exercice 9 - Cache "last value" sur le forex
+On va maintenant apporter une petite modification à la classe **StockQuoteServerTest**. Quand une cotation sur une stock arrive,
+on veut maintenant que le dernier cours de change euros/dollars connu soit utilisé. Cela veut dire que quand une cotation sur une stock en dollar arrive, pas besoin d'attendre de recevoir une nouvelle cotation EUR/USD, il suffit d'utiliser la dernière valeur connu. Pour pouvoir répondre à ce nouveau besoin il est fortement recommandé d'utiliser la classe **BehaviorSubject**.   
+Test d'acceptance: Test 10 dans **StockQuoteServerTest**
+
 
 TODO - idées pour la suite    
 Typescript : tendance rouge/vert si ça monte ou ça descend  (skip, zip)
 Typescript : moyenne glissante (window + flatmap)  
 Typescript : plus grosse progression / baisse (combineLatest)
-Java: cache stock / forex  
 Typescript: partage d'un flux sse avec publish/refCount    
 Typescript: gestion des reconnections avec retryWhen  
