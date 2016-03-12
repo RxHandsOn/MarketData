@@ -6,6 +6,7 @@ import com.handson.infra.EventStreamClient;
 import com.handson.infra.HttpRequest;
 import org.junit.Before;
 import org.junit.Test;
+import rx.Subscription;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
@@ -99,6 +100,25 @@ public class StockQuoteServerTest {
         List<Quote> events = testSubscriber.getOnNextEvents();
         assertThat(events).hasSize(1);
         assertThat(events.get(0).quote).isEqualTo(1000);
+    }
+
+
+    /**
+     * Test 11
+     */
+    @Test
+    public void should_unsubscribe_to_forex_stream_when_unscribing_to_quote() {
+        // given
+        TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
+        HttpRequest request = createRequest("code", "GOOGL");
+        Subscription subscription = stockQuoteServer.getEvents(request).subscribe(testSubscriber);
+        forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson(), 90);
+        quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson(), 100);
+        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
+        // when
+        subscription.unsubscribe();
+        // then
+        assertThat(forexSourceSubject.hasObservers()).isFalse();
     }
 
     public HttpRequest createRequest(String name, String value) {
