@@ -6,7 +6,6 @@ import com.handson.infra.RandomSequenceGenerator;
 import com.handson.infra.RxNettyEventBroadcaster;
 import rx.Observable;
 
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class TradeProvider extends RxNettyEventBroadcaster<Trade> {
@@ -15,8 +14,8 @@ public class TradeProvider extends RxNettyEventBroadcaster<Trade> {
     private final StockQuoteProvider stockQuoteProvider;
 
 
-    public TradeProvider(int port, StockQuoteProvider stockQuoteProvider) {
-        super(port);
+    public TradeProvider(int port, boolean flaky, StockQuoteProvider stockQuoteProvider) {
+        super(port, flaky);
         this.stockQuoteProvider = stockQuoteProvider;
     }
 

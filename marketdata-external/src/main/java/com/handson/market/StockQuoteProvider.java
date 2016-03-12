@@ -24,8 +24,8 @@ public class StockQuoteProvider extends RxNettyEventBroadcaster<Quote> {
     private static final double MICROSOFT_MAX = 53;
 
 
-    public StockQuoteProvider(int port) {
-        super(port);
+    public StockQuoteProvider(int port, boolean flaky) {
+        super(port, flaky);
     }
 
     @Override
@@ -55,6 +55,6 @@ public class StockQuoteProvider extends RxNettyEventBroadcaster<Quote> {
     }
 
     public static void main(String[] args) {
-        new StockQuoteProvider(PORT).createServer().startAndWait();
+        new StockQuoteProvider(PORT, false).createServer().startAndWait();
     }
 }

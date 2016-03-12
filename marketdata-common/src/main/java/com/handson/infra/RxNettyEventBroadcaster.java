@@ -2,12 +2,8 @@ package com.handson.infra;
 
 import io.netty.buffer.ByteBuf;
 import io.reactivex.netty.protocol.http.server.HttpServer;
-import io.reactivex.netty.protocol.http.server.HttpServerRequest;
 import io.reactivex.netty.protocol.http.sse.ServerSentEvent;
 import rx.Observable;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Strongly inspired from RxNetty's examples
@@ -15,14 +11,21 @@ import java.util.Map;
 public abstract class RxNettyEventBroadcaster<T> extends RxNettyEventServer {
 
 
+    private final boolean flaky;
     private Observable<T> events;
 
-    public RxNettyEventBroadcaster(int port) {
+    public RxNettyEventBroadcaster(int port, boolean flaky) {
         super(port);
+        this.flaky = flaky;
     }
 
     public HttpServer<ByteBuf, ServerSentEvent> createServer() {
-        events  = initializeEventStream();
+        if (flaky) {
+            events = SubscriptionLimiter
+                        .limitSubscriptions(1,initializeEventStream());
+        } else {
+            events  = initializeEventStream();
+        }
         return super.createServer();
     }
 
