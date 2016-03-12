@@ -35,7 +35,7 @@ public class StockQuoteServerTest {
         stockQuoteEventStreamClient = mock(EventStreamClient.class);
         forexEventStreamClient = mock(EventStreamClient.class);
         scheduler = Schedulers.test();
-        stockQuoteServer = new StockQuoteServer(42, stockQuoteEventStreamClient, forexEventStreamClient);
+        stockQuoteServer = new StockQuoteServer(42, stockQuoteEventStreamClient, forexEventStreamClient, scheduler);
         quoteSourceSubject = TestSubject.create(scheduler);
         when(stockQuoteEventStreamClient.readServerSideEvents()).thenReturn(quoteSourceSubject);
         forexSourceSubject = TestSubject.create(scheduler);
@@ -119,6 +119,22 @@ public class StockQuoteServerTest {
         subscription.unsubscribe();
         // then
         assertThat(forexSourceSubject.hasObservers()).isFalse();
+    }
+
+    /**
+     * Test 12
+     */
+    @Test
+    public void should_send_an_error_when_no_forex_data_after_five_seconds() {
+        // given
+        TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
+        HttpRequest request = createRequest("code", "GOOGL");
+        stockQuoteServer.getEvents(request).subscribe(testSubscriber);
+        quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson(), 100);
+        // when
+        scheduler.advanceTimeBy(5100, TimeUnit.MILLISECONDS);
+        // then
+        assertThat(testSubscriber.getOnErrorEvents()).hasSize(1);
     }
 
     public HttpRequest createRequest(String name, String value) {
