@@ -34,8 +34,30 @@ sur une même stock.
 Test d'acceptance: Test 5 dans **StockServerTest**  
 Opérateurs Rx: distinct & map
 
+# Exercice 6 -  gestion d'état et calcul d'un prix vwap
+ On va maintenant consommer un flux de transactions pour calculer pour un titre, le volume d'actions échangées
+ ainsi qu'un prix vwap, c'est à dire une moyenne pondérée du prix.  
+ En gros si 10 actions google ont été vendu à 7000$ puis 20 actions à 15200$, alors le prix vwap est égale à
+ (7000 + 15200) / (10 + 20) = 740$    
+Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**
+Test d'acceptance: Test 7 et Test 8 dans **VwapServerTest**  
+Opérateurs Rx: map, filter, skip & scan
 
-# Exercice 6 -  combinaison cotations / taux de changes
+# Exercice 7 -  échantillonage
+ Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface
+ web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de
+ messages envoyés sur le web.  
+ Attention il y a un piège, pour que le test passe il faut penser au scheduler...
+ Test d'acceptance: Test 9 dans **VwapServerTest**
+ Opérateurs Rx: sample
+
+
+
+TODO : exos javascript avant
+
+
+
+# Exercice 8 -  combinaison cotations / taux de changes
  Le but maintenant est de faire en sorte que les cotations transmises par la classe **StockQuoteServer** soient exprimées
  en euros, et non en dollars.  
  A chaque cotation du flux stockEventStreamClient.readServerSideEvents(), il faut appliquer un taux de change venant du
@@ -46,31 +68,21 @@ Opérateurs Rx: distinct & map
  Test d'acceptance: Test 6 dans **StockQuoteServerTest**  
  Opérateurs Rx: map, take & flatMap !!  
 
-# Exercice 7 -  gestion d'état et calcul d'un prix vwap
- On va maintenant consommer un flux de transactions pour calculer pour un titre, le volume d'actions échangées
- ainsi qu'un prix vwap, c'est à dire une moyenne pondérée du prix.  
- En gros si 10 actions google ont été vendu à 7000$ puis 20 actions à 15200$, alors le prix vwap est égale à
- (7000 + 15200) / (10 + 20) = 740$    
-Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**
-Test d'acceptance: Test 7 et Test 8 dans **VwapServerTest**  
-Opérateurs Rx: map, filter, skip & scan
-
-# Exercice 8 -  échantillonage
- Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface
- web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de
- messages envoyés sur le web.  
- Attention il y a un piège, pour que le test passe il faut penser au scheduler...
- Test d'acceptance: Test 9 dans **VwapServerTest**
- Opérateurs Rx: sample
-
-
-TODO : exos javascript avant
-
 # Exercice 9 - Cache "last value" sur le forex
 On va maintenant apporter une petite modification à la classe **StockQuoteServerTest**. Quand une cotation sur une stock arrive,
 on veut maintenant que le dernier cours de change euros/dollars connu soit utilisé. Cela veut dire que quand une cotation sur une stock en dollar arrive, pas besoin d'attendre de recevoir une nouvelle cotation EUR/USD, il suffit d'utiliser la dernière valeur connu. Pour pouvoir répondre à ce nouveau besoin il est fortement recommandé d'utiliser la classe **BehaviorSubject**.   
 Test d'acceptance: Test 10 dans **StockQuoteServerTest**
 
+# Exercice 10 - Se désinscrire quand il faut...
+Vous avez peut-être un soucis avec le code écrit précédemment: vous continuez peut-être d'écouter le flux forex lorsque plus personne n'écoute le flux stock. L'idée ici est donc d'arrèter les souscriptions au flux forex quand s'arrètent les souscriptions au flux sur les stocks.
+Test d'acceptance: Test 11 dans **StockQuoteServerTest**
+Opérateurs Rx: doOnUnsubscribe
+
+# Exercice 11 - Ne pas attendre indéfiniment
+Si jamais pour une raison ou un autre il y a un souci avec le flux forex, votre serveur va avoir un gros problème. Les cotations sur les stocks en dollars risquent de s'accumuler jusqu'à saturation de la mémoire de la JVM.
+Pour résoudre ce problème on va limiter le temps d'attente d'une cotation forex à 5 secondes, temps au dela duquel un événement d'erreur sera lancé.
+Test d'acceptance: Test 12 dans **StockQuoteServerTest**
+Opérateurs Rx: timeout
 
 TODO - idées pour la suite    
 Typescript : tendance rouge/vert si ça monte ou ça descend  (skip, zip)
