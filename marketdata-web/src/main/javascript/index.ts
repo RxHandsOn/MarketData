@@ -23,7 +23,7 @@ rx.Observable
     document.getElementById("container").innerHTML = "Code " + code;
   });
 
-const eventSource = new EventSource('http://localhost:8096');
+const eventSource = new EventSource('http://localhost:8081');
 eventSource.addEventListener('message', (e: any) => {
     console.log(`Message from server: ${e.data}`);
 });
