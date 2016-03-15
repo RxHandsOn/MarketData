@@ -8,9 +8,9 @@
     "clean": "rm -vfr node_modules output typings",
     "postinstall": "typings install",
     "lockDeps": "npm shrinkwrap --dev",
-    "pretest": "tsc",
-    "test": "mocha output/test/javascript",
-    "start": "npm test && http-server -o"
+    "tsc": "tsc",
+    "test": "echo 'JS tests disabled'",
+    "start": "http-server -o -c-1"
   },
   "author": "",
   "license": "ISC",

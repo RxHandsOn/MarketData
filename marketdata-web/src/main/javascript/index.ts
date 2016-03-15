@@ -1,6 +1,7 @@
 import Complex from './Complex'
 import * as rx from '@reactivex/rxjs';
 import * as d3 from 'd3';
+import {fromEventSource} from './rx-sse';
 
 class Dummy {
   constructor(public name : string) {}
@@ -23,10 +24,10 @@ rx.Observable
     document.getElementById("container").innerHTML = "Code " + code;
   });
 
-const eventSource = new EventSource('http://localhost:8081');
-eventSource.addEventListener('message', (e: any) => {
-    console.log(`Message from server: ${e.data}`);
-});
+const eventSource = new EventSource('http://localhost:8096');
+const eurUsdQuoteObservable = fromEventSource(eventSource, 'message')
+    .map((event) => JSON.parse(event.data))
+    .pluck('quote');
 
 const width = 960;
 const height = 600;
@@ -81,12 +82,12 @@ yAxisElement.append("text")
     .attr("x", -(margins.top + yAxisHeight))
     .attr("dy", "-3.5em")
     .style("text-anchor", "middle")
-    .text("Updates per second");
+    .text("EUR/USD Quote");
 
 // Define our line series
 const lineFunc = d3.svg.line()
-    .x((d:[number, number]) => xRange(new Date(d[0])))
-    .y((d:[number, number]) => yRange(d[1]))
+    .x(function(d) { return xRange(d.x); })
+    .y(function(d) { return yRange(d.y); })
     .interpolate("linear");
 
 svg.append("defs").append("clipPath")
@@ -109,14 +110,68 @@ svg.append("text")
     .attr("transform", "translate(" + margins.left + "," + (height + 20)  + ")")
     .attr("width", width - margins.left);
 
-// Add a text element below the chart, which will display the times that new users
-// are added
-const newUserTextWidth = 150;
-svg.append("text")
-    .attr("class", "new-user-text")
-    .attr("fill", "green")
-    .attr("transform", "translate(" + (width - margins.right - newUserTextWidth) + "," + (height + 20)  + ")")
-    .attr("width", newUserTextWidth);
+const maxNumberOfDataPoints = 100;
 
-const samplingTime = 2000;
-const maxNumberOfDataPoints = 20;
+function update(updates) {
+    // Update the ranges of the chart to reflect the new data
+    if (updates.length > 0)   {
+        xRange.domain(d3.extent(updates, function(d) { return d.x; }));
+        yRange.domain([d3.min(updates, function(d) { return d.y; }),
+            d3.max(updates, function(d) { return d.y; })]);
+    }
+
+    // Until we have filled up our data window, we just keep adding data
+    // points to the end of the chart.
+    if (updates.length < maxNumberOfDataPoints) {
+        line.transition()
+            .ease("linear")
+            .attr("d", lineFunc(updates));
+
+        svg.selectAll("g.x.axis")
+            .transition()
+            .ease("linear")
+            .call(xAxis);
+    }
+    // Once we have filled up the window, we then remove points from the
+    // start of the chart, and move the data over so the chart looks
+    // like it is scrolling forwards in time
+    else    {
+        // Calculate the amount of translation on the x axis which equates to the
+        // time between two samples
+        var xTranslation = xRange(updates[0].x) - xRange(updates[1].x);
+
+        // Transform our line series immediately, then translate it from
+        // right to left. This gives the effect of our chart scrolling
+        // forwards in time
+        line
+            .attr("d", lineFunc(updates))
+            .attr("transform", null)
+            .transition()
+            .duration(200)
+            .ease("linear")
+            .attr("transform", "translate(" + xTranslation + ", 0)");
+
+        svg.selectAll("g.x.axis")
+            .transition()
+            .duration(200)
+            .ease("linear")
+            .call(xAxis);
+    }
+
+    svg.selectAll("g.y.axis")
+        .transition()
+        .call(yAxis);
+}
+
+var updatesOverTime = [];
+
+eurUsdQuoteObservable.subscribe((value) => {
+    updatesOverTime.push({
+        x: new Date(),
+        y:(value)
+    });
+    if (updatesOverTime.length > maxNumberOfDataPoints)  {
+        updatesOverTime.shift();
+    }
+    update(updatesOverTime);
+});
