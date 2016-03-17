@@ -1,6 +1,5 @@
 import Complex from './Complex'
 import * as rx from '@reactivex/rxjs';
-import * as d3 from 'd3';
 import {fromEventSource} from './rx-sse';
 import LineChart from './LineChart';
 

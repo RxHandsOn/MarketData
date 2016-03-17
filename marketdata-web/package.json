@@ -8,8 +8,8 @@
     "clean": "rm -vfr node_modules output typings",
     "postinstall": "typings install",
     "lockDeps": "npm shrinkwrap --dev",
-    "tsc": "tsc",
-    "test": "echo 'JS tests disabled'",
+    "pretest": "tsc",
+    "test": "mocha output/test/javascript",
     "start": "http-server -o -c-1"
   },
   "author": "",
