@@ -26,7 +26,7 @@ rx.Observable
 
 const eventSource = new EventSource('http://localhost:8096');
 const eurUsdQuoteObservable = fromEventSource(eventSource, 'message')
-    .map((event) => JSON.parse(event.data))
+    .map((event: any) => JSON.parse(event.data))
     .pluck('quote');
 
 const lineChart = new LineChart();

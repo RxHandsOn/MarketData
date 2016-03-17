@@ -1,20 +1,25 @@
 import * as d3 from 'd3';
 import * as rx from '@reactivex/rxjs';
 
+interface Point {
+    x: Date;
+    y: number;
+}
+
 export default class LineChart {
     constructor() {
         this.initChart();
     }
 
-    private svg;
-    private xRange;
-    private yRange;
-    private xAxis;
-    private yAxis;
+    private svg:d3.Selection<SVGElement>;
+    private xRange:d3.time.Scale<number, number>;
+    private yRange:d3.scale.Linear<number, number>;
+    private xAxis:d3.svg.Axis;
+    private yAxis:d3.svg.Axis;
     private maxNumberOfDataPoints = 100;
-    private line;
-    private lineFunc;
-    private updatesOverTime = [];
+    private line:any;
+    private lineFunc: d3.svg.Line<any>;
+    private updatesOverTime:Point[] = [];
 
     initChart() {
         const width = 960;
@@ -74,8 +79,8 @@ export default class LineChart {
 
         // Define our line series
         this.lineFunc = d3.svg.line()
-            .x(function(d) { return this.xRange(d.x); })
-            .y(function(d) { return this.yRange(d.y); })
+            .x(function(d:any) { return this.xRange(d.x); })
+            .y(function(d:any) { return this.yRange(d.y); })
             .interpolate("linear");
 
         this.svg.append("defs").append("clipPath")
@@ -99,10 +104,10 @@ export default class LineChart {
             .attr("width", width - margins.left);
     }
 
-    update(updates) {
+    private update(updates:Point[]) {
         // Update the ranges of the chart to reflect the new data
         if (updates.length > 0)   {
-            this.xRange.domain(d3.extent(updates, function(d) { return d.x; }));
+            this.xRange.domain(d3.extent(updates, function(d:any) { return d.x; }));
             this.yRange.domain([d3.min(updates, function(d) { return d.y; }),
                 d3.max(updates, function(d) { return d.y; })]);
         }

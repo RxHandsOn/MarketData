@@ -21,16 +21,16 @@ import * as rx from '@reactivex/rxjs';
  * @param {Observer} [openObserver] An optional observer for the 'open' event for the server side event.
  * @returns {Observable} An observable sequence which represents the data from a server-side event.
  */
- export function fromEventSource(source: sse.IEventSourceStatic, event: string, openObserver:rx.Observer = undefined):rx.Observable {
+ export function fromEventSource(source: sse.IEventSourceStatic, event: string, openObserver:rx.Observer<Event> = undefined):rx.Observable<Event> {
 
-    return rx.Observable.create(function (observer:rx.Observer) {
-        function onOpen(e) {
+    return rx.Observable.create(function (observer:rx.Observer<Event>) {
+        function onOpen(e:Event) {
             openObserver.next(e);
             openObserver.complete();
             source.removeEventListener('open', onOpen, false);
         }
 
-        function onError(e) {
+        function onError(e:any) {
             if (e.readyState === EventSource.CLOSED) {
                 observer.complete();
             } else {
@@ -38,7 +38,7 @@ import * as rx from '@reactivex/rxjs';
             }
         }
 
-        function onMessage(e) {
+        function onMessage(e:Event) {
             observer.next(e);
         }
 
