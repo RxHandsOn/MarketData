@@ -23,7 +23,7 @@ rx.Observable
     document.getElementById("container").innerHTML = "Code " + code;
   });
 
-const eventSource = new EventSource('http://localhost:8096');
+const eventSource = new EventSource('http://localhost:8081?code=IBM');
 const eurUsdQuoteObservable = fromEventSource(eventSource, 'message')
     .map((event: any) => JSON.parse(event.data))
     .pluck('quote');

@@ -75,7 +75,7 @@ export default class LineChart {
             .attr("x", -(margins.top + yAxisHeight))
             .attr("dy", "-3.5em")
             .style("text-anchor", "middle")
-            .text("EUR/USD Quote");
+            .text("IBM Quote");
 
         // Define our line series
         this.lineFunc = d3.svg.line()
