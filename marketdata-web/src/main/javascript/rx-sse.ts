@@ -1,4 +1,4 @@
-import * as rx from '@reactivex/rxjs';
+import * as rx from 'rxjs/Rx';
 
 /**
  * Ported to RxJs5 from https://gist.github.com/searler/204a3fa4a62df09765c8

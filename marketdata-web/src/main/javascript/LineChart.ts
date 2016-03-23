@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import * as rx from '@reactivex/rxjs';
+import * as rx from 'rxjs/Rx';
 
 interface Point {
     x: Date;

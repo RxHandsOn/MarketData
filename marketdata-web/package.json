@@ -15,11 +15,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@reactivex/rxjs": "5.0.0-beta.2",
     "d3": "3.5.16",
     "es6-shim": "0.34.4",
     "eventsource": "0.2.0",
     "lodash": "4.5.1",
+    "rxjs": "5.0.0-beta.3",
     "systemjs": "0.19.22",
     "typescript": "1.8.2"
   },

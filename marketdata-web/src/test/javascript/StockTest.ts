@@ -1,4 +1,4 @@
-import * as rx from '@reactivex/rxjs';
+import * as rx from 'rxjs/Rx';
 import { expect } from 'chai';
 import * as trends from "../../main/javascript/Stock";
 

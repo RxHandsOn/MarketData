@@ -1,4 +1,4 @@
-import * as rx from '@reactivex/rxjs';
+import * as rx from 'rxjs/Rx';
 
 class Quote {
   constructor(public code:string, public quote:number) {
