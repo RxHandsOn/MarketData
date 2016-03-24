@@ -10,14 +10,15 @@ class Quote {
 }
 
 function parseRawStream(raw$: rx.Observable<string>) : rx.Observable<Quote>  {
-  return null;
+  return raw$.map(Quote.parse);
 }
 
-function detectTrends(quote$: rx.Observable<string>) : rx.Observable<string>  {
+function detectTrends(quote$: rx.Observable<Quote>) : rx.Observable<string>  {
   return null;
 }
 
 export {
-  detectTrends,
-  Quote
+  Quote,
+  parseRawStream,
+  detectTrends
 }
