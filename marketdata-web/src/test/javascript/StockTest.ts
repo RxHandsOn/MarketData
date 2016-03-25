@@ -37,13 +37,25 @@ describe("Trends engine", () => {
 
   it("Should detect price getting higher", () => {
     // given
-
+    const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.34 }"
+    const json2 = "{ \"code\" : \"ibm\" , \"quote\" : 42.42 }"
+    const json$ = hot<string>('-a-b-|', { a: json1, b: json2 });
+    const quote$ = trends.parseRawStream(json$);
     // when
-
+    const trend$ = trends.detectTrends(quote$);
     // then
+    expectObservable(trend$).toBe('---s-|', { s: "green" });
   }),
 
   it("Should detect price getting lower", () => {
-    // TODO
+    // given
+    const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.34 }"
+    const json2 = "{ \"code\" : \"ibm\" , \"quote\" : 42.12 }"
+    const json$ = hot<string>('-a-b-|', { a: json1, b: json2 });
+    const quote$ = trends.parseRawStream(json$);
+    // when
+    const trend$ = trends.detectTrends(quote$);
+    // then
+    expectObservable(trend$).toBe('---s-|', { s: "red" });
   })
 });

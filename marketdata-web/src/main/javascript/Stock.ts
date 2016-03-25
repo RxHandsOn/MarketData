@@ -14,7 +14,16 @@ function parseRawStream(raw$: rx.Observable<string>) : rx.Observable<Quote>  {
 }
 
 function detectTrends(quote$: rx.Observable<Quote>) : rx.Observable<string>  {
-  return null;
+  return quote$.zip(quote$.skip(1),
+    (q1, q2) => {
+      let result : string;
+      if (q2.quote > q1.quote) {
+        result = "green"
+      } else {
+        result = "red"
+      }
+       return result;
+     });
 }
 
 export {
