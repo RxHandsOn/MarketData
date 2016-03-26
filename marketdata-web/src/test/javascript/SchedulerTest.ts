@@ -1,6 +1,7 @@
 import * as rx from 'rxjs/Rx.KitchenSink';
 import {ArrayObservable} from 'rxjs/observable/ArrayObservable';
 import {EmptyObservable} from 'rxjs/observable/EmptyObservable';
+import {NeverObservable} from 'rxjs/observable/NeverObservable';
 
 declare const rxTestScheduler: rx.TestScheduler;
 import {cold, hot, time, expectObservable, expectSubscriptions} from './SchedulerHelper';
@@ -205,8 +206,8 @@ describe('TestScheduler', () => {
             });
 
             it('should handle never', () => {
-                expectObservable(EmptyObservable.create()).toBe('-', {});
-                expectObservable(EmptyObservable.create()).toBe('---', {});
+                expectObservable(NeverObservable.create()).toBe('-', {});
+                expectObservable(NeverObservable.create()).toBe('---', {});
             });
 
             it('should accept an unsubscription marble diagram', () => {
