@@ -6,7 +6,7 @@ declare const rxTestScheduler: rx.TestScheduler;
 import {cold, hot, time, expectObservable, expectSubscriptions} from './SchedulerHelper';
 
 
-describe("Trends engine", () => {
+describe("Stocks trends engine", () => {
 
   it("Should parse a quote", () => {
     // given
