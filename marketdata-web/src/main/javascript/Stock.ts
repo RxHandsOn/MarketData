@@ -26,8 +26,29 @@ function detectTrends(quote$: rx.Observable<Quote>) : rx.Observable<string>  {
      });
 }
 
+
+function maxFromPrevious(quote$: rx.Observable<Quote>, nbQuotes : number) : rx.Observable<number>  {
+  return quote$
+    .windowCount(nbQuotes, 1)
+    .flatMap(
+      q$ => q$.map(q => q.quote)
+              .max()
+    )
+}
+
+function minFromPrevious(quote$: rx.Observable<Quote>, nbQuotes : number) : rx.Observable<number>  {
+  return quote$
+    .windowCount(nbQuotes, 1)
+    .flatMap(
+      q$ => q$.map(q => q.quote)
+              .min()
+    )
+}
+
 export {
   Quote,
   parseRawStream,
-  detectTrends
+  detectTrends,
+  maxFromPrevious,
+  minFromPrevious,
 }
