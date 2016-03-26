@@ -1,4 +1,3 @@
-import Complex from './Complex'
 import * as rx from 'rxjs/Rx';
 import {fromEventSource} from './rx-sse';
 import LineChart from './LineChart';
@@ -10,10 +9,6 @@ class Dummy {
 let obj = new Dummy("hello!");
 
 console.log("Hello " + obj.name);
-
-let cpx = new Complex(1,1);
-
-console.log("Module works! " + cpx.real);
 
 rx.Observable.of("world").subscribe(s => console.log("Hello " + s));
 rx.Observable
