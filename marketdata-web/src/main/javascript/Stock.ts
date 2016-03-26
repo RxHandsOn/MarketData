@@ -10,10 +10,14 @@ class Quote {
 }
 
 function parseRawStream(raw$: rx.Observable<string>) : rx.Observable<Quote>  {
+  // Etape 0
+  // return rx.Observable.empty<Quote>();
   return raw$.map(Quote.parse);
 }
 
 function detectTrends(quote$: rx.Observable<Quote>) : rx.Observable<string>  {
+  // Etape 0
+  // return rx.Observable.empty<string>();
   return quote$.zip(quote$.skip(1),
     (q1, q2) => {
       let result : string;
@@ -28,6 +32,8 @@ function detectTrends(quote$: rx.Observable<Quote>) : rx.Observable<string>  {
 
 
 function maxFromPrevious(quote$: rx.Observable<Quote>, nbQuotes : number) : rx.Observable<number>  {
+  // Etape 0
+  // return rx.Observable.empty<number>();
   return quote$
     .windowCount(nbQuotes, 1)
     .flatMap(
@@ -37,6 +43,8 @@ function maxFromPrevious(quote$: rx.Observable<Quote>, nbQuotes : number) : rx.O
 }
 
 function minFromPrevious(quote$: rx.Observable<Quote>, nbQuotes : number) : rx.Observable<number>  {
+  // Etape 0
+  // return rx.Observable.empty<number>();
   return quote$
     .windowCount(nbQuotes, 1)
     .flatMap(
