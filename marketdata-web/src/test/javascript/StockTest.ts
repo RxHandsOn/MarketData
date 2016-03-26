@@ -7,11 +7,7 @@ import {cold, hot, time, expectObservable, expectSubscriptions} from './Schedule
 
 
 describe("Trends engine", () => {
-
-  afterEach(() => {
-    rxTestScheduler.flush();
-  });
-
+  
   it("Should parse a quote", () => {
     // given
     const json = "{ \"code\" : \"ibm\" , \"quote\" : 42.34 }"
@@ -21,8 +17,7 @@ describe("Trends engine", () => {
     expect(quote).to.be.not.null;
     expect(quote.code).to.be.equal("ibm");
     expect(quote.quote).to.be.equal(42.34);
-
-  }),
+  });
 
   it("Should parse quotes from the server", () => {
     // given
@@ -33,7 +28,7 @@ describe("Trends engine", () => {
     // then
     const quote = trends.Quote.parse(json);
     expectObservable(quote$).toBe('-q--|', { q: quote });
-  }),
+  });
 
   it("Should detect price getting higher", () => {
     // given
@@ -45,7 +40,7 @@ describe("Trends engine", () => {
     const trend$ = trends.detectTrends(quote$);
     // then
     expectObservable(trend$).toBe('---s-|', { s: "green" });
-  }),
+  });
 
   it("Should detect price getting lower", () => {
     // given
@@ -57,5 +52,5 @@ describe("Trends engine", () => {
     const trend$ = trends.detectTrends(quote$);
     // then
     expectObservable(trend$).toBe('---s-|', { s: "red" });
-  })
+  });
 });

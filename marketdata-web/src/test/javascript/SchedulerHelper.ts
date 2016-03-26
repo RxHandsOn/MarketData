@@ -13,6 +13,10 @@ beforeEach(() => {
     });
 });
 
+afterEach(() => {
+    rxTestScheduler.flush();
+});
+
 export function cold<T>(marbles: string, values?: any, error?: any): rx.Observable<T> {
     if (!rxTestScheduler) {
         throw 'tried to use cold() in async test';
@@ -30,7 +34,7 @@ export function hot<T>(marbles: string, values?: any, error?: any): rx.Observabl
 export function expectObservable(observable: rx.Observable<any>,
                                  unsubscriptionMarbles: string = null): ({ toBe: TestScheduler.observableToBeFn }) {
     if (!rxTestScheduler) {
-        throw 'tried to use cold() in async test';
+        throw 'tried to use expectObservable() in async test';
     }
     return rxTestScheduler.expectObservable(observable, unsubscriptionMarbles);
 }
