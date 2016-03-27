@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,7 +27,6 @@ public class StockServerTest {
     private EventStreamClient stockQuoteClient;
     private TestScheduler scheduler;
     private StockServer stockServer;
-    private TestSubject<String> stockSourceSubject;
     private TestSubject<String> quoteSourceSubject;
 
     @Before
@@ -54,7 +52,7 @@ public class StockServerTest {
     }
 
     /**
-     * Test 4
+     * Test 7
      */
     @Test
     public void should_send_a_stock_message_when_receiving_a_quote() {
@@ -71,7 +69,7 @@ public class StockServerTest {
     }
 
     /**
-     * test 5
+     * test 8
      */
     @Test
     public void should_send_a_stock_message_only_once_when_receiving_two_quotes_for_the_same_stock() {

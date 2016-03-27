@@ -19,6 +19,9 @@ describe("Stocks trends engine", () => {
     expect(quote.quote).to.be.equal(42.34);
   });
 
+  /**
+      Test 4
+  */
   it("Should parse quotes from the server", () => {
     // given
     const json = "{ \"code\" : \"ibm\" , \"quote\" : 42.34 }"
@@ -30,6 +33,9 @@ describe("Stocks trends engine", () => {
     expectObservable(quote$).toBe('-q--|', { q: quote });
   });
 
+  /**
+      Test 5
+  */
   it("Should detect price getting higher", () => {
     // given
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.34 }"
@@ -42,6 +48,9 @@ describe("Stocks trends engine", () => {
     expectObservable(trend$).toBe('---s-|', { s: "green" });
   });
 
+  /**
+      Test 6
+  */
   it("Should detect price getting lower", () => {
     // given
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.34 }"
