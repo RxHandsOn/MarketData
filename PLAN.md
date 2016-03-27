@@ -57,15 +57,9 @@ Opérateurs Rx: map, filter, skip & scan
  Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface
  web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de
  messages envoyés sur le web.  
- Attention il y a un piège, pour que le test passe il faut penser au scheduler...
- Test d'acceptance: Test 11 dans **VwapServerTest**
+ Attention il y a un piège, pour que le test passe il faut penser au scheduler...  
+ Test d'acceptance: Test 11 dans **VwapServerTest**  
  Opérateurs Rx: sample
-
-
-
-TODO : exos javascript avant
-
-
 
 # Exercice 10 -  combinaison cotations / taux de changes
  Le but maintenant est de faire en sorte que les cotations transmises par la classe **StockQuoteServer** soient exprimées
@@ -83,19 +77,22 @@ on veut maintenant que le dernier cours de change euros/dollars connu soit utili
 Test d'acceptance: Test 13 dans **StockQuoteServerTest**
 
 # Exercice 12 - Se désinscrire quand il faut...
-Vous avez peut-être un soucis avec le code écrit précédemment: vous continuez peut-être d'écouter le flux forex lorsque plus personne n'écoute le flux stock. L'idée ici est donc d'arrèter les souscriptions au flux forex quand s'arrètent les souscriptions au flux sur les stocks.
-Test d'acceptance: Test 14 dans **StockQuoteServerTest**
+Vous avez peut-être un soucis avec le code écrit précédemment: vous continuez peut-être d'écouter le flux forex lorsque plus personne n'écoute le flux stock. L'idée ici est donc d'arrèter les souscriptions au flux forex quand s'arrètent les souscriptions au flux sur les stocks.  
+Test d'acceptance: Test 14 dans **StockQuoteServerTest**  
 Opérateurs Rx: doOnUnsubscribe
 
 # Exercice 13 - Ne pas attendre indéfiniment
 Si jamais pour une raison ou un autre il y a un souci avec le flux forex, votre serveur va avoir un gros problème. Les cotations sur les stocks en dollars risquent de s'accumuler jusqu'à saturation de la mémoire de la JVM.
-Pour résoudre ce problème on va limiter le temps d'attente d'une cotation forex à 5 secondes, temps au dela duquel un événement d'erreur sera lancé.
-Test d'acceptance: Test 15 dans **StockQuoteServerTest**
+Pour résoudre ce problème on va limiter le temps d'attente d'une cotation forex à 5 secondes, temps au dela duquel un événement d'erreur sera lancé.  
+Test d'acceptance: Test 15 dans **StockQuoteServerTest**  
 Opérateurs Rx: timeout
 
+# Exercice 14 - min/max glissants
+Retour sur le code Typescript. On va maintenant implémenter les méthodes **minFromPrevious** et **maxFromPrevious** dans **Stock.ts**. L'idée est d'avoir un flux contenant la valeur minimum/maximum des n dernières cotations.  
+Test d'acceptance: Tests 16, 17, 18 et 19 dans **StockTest.ts**  
+Opérateurs Rx: windowCount, flatMap, map, min & max  
+
 TODO - idées pour la suite    
-Typescript : tendance rouge/vert si ça monte ou ça descend  (skip, zip)
-Typescript : moyenne glissante (window + flatmap)  
 Typescript : plus grosse progression / baisse (combineLatest)
 Typescript: partage d'un flux sse avec publish/refCount    
 Typescript: gestion des reconnections avec retryWhen  

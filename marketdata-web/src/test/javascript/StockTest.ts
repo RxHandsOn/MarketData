@@ -63,6 +63,9 @@ describe("Stocks trends engine", () => {
     expectObservable(trend$).toBe('---s-|', { s: "red" });
   })
 
+  /**
+      Test 16
+  */
   it("Should compute max of last 4 known prices", () => {
     // given
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.10 }"
@@ -78,6 +81,9 @@ describe("Stocks trends engine", () => {
     expectObservable(trend$).toBe('-------m--', { m: 42.20 });
   })
 
+  /**
+      Test 17
+  */
   it("Should ignore older values when computing max of last 4 known prices", () => {
     // given
     const json0 = "{ \"code\" : \"ibm\" , \"quote\" : 43 }"
@@ -94,6 +100,9 @@ describe("Stocks trends engine", () => {
     expectObservable(trend$).toBe('------o-m--', { o: 43, m: 42.20 });
   })
 
+  /**
+      Test 18
+  */
   it("Should compute min of last 4 known prices", () => {
     // given
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.10 }"
@@ -109,6 +118,9 @@ describe("Stocks trends engine", () => {
     expectObservable(trend$).toBe('-------m--', { m: 42.10 });
   })
 
+  /**
+      Test 19
+  */
   it("Should ignore older values when computing min of last 4 known prices", () => {
     // given
     const json0 = "{ \"code\" : \"ibm\" , \"quote\" : 41 }"
