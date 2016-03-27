@@ -20,6 +20,8 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
  Test d'acceptance: Test 3 dans **StockQuoteServerTest**  
  Opérateurs Rx: filter  
 
+ TODO premiers exos typescript
+
 # Exercice 4 -  première combinaison avec flatmap
 C'est bien de pouvoir filtrer, faut-il encore savoir ce que l'on a sous la main... L'idée de cet exercice est de récupérer
 les informations sur les stocks qui sont actives, celles pour lesquelles il y a eu au moins une cotation depuis la souscription.  
