@@ -3,25 +3,8 @@ import {fromEventSource} from './rx-sse';
 import LineChart from './LineChart';
 import * as stock from './Stock';
 
-class Dummy {
-  constructor(public name : string) {}
-}
 
-let obj = new Dummy("hello!");
-
-console.log("Hello " + obj.name);
-
-rx.Observable.of("world").subscribe(s => console.log("Hello " + s));
-rx.Observable
-  .fromEvent(document, "keypress")
-  .pluck("keyCode")
-  .subscribe(code => {
-    document.getElementById("container").innerHTML = "Code " + code;
-  });
-
-
-
-window["toggle"]  = function(code : string) {
+window["toggle"]  = function(code : string) : void {
   if (window["cleanUp"]) {
     window["cleanUp"]();
   }
@@ -31,12 +14,12 @@ window["toggle"]  = function(code : string) {
     = stock.parseRawStream(
         fromEventSource(quoteEventSource, 'message')
           .pluck<string>('data')
-      ).pluck('quote');
+      );
 
   const lineChart = new LineChart("#spotGraph", `${code} spot`);
-  const chartSubscription = quoteObservable.subscribe(lineChart.getObserver());
-  const labelSubscription = quoteObservable.subscribe(q => {
-    document.getElementById("currentStock").innerHTML = `Last quote: ${q}`
+  const chartSubscription = quoteObservable.pluck('quote').subscribe(lineChart.getObserver());
+  const labelSubscription = stock.detectTrends(quoteObservable).subscribe(q => {
+    document.getElementById("currentStock").innerHTML = `Last quote: <span style="color: ${q.color}">${q.quote.quote}</span>EUR`
   })
 
   const vwapEventSource = new EventSource(`http://localhost:8082?code=${code}`);
@@ -48,11 +31,15 @@ window["toggle"]  = function(code : string) {
 
   const vwapLineChart = new LineChart("#vwapGraph", `${code} vwap`);
   const vwapChartSubscription = vwapObservable.subscribe(vwapLineChart.getObserver());
+  const vwapLabelSubscription = vwapObservable.subscribe(v => {
+    document.getElementById("currentVwap").innerHTML = `Vwap: ${v}$`
+  })
 
-  window["cleanUp"] = function() {
+  window["cleanUp"] = function() : void {
     chartSubscription.unsubscribe();
     labelSubscription.unsubscribe();
     vwapChartSubscription.unsubscribe();
+    vwapLabelSubscription.unsubscribe();
     quoteEventSource.close();
     vwapEventSource.close();
     document.getElementById("currentStock").innerHTML = "";

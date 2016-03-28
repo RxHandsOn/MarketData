@@ -70,7 +70,7 @@ describe("Stocks trends engine", () => {
     // when
     const trend$ = trends.detectTrends(quote$);
     // then
-    expectObservable(trend$).toBe('---s-|', { s: "green" });
+    expectObservable(trend$).toBe('---s-|', { s: { quote: {code: "ibm", quote: 42.42 }, color: "green"}});
   });
 
   /**
@@ -85,7 +85,7 @@ describe("Stocks trends engine", () => {
     // when
     const trend$ = trends.detectTrends(quote$);
     // then
-    expectObservable(trend$).toBe('---s-|', { s: "red" });
+    expectObservable(trend$).toBe('---s-|', { s: { quote: {code: "ibm", quote: 42.12 }, color: "red"}});
   })
 
   /**

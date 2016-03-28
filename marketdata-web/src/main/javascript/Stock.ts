@@ -18,6 +18,11 @@ class Quote {
   }
 }
 
+class Trend {
+  constructor(public quote:Quote, public color:string) {
+  }
+}
+
 class Vwap {
   constructor(public code:string, public vwap:number, public volume:number) {
   }
@@ -41,18 +46,18 @@ function parseRawStream(raw$: rx.Observable<string>) : rx.Observable<Quote>  {
   return raw$.map(Quote.parse);
 }
 
-function detectTrends(quote$: rx.Observable<Quote>) : rx.Observable<string>  {
+function detectTrends(quote$: rx.Observable<Quote>) : rx.Observable<Trend>  {
   // Etape 0
   // return rx.Observable.empty<string>();
   return quote$.zip(quote$.skip(1),
     (q1, q2) => {
-      let result : string;
+      let color : string;
       if (q2.quote > q1.quote) {
-        result = "green"
+        color = "green"
       } else {
-        result = "red"
+        color = "red"
       }
-       return result;
+       return new Trend(q2, color);
      });
 }
 
@@ -83,6 +88,7 @@ export {
   Stock,
   Quote,
   Vwap,
+  Trend,
   parseRawStream,
   parseStaticDataRawStream,
   parseRawVwapStream,
