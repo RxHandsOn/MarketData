@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES5",
     "module": "commonjs",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "outDir": "output",
     "declaration": true,
     "experimentalDecorators": true
