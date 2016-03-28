@@ -7,7 +7,7 @@ interface Point {
 }
 
 export default class LineChart {
-    constructor() {
+    constructor(private svgSelector : string, private title : string) {
         this.initChart();
     }
 
@@ -22,8 +22,8 @@ export default class LineChart {
     private updatesOverTime:Point[] = [];
 
     initChart() {
-        const width = 960;
-        const height = 600;
+        const width = 480;
+        const height = 300;
         const margins = {
             top: 20,
             bottom: 50,
@@ -31,9 +31,9 @@ export default class LineChart {
             right: 20
         };
 
-        this.svg = d3.select("svg")
+        this.svg = d3.select(this.svgSelector)
             .attr("width", width)
-            .attr("height", height + 200);
+            .attr("height", height + 20);
 
         this.xRange = d3.time.scale().range([margins.left, width - margins.right])
             .domain([new Date(), new Date()]);
@@ -75,7 +75,7 @@ export default class LineChart {
             .attr("x", -(margins.top + yAxisHeight))
             .attr("dy", "-3.5em")
             .style("text-anchor", "middle")
-            .text("IBM Quote");
+            .text(this.title);
 
         // Define our line series
         this.lineFunc = d3.svg.line()
