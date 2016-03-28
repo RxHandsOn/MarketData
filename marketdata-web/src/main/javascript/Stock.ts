@@ -1,5 +1,14 @@
 import * as rx from 'rxjs/Rx';
 
+class Stock {
+  constructor(public code:string, public companyName:string, public market:string) {
+  }
+
+  public static parse(json : string) : Stock {
+    return JSON.parse(json);
+  }
+}
+
 class Quote {
   constructor(public code:string, public quote:number) {
   }
@@ -7,6 +16,10 @@ class Quote {
   public static parse(json : string) : Quote {
     return JSON.parse(json);
   }
+}
+
+function parseStaticDataRawStream(raw$: rx.Observable<string>) : rx.Observable<Stock>  {
+  return raw$.map(Stock.parse);
 }
 
 function parseRawStream(raw$: rx.Observable<string>) : rx.Observable<Quote>  {
@@ -54,8 +67,10 @@ function minFromPrevious(quote$: rx.Observable<Quote>, nbQuotes : number) : rx.O
 }
 
 export {
+  Stock,
   Quote,
   parseRawStream,
+  parseStaticDataRawStream,
   detectTrends,
   maxFromPrevious,
   minFromPrevious,

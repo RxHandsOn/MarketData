@@ -1,8 +1,6 @@
 package com.handson.rx;
 
-import com.handson.infra.EventStreamClient;
-import com.handson.infra.RxNettyEventEventStreamClient;
-import com.handson.infra.StaticServer;
+import com.handson.infra.*;
 import rx.schedulers.Schedulers;
 
 import java.io.IOException;
@@ -25,6 +23,10 @@ public class Application {
         EventStreamClient tradeEventStreamClient = new RxNettyEventEventStreamClient(8098);
         VwapServer vwapServer = new VwapServer(8082, tradeEventStreamClient, Schedulers.immediate());
         vwapServer.createServer().start();
+
+        RequestReplyClient stockStaticDataClient = new RxNettyRequestReplyClient(8099, "code");
+        StockServer stockServer = new StockServer(8083, stockStaticDataClient, stockEventStreamClient);
+        stockServer.createServer().start();
 
         System.out.println("Servers ready!");
         System.out.println("Application available on http://localhost:8000");

@@ -5,6 +5,31 @@ import * as trends from "../../main/javascript/Stock";
 declare const rxTestScheduler: rx.TestScheduler;
 import {cold, hot, time, expectObservable, expectSubscriptions} from './SchedulerHelper';
 
+describe("Stocks static data engine", () => {
+
+  it("Should parse stock data", () => {
+    // given
+    const json = "{ \"code\" : \"ibm\" , \"companyName\" : \"International Business Machines Corp.\" , \"market\" : \"NYSE\" }"
+    // when
+    const stock = trends.Stock.parse(json);
+    // then
+    expect(stock).to.be.not.null;
+    expect(stock.code).to.be.equal("ibm");
+    expect(stock.market).to.be.equal("NYSE");
+    expect(stock.companyName).to.be.equal("International Business Machines Corp.");
+  });
+
+  it("Should parse stock data from the server", () => {
+    // given
+    const json = "{ \"code\" : \"ibm\" , \"companyName\" : \"International Business Machines Corp.\" , \"market\" : \"NYSE\" }"
+    const json$ = hot<string>('-s--|', { s: json });
+    // when
+    const stock$ = trends.parseRawStream(json$);
+    // then
+    const stock = trends.Stock.parse(json);
+    expectObservable(stock$).toBe('-s--|', { s: stock });
+  });
+});
 
 describe("Stocks trends engine", () => {
 
