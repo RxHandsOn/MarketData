@@ -21,7 +21,7 @@ public class Application {
         stockQuoteServer.createServer().start();
 
         EventStreamClient tradeEventStreamClient = new RxNettyEventEventStreamClient(8098);
-        VwapServer vwapServer = new VwapServer(8082, tradeEventStreamClient, Schedulers.immediate());
+        VwapServer vwapServer = new VwapServer(8082, tradeEventStreamClient, Schedulers.newThread());
         vwapServer.createServer().start();
 
         RequestReplyClient stockStaticDataClient = new RxNettyRequestReplyClient(8099, "code");

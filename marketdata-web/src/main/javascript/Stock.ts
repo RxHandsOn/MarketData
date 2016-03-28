@@ -18,8 +18,21 @@ class Quote {
   }
 }
 
+class Vwap {
+  constructor(public code:string, public vwap:number, public volume:number) {
+  }
+
+  public static parse(json : string) : Vwap {
+    return JSON.parse(json);
+  }
+}
+
 function parseStaticDataRawStream(raw$: rx.Observable<string>) : rx.Observable<Stock>  {
   return raw$.map(Stock.parse);
+}
+
+function parseRawVwapStream(raw$: rx.Observable<string>) : rx.Observable<Vwap>  {
+  return raw$.map(Vwap.parse);
 }
 
 function parseRawStream(raw$: rx.Observable<string>) : rx.Observable<Quote>  {
@@ -69,8 +82,10 @@ function minFromPrevious(quote$: rx.Observable<Quote>, nbQuotes : number) : rx.O
 export {
   Stock,
   Quote,
+  Vwap,
   parseRawStream,
   parseStaticDataRawStream,
+  parseRawVwapStream,
   detectTrends,
   maxFromPrevious,
   minFromPrevious,

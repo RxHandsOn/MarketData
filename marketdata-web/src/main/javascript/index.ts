@@ -39,12 +39,26 @@ window["toggle"]  = function(code : string) {
     document.getElementById("currentStock").innerHTML = `Last quote: ${q}`
   })
 
+  const vwapEventSource = new EventSource(`http://localhost:8082?code=${code}`);
+  const vwapObservable
+    = stock.parseRawVwapStream(
+        fromEventSource(vwapEventSource, 'message')
+          .pluck<string>('data')
+      ).pluck('vwap');
+
+  const vwapLineChart = new LineChart("#vwapGraph", `${code} vwap`);
+  const vwapChartSubscription = vwapObservable.subscribe(vwapLineChart.getObserver());
+
   window["cleanUp"] = function() {
     chartSubscription.unsubscribe();
     labelSubscription.unsubscribe();
+    vwapChartSubscription.unsubscribe();
     quoteEventSource.close();
+    vwapEventSource.close();
     document.getElementById("currentStock").innerHTML = "";
     document.getElementById("spotGraph").innerHTML = "";
+    document.getElementById("vwapGraph").innerHTML = "";
+
   }
 
 }
