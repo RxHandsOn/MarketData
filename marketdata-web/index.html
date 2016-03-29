@@ -14,7 +14,7 @@
               transpiler: 'typescript',
               map: {
                   typescript: 'node_modules/typescript/lib/typescript.js',
-                  'rxjs/Rx': 'node_modules/rxjs/Rx.js',
+                  'rxjs/Rx': 'node_modules/rxjs/Rx.KitchenSink.js',
                   'd3': 'node_modules/d3/d3.js'
               },
               packages: {
@@ -40,6 +40,9 @@
       #vwap {
         display: inline-block;
       }
+      .label {
+        margin-left: 100px;
+      }
     </style>
   </head>
   <body>
@@ -51,17 +54,24 @@
 
       </div>
     </div>
-    <hr/>
+    <div>
+      &nbsp;
+    </div>
     <div id="spot">
       <svg id="spotGraph"></svg>
-      <div id="currentStock">
+      <div id="currentStock" class="label">
+
+      </div>
+      <div id="minStock" class="label">
+
+      </div>
+      <div id="maxStock" class="label">
 
       </div>
     </div>
     <div id="vwap">
       <svg id="vwapGraph"></svg>
-      <div id="currentVwap">
-          TODO
+      <div id="currentVwap" class="label">
       </div>
     </div>
   </body>

@@ -19,7 +19,14 @@ window["toggle"]  = function(code : string) : void {
   const lineChart = new LineChart("#spotGraph", `${code} spot`);
   const chartSubscription = quoteObservable.pluck('quote').subscribe(lineChart.getObserver());
   const labelSubscription = stock.detectTrends(quoteObservable).subscribe(q => {
-    document.getElementById("currentStock").innerHTML = `Last quote: <span style="color: ${q.color}">${q.quote.quote}</span>EUR`
+    document.getElementById("currentStock").innerHTML = `Last quote: <span style="background: ${q.color}">${q.quote.quote.toFixed(4)}</span>EUR`
+  })
+
+  const minSubscription = stock.minFromPrevious(quoteObservable, 10).subscribe(q => {
+    document.getElementById("minStock").innerHTML = `Min: ${q.toFixed(4)} EUR`
+  })
+  const maxSubscription = stock.maxFromPrevious(quoteObservable, 10).subscribe(q => {
+    document.getElementById("maxStock").innerHTML = `Max: ${q.toFixed(4)} EUR`
   })
 
   const vwapEventSource = new EventSource(`http://localhost:8082?code=${code}`);
@@ -27,22 +34,26 @@ window["toggle"]  = function(code : string) : void {
     = stock.parseRawVwapStream(
         fromEventSource(vwapEventSource, 'message')
           .pluck<string>('data')
-      ).pluck('vwap');
+      ).pluck<number>('vwap');
 
   const vwapLineChart = new LineChart("#vwapGraph", `${code} vwap`);
   const vwapChartSubscription = vwapObservable.subscribe(vwapLineChart.getObserver());
   const vwapLabelSubscription = vwapObservable.subscribe(v => {
-    document.getElementById("currentVwap").innerHTML = `Vwap: ${v}$`
+    document.getElementById("currentVwap").innerHTML = `Vwap: ${v.toFixed(4)}$`
   })
 
   window["cleanUp"] = function() : void {
     chartSubscription.unsubscribe();
     labelSubscription.unsubscribe();
+    minSubscription.unsubscribe();
+    maxSubscription.unsubscribe();
     vwapChartSubscription.unsubscribe();
     vwapLabelSubscription.unsubscribe();
     quoteEventSource.close();
     vwapEventSource.close();
     document.getElementById("currentStock").innerHTML = "";
+    document.getElementById("minStock").innerHTML = "";
+    document.getElementById("maxStock").innerHTML = "";
     document.getElementById("spotGraph").innerHTML = "";
     document.getElementById("vwapGraph").innerHTML = "";
 
