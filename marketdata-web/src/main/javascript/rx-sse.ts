@@ -31,6 +31,7 @@ import * as rx from 'rxjs/Rx';
         }
 
         function onError(e:any) {
+            source.close();
             if (e.readyState === EventSource.CLOSED) {
                 observer.complete();
             } else {

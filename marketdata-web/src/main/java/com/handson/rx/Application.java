@@ -21,11 +21,11 @@ public class Application {
         stockQuoteServer.createServer().start();
 
         EventStreamClient tradeEventStreamClient = new RxNettyEventEventStreamClient(8098);
-        VwapServer vwapServer = new VwapServer(8082, tradeEventStreamClient, Schedulers.newThread());
+        VwapServer vwapServer = new VwapServer(8082, tradeEventStreamClient, Schedulers.computation());
         vwapServer.createServer().start();
 
         RequestReplyClient stockStaticDataClient = new RxNettyRequestReplyClient(8099, "code");
-        StockServer stockServer = new StockServer(8083, stockStaticDataClient, stockEventStreamClient);
+        StockServer stockServer = new StockServer(8083, stockStaticDataClient, stockEventStreamClient, Schedulers.computation());
         stockServer.createServer().start();
 
         System.out.println("Servers ready!");

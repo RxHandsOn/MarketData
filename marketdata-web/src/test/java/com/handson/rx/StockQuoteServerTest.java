@@ -63,7 +63,7 @@ public class StockQuoteServerTest {
     }
 
     /**
-     * Test 12
+     * Test 13
      */
     @Test
     public void should_generate_one_quote_in_euro_for_one_quote_in_dollar() {
@@ -83,7 +83,7 @@ public class StockQuoteServerTest {
     }
 
     /**
-     * Test 13
+     * Test 14
      */
     @Test
     public void should_generate_quotes_in_euro_using_latest_known_foreign_exchange_rate() {
@@ -104,7 +104,7 @@ public class StockQuoteServerTest {
 
 
     /**
-     * Test 14
+     * Test 15
      */
     @Test
     public void should_unsubscribe_to_forex_stream_when_unscribing_to_quote() {
@@ -122,7 +122,7 @@ public class StockQuoteServerTest {
     }
 
     /**
-     * Test 15
+     * Test 16
      */
     @Test
     public void should_send_an_error_when_no_forex_data_after_five_seconds() {

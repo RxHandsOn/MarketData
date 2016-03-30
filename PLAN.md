@@ -26,7 +26,13 @@ Test d'acceptance: Test 4 dans **StockTest.ts**
 Opérateurs Rx: map  
 
 # Exercice 5 -  ça monte et ça baisse
-Ici le but est de détecter quand le cours monte et quand il baisse. Dans le flux renvoyé par **detectTrends** il y aura un un événement "vert" lorsque le cours augmente, un événement "rouge" lorsqu'il baisse. On va donc avoir besoin de comparer chaque cotation avec la cotation précédente.  
+Ici le but est de détecter quand le cours monte et quand il baisse. Dans le flux renvoyé par **detectTrends** il y aura un un événement "vert" lorsque le cours augmente, un événement "rouge" lorsqu'il baisse. On va donc avoir besoin de comparer chaque cotation avec la cotation précédente. On va utiliser l'opérateur zip pour combiner 2 flux:
+
+  1. le flux de cotations tel quel
+  2. le même flux de cotations mais décalé d'un événement grâce à l'opérateur skip
+
+Ainsi nous allons pouvoir comparer les cotations 2 à 2 et renvoyer un flux de résultats en sorti de l'opérateur zip.
+
 Test d'acceptance: Test 5 et 6 dans **StockTest.ts**  
 Opérateurs Rx: skip et zip  
 
@@ -39,9 +45,14 @@ Test d'acceptance: Test 7 dans **StockServerTest**
 Opérateurs Rx: map & flatmap   
 
 # Exercice 7 - pas de doublons
-On reprend l'exercice précédent et cette fois-ci on utilise l'opérateur distinct pour ne pas envoyer plusieurs fois les informations
-sur une même stock.  
+On reprend l'exercice précédent et cette fois-ci on utilise l'opérateur distinct pour ne pas envoyer plusieurs fois les informations sur une même stock.  
 Test d'acceptance: Test 8 dans **StockServerTest**  
+Opérateurs Rx: distinct & map
+
+# Exercice 8 - on coupe au bout de 10 secondes
+Le code écrit jusqu'à maintenant fonctionne mais on a un souci: la connection HTTP utilisée pour récupérer les descriptions des stocks n'est jamais coupée. Pour s'en convaincre vous pouvez ouvrir et fermer plusieurs fois l'application [WEB](http://localhost:8000) et regarder ce qui est loggé au niveau des process java.  
+On va donc modifier la classe **StockServer** pour que le flux soit coupé au bout de 10 secondes.  
+Test d'acceptance: Test 9 dans **StockServerTest**  
 Opérateurs Rx: distinct & map  
 
 # Exercice 8 -  gestion d'état et calcul d'un prix vwap
@@ -50,7 +61,7 @@ Opérateurs Rx: distinct & map
  En gros si 10 actions google ont été vendu à 7000$ puis 20 actions à 15200$, alors le prix vwap est égale à
  (7000 + 15200) / (10 + 20) = 740$    
 Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**  
-Test d'acceptance: Test 9 et Test 10 dans **VwapServerTest**   
+Test d'acceptance: Test 10 et Test 11 dans **VwapServerTest**   
 Opérateurs Rx: map, filter, skip & scan  
 
 # Exercice 9 -  échantillonage
@@ -58,7 +69,7 @@ Opérateurs Rx: map, filter, skip & scan
  web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de
  messages envoyés sur le web.  
  Attention il y a un piège, pour que le test passe il faut penser au scheduler...  
- Test d'acceptance: Test 11 dans **VwapServerTest**  
+ Test d'acceptance: Test 12 dans **VwapServerTest**  
  Opérateurs Rx: sample
 
 # Exercice 10 -  combinaison cotations / taux de changes
@@ -68,28 +79,28 @@ Opérateurs Rx: map, filter, skip & scan
  flux forexEventStreamClient.readServerSideEvents().  
  Attention, il ne faut pas générer plus de cotations sur une stock que ce que l'on a en entrée. En gros si le taux
  de change fluctue alors que le cours de l'action en dollar ne varie pas, il ne faut pas générer d'événement.
- Test d'acceptance: Test 12 dans **StockQuoteServerTest**  
+ Test d'acceptance: Test 13 dans **StockQuoteServerTest**  
  Opérateurs Rx: map, take & flatMap !!  
 
 # Exercice 11 - Cache "last value" sur le forex
 On va maintenant apporter une petite modification à la classe **StockQuoteServerTest**. Quand une cotation sur une stock arrive,
 on veut maintenant que le dernier cours de change euros/dollars connu soit utilisé. Cela veut dire que quand une cotation sur une stock en dollar arrive, pas besoin d'attendre de recevoir une nouvelle cotation EUR/USD, il suffit d'utiliser la dernière valeur connu. Pour pouvoir répondre à ce nouveau besoin il est fortement recommandé d'utiliser la classe **BehaviorSubject**.   
-Test d'acceptance: Test 13 dans **StockQuoteServerTest**
+Test d'acceptance: Test 14 dans **StockQuoteServerTest**
 
 # Exercice 12 - Se désinscrire quand il faut...
 Vous avez peut-être un soucis avec le code écrit précédemment: vous continuez peut-être d'écouter le flux forex lorsque plus personne n'écoute le flux stock. L'idée ici est donc d'arrèter les souscriptions au flux forex quand s'arrètent les souscriptions au flux sur les stocks.  
-Test d'acceptance: Test 14 dans **StockQuoteServerTest**  
+Test d'acceptance: Test 15 dans **StockQuoteServerTest**  
 Opérateurs Rx: doOnUnsubscribe
 
 # Exercice 13 - Ne pas attendre indéfiniment
 Si jamais pour une raison ou un autre il y a un souci avec le flux forex, votre serveur va avoir un gros problème. Les cotations sur les stocks en dollars risquent de s'accumuler jusqu'à saturation de la mémoire de la JVM.
 Pour résoudre ce problème on va limiter le temps d'attente d'une cotation forex à 5 secondes, temps au dela duquel un événement d'erreur sera lancé.  
-Test d'acceptance: Test 15 dans **StockQuoteServerTest**  
+Test d'acceptance: Test 16 dans **StockQuoteServerTest**  
 Opérateurs Rx: timeout
 
 # Exercice 14 - min/max glissants
 Retour sur le code Typescript. On va maintenant implémenter les méthodes **minFromPrevious** et **maxFromPrevious** dans **Stock.ts**. L'idée est d'avoir un flux contenant la valeur minimum/maximum des n dernières cotations.  
-Test d'acceptance: Tests 16, 17, 18 et 19 dans **StockTest.ts**  
+Test d'acceptance: Tests 17, 18, 19 et 20 dans **StockTest.ts**  
 Opérateurs Rx: windowCount, flatMap, map, min & max  
 
 TODO - idées pour la suite    

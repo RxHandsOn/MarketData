@@ -34,7 +34,7 @@ public class StockServerTest {
         stockClient = mock(RequestReplyClient.class);
         stockQuoteClient = mock(EventStreamClient.class);
         scheduler = Schedulers.test();
-        stockServer = new StockServer(42, stockClient, stockQuoteClient);
+        stockServer = new StockServer(42, stockClient, stockQuoteClient, scheduler);
         quoteSourceSubject = TestSubject.create(scheduler);
         when(stockQuoteClient.readServerSideEvents()).thenReturn(quoteSourceSubject);
         when(stockClient.request(eq("GOOGL")))
@@ -69,7 +69,7 @@ public class StockServerTest {
     }
 
     /**
-     * test 8
+     * Test 8
      */
     @Test
     public void should_send_a_stock_message_only_once_when_receiving_two_quotes_for_the_same_stock() {
@@ -83,10 +83,23 @@ public class StockServerTest {
 
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
         // then
-        testSubscriber.getOnCompletedEvents();
         List<Stock> events = testSubscriber.getOnNextEvents();
         assertThat(events).hasSize(2);
         assertThat(events.get(0).companyName).isEqualTo("Alphabet Inc");
         assertThat(events.get(1).companyName).isEqualTo("International Business Machines Corp.");
+    }
+
+    /**
+     * Test 9
+     */
+    @Test
+    public void should_stop_stream_after_10_seconds() {
+        // given
+        TestSubscriber<Stock> testSubscriber = new TestSubscriber<>();
+        stockServer.getEvents(null).subscribe(testSubscriber);
+        // when
+        scheduler.advanceTimeBy(10, TimeUnit.SECONDS);
+        // then
+        assertThat(testSubscriber.getOnCompletedEvents()).hasSize(1);
     }
 }

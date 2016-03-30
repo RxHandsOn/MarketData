@@ -19,7 +19,7 @@ window["toggle"]  = function(code : string) : void {
   const lineChart = new LineChart("#spotGraph", `${code} spot`);
   const chartSubscription = quoteObservable.pluck('quote').subscribe(lineChart.getObserver());
   const labelSubscription = stock.detectTrends(quoteObservable).subscribe(q => {
-    document.getElementById("currentStock").innerHTML = `Last quote: <span style="background: ${q.color}">${q.quote.quote.toFixed(4)}</span>EUR`
+    document.getElementById("currentStock").innerHTML = `Last quote: <span style="background: ${q.color}">${q.quote.quote.toFixed(4)}</span> EUR`
   })
 
   const minSubscription = stock.minFromPrevious(quoteObservable, 10).subscribe(q => {
@@ -67,6 +67,7 @@ const stockStaticDataObservable
       fromEventSource(activeStocksEventSource, 'message')
         .pluck<string>('data')
   );
+
 stockStaticDataObservable.subscribe(st => {
   document.getElementById("activeStocks").innerHTML += `<a href="#" onclick="toggle('${st.code}')">${st.code}</a> - ${st.companyName} - ${st.market}<br/>`
 });

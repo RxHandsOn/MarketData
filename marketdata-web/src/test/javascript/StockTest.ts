@@ -89,7 +89,7 @@ describe("Stocks trends engine", () => {
   })
 
   /**
-      Test 16
+      Test 17
   */
   it("Should compute max of last 4 known prices", () => {
     // given
@@ -107,7 +107,7 @@ describe("Stocks trends engine", () => {
   })
 
   /**
-      Test 17
+      Test 18
   */
   it("Should ignore older values when computing max of last 4 known prices", () => {
     // given
@@ -126,7 +126,7 @@ describe("Stocks trends engine", () => {
   })
 
   /**
-      Test 18
+      Test 19
   */
   it("Should compute min of last 4 known prices", () => {
     // given
@@ -144,7 +144,7 @@ describe("Stocks trends engine", () => {
   })
 
   /**
-      Test 19
+      Test 20
   */
   it("Should ignore older values when computing min of last 4 known prices", () => {
     // given
