@@ -104,7 +104,14 @@ Retour sur le code Typescript. On va maintenant implémenter les méthodes **min
 Test d'acceptance: Tests 17, 18, 19 et 20 dans **StockTest.ts**  
 Opérateurs Rx: windowCount, flatMap, map, min & max  
 
+# Exercice 15 - des souscriptions en double
+Si vous ouvrez plusieurs fois l'application WEB dans plusieurs onglets de votre navigateur, vous allez constater que la charge sur les serveurs va augmenter de manière significative (vous allez vite entendre le ventilo de votre portable).  
+Côté "market" les messages vont être envoyé en double et c'est dommage. Dans la classe **Market** justement, passez le flag **flaky** à true histoire de générer des erreurs lorsque plusieurs clients essayent de soucrire au même flux.  
+En fait le problème vient de la classe **MulticastEventStreamClient** qui est censée générer des flux "chauds"...
+Test d'acceptance: Test 21 dans **MulticastEventStreamClientTest**  
+Opérateurs Rx: publish & refcount  
+
+
 TODO - idées pour la suite    
 Typescript : plus grosse progression / baisse (combineLatest)
-Typescript: partage d'un flux sse avec publish/refCount    
 Typescript: gestion des reconnections avec retryWhen  

@@ -11,21 +11,25 @@ public class Application {
     public static void main(String[] args) throws IOException {
         new StaticServer("marketdata-web", 8000).createServer().start();
 
-        EventStreamClient forexEventStreamClient = new RxNettyEventEventStreamClient(8096);
+        EventStreamClient forexEventStreamClient
+                = new MulticastEventStreamClient(new RxNettyEventEventStreamClient(8096));
         ForexServer forexServer = new ForexServer(8080, forexEventStreamClient);
         forexServer.createServer().start();
 
-        EventStreamClient stockEventStreamClient = new RxNettyEventEventStreamClient(8097);
-
-        StockQuoteServer stockQuoteServer = new StockQuoteServer(8081, stockEventStreamClient, forexEventStreamClient, Schedulers.newThread());
+        EventStreamClient stockEventStreamClient
+                = new MulticastEventStreamClient(new RxNettyEventEventStreamClient(8097));
+        StockQuoteServer stockQuoteServer
+                = new StockQuoteServer(8081, stockEventStreamClient, forexEventStreamClient, Schedulers.newThread());
         stockQuoteServer.createServer().start();
 
-        EventStreamClient tradeEventStreamClient = new RxNettyEventEventStreamClient(8098);
+        EventStreamClient tradeEventStreamClient
+                = new MulticastEventStreamClient(new RxNettyEventEventStreamClient(8098));
         VwapServer vwapServer = new VwapServer(8082, tradeEventStreamClient, Schedulers.computation());
         vwapServer.createServer().start();
 
         RequestReplyClient stockStaticDataClient = new RxNettyRequestReplyClient(8099, "code");
-        StockServer stockServer = new StockServer(8083, stockStaticDataClient, stockEventStreamClient, Schedulers.computation());
+        StockServer stockServer
+                = new StockServer(8083, stockStaticDataClient, stockEventStreamClient, Schedulers.newThread());
         stockServer.createServer().start();
 
         System.out.println("Servers ready!");
