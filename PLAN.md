@@ -1,5 +1,6 @@
 # Exercice 0 - vérifier l'installation
-Depuis votre IDE, lancer la classe Market puis la classe Application avant d'afficher la page index.html dans un navigateur.
+Depuis votre IDE, lancer la classe Market puis la classe Application avant d'afficher la page [index.html](http://localhost:8000) dans un navigateur.  
+Il n'y aura pas encore grand chose d'intéressant à l'écran, il faudra attendre l'exercice 6 pour voir des données à l'écran...
 
 # Exercice 1 -  transformation simple
  Le but est de rendre opérationnel la classe **ForexServer** pour quelle propage les taux de change euro / dollar
