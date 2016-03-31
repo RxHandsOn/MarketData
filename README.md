@@ -2,10 +2,15 @@
 
 # MarketData
 ## Java
-TODO
+The project is based on Java8. As a prerequisite you also need maven3.
+There is 3 modules:
+
+1. marketdata-common: infrastructure code, mostly related to RxNetty. You do not need to change anything in this module
+2. marketdata-external: fake marketdata providers. You just need to run class **Market**. No code change required during the handson
+3. marketdata-web: the module where you will write code! Class **Application** launch a bunch of tiny HTTP servers, listening on different ports, that will be used by the Typescript UI (see below). Also these tiny servers relies on fake providers from marketdata-external.
 
 ## TypeScript
-A simple project to help you get started with RxJS and Typescript. It contains an html page where systemJS is configured with the Typescript transpiler, everything is ready to start coding in file index.ts.
+The whole UI is written in Typescript. You can either 'transpile' the code using the command line or directly within the browser. Everything is already set up.
 
 ### Build
 First step is to retrieve the dependencies:
