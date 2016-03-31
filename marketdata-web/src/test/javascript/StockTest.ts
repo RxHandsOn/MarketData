@@ -24,7 +24,7 @@ describe("Stocks static data engine", () => {
     const json = "{ \"code\" : \"ibm\" , \"companyName\" : \"International Business Machines Corp.\" , \"market\" : \"NYSE\" }"
     const json$ = hot<string>('-s--|', { s: json });
     // when
-    const stock$ = trends.parseRawStream(json$);
+    const stock$ = trends.parseStaticDataRawStream(json$);
     // then
     const stock = trends.Stock.parse(json);
     expectObservable(stock$).toBe('-s--|', { s: stock });
@@ -47,7 +47,7 @@ describe("Stocks trends engine", () => {
   /**
       Test 4
   */
-  it("Should parse quotes from the server", () => {
+  it.skip("Should parse quotes from the server", () => {
     // given
     const json = "{ \"code\" : \"ibm\" , \"quote\" : 42.34 }"
     const json$ = hot<string>('-q--|', { q: json });
@@ -61,7 +61,7 @@ describe("Stocks trends engine", () => {
   /**
       Test 5
   */
-  it("Should detect price getting higher", () => {
+  it.skip("Should detect price getting higher", () => {
     // given
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.34 }"
     const json2 = "{ \"code\" : \"ibm\" , \"quote\" : 42.42 }"
@@ -76,7 +76,7 @@ describe("Stocks trends engine", () => {
   /**
       Test 6
   */
-  it("Should detect price getting lower", () => {
+  it.skip("Should detect price getting lower", () => {
     // given
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.34 }"
     const json2 = "{ \"code\" : \"ibm\" , \"quote\" : 42.12 }"
@@ -91,7 +91,7 @@ describe("Stocks trends engine", () => {
   /**
       Test 17
   */
-  it("Should compute max of last 4 known prices", () => {
+  it.skip("Should compute max of last 4 known prices", () => {
     // given
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.10 }"
     const json2 = "{ \"code\" : \"ibm\" , \"quote\" : 42.20 }"
@@ -109,7 +109,7 @@ describe("Stocks trends engine", () => {
   /**
       Test 18
   */
-  it("Should ignore older values when computing max of last 4 known prices", () => {
+  it.skip("Should ignore older values when computing max of last 4 known prices", () => {
     // given
     const json0 = "{ \"code\" : \"ibm\" , \"quote\" : 43 }"
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.10 }"
@@ -128,7 +128,7 @@ describe("Stocks trends engine", () => {
   /**
       Test 19
   */
-  it("Should compute min of last 4 known prices", () => {
+  it.skip("Should compute min of last 4 known prices", () => {
     // given
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.10 }"
     const json2 = "{ \"code\" : \"ibm\" , \"quote\" : 42.20 }"
@@ -146,7 +146,7 @@ describe("Stocks trends engine", () => {
   /**
       Test 20
   */
-  it("Should ignore older values when computing min of last 4 known prices", () => {
+  it.skip("Should ignore older values when computing min of last 4 known prices", () => {
     // given
     const json0 = "{ \"code\" : \"ibm\" , \"quote\" : 41 }"
     const json1 = "{ \"code\" : \"ibm\" , \"quote\" : 42.10 }"
