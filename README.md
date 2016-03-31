@@ -25,4 +25,4 @@ Then you can run the tests with the following command:
 You need to launch 2 java processes:
 
  1. One java process running class **Market**. This is our fake market data providers
- 2. One Java process running class **Application**. This class will run several HTTP netty servers that will be used by the Typescript UI. To open the UI in your browser just use URL [http://localhost:8000](http://localhost:8000)
+ 2. One Java process running class **Application**. This class will run several HTTP netty servers that will be used by the Typescript UI. To open the UI in your browser just use URL [http://localhost:8000](http://localhost:8000) 
