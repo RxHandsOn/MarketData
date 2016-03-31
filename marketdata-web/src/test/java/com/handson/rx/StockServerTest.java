@@ -6,6 +6,7 @@ import com.handson.dto.Stock;
 import com.handson.infra.EventStreamClient;
 import com.handson.infra.RequestReplyClient;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -55,6 +56,7 @@ public class StockServerTest {
      * Test 7
      */
     @Test
+    @Ignore
     public void should_send_a_stock_message_when_receiving_a_quote() {
         // given
         TestSubscriber<Stock> testSubscriber = new TestSubscriber<>();
@@ -72,6 +74,7 @@ public class StockServerTest {
      * Test 8
      */
     @Test
+    @Ignore
     public void should_send_a_stock_message_only_once_when_receiving_two_quotes_for_the_same_stock() {
         // given
         TestSubscriber<Stock> testSubscriber = new TestSubscriber<>();
@@ -93,6 +96,7 @@ public class StockServerTest {
      * Test 9
      */
     @Test
+    @Ignore
     public void should_stop_stream_after_10_seconds() {
         // given
         TestSubscriber<Stock> testSubscriber = new TestSubscriber<>();

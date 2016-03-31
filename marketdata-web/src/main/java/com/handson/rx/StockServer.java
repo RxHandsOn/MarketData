@@ -30,48 +30,6 @@ public class StockServer extends RxNettyEventServer<Stock> {
 
     @Override
     protected Observable<Stock> getEvents(HttpRequest request) {
-
-        /* Etape initiale
-        return Observable.never(); */
-
-        /* Etape 1
-        return quoteEventStreamClient
-                .readServerSideEvents()
-                .map(Quote::fromJson)
-                .flatMap(quote ->
-                            stockClient
-                                .request(quote.code)
-                                .doOnNext(System.out::println)
-                                .map(Stock::fromJson)
-                );
-        */
-
-        /* Etape 2
-        return quoteEventStreamClient
-                .readServerSideEvents()
-                .map(Quote::fromJson)
-                .map(quote -> quote.code)
-                .distinct()
-                .flatMap(code ->
-                        stockClient
-                                .request(code)
-                                .doOnNext(System.out::println)
-                                .map(Stock::fromJson)
-                );
-        */
-
-        /* Etape 3 */
-        return quoteEventStreamClient
-                .readServerSideEvents()
-                .map(Quote::fromJson)
-                .map(quote -> quote.code)
-                .distinct()
-                .flatMap(code ->
-                        stockClient
-                                .request(code)
-                                .doOnNext(System.out::println)
-                                .map(Stock::fromJson)
-                ).takeUntil(Observable.timer(10, TimeUnit.SECONDS, scheduler));
-
+        return Observable.never();
     }
 }

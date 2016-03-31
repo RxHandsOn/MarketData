@@ -13,17 +13,7 @@ public class MulticastEventStreamClient implements EventStreamClient {
 
     public MulticastEventStreamClient(EventStreamClient targetClient, Scheduler scheduler) {
         this.scheduler = scheduler;
-        /* Etape initiale
-        this.serverSideEvents = targetClient.readServerSideEvents(); */
-        /* Etape 1
-        this.serverSideEvents = targetClient.readServerSideEvents().publish().refCount();
-        */
-        this.serverSideEvents
-                = targetClient
-                    .readServerSideEvents()
-                    .publish()
-                    .refCount()
-                    .retryWhen(errors -> errors.delay(2, TimeUnit.SECONDS, scheduler));
+       this.serverSideEvents = targetClient.readServerSideEvents();
     }
 
     @Override

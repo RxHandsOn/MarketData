@@ -5,6 +5,7 @@ import com.handson.dto.Vwap;
 import com.handson.infra.EventStreamClient;
 import com.handson.infra.HttpRequest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
@@ -42,6 +43,7 @@ public class VwapServerTest {
      * Test 10
      */
     @Test
+    @Ignore
     public void should_generate_one_google_vwap_event_when_a_google_trade_is_done() {
         // given
         TestSubscriber<Vwap> testSubscriber = new TestSubscriber<>();
@@ -64,6 +66,7 @@ public class VwapServerTest {
      * Test 11
      */
     @Test
+    @Ignore
     public void should_add_all_google_trades_to_generate_vwap_events() {
         // given
         TestSubscriber<Vwap> testSubscriber = new TestSubscriber<>();
@@ -86,6 +89,7 @@ public class VwapServerTest {
      * Test 12
      */
     @Test
+    @Ignore
     public void should_generate_at_most_one_event_per_sec() {
         // given
         TestSubscriber<Vwap> testSubscriber = new TestSubscriber<>();

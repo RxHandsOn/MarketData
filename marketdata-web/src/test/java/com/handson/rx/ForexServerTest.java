@@ -4,6 +4,7 @@ package com.handson.rx;
 import com.handson.dto.Quote;
 import com.handson.infra.EventStreamClient;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
@@ -37,6 +38,7 @@ public class ForexServerTest {
      * Test 1
      */
     @Test
+    @Ignore
     public void should_forward_forex_data() {
         // given
         TestSubscriber<Double> testSubscriber = new TestSubscriber<>();
@@ -54,6 +56,7 @@ public class ForexServerTest {
      * Test 2
      */
     @Test
+    @Ignore
     public void should_forward_only_one_forex_data() {
         // given
         TestSubscriber<Double> testSubscriber = new TestSubscriber<>();

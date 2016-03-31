@@ -1,6 +1,7 @@
 package com.handson.rx;
 
 import com.handson.infra.EventStreamClient;
+import org.junit.Ignore;
 import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -41,6 +42,7 @@ public class MulticastEventStreamClientTest {
      * Test 21
      */
     @Test
+    @Ignore
     public void Should_generate_only_one_subscription_side_effect_with_multiple_subscribers() {
         // given
         Observable<String> source = Observable.create(subscriber -> {
@@ -65,6 +67,7 @@ public class MulticastEventStreamClientTest {
      * Test 22
      */
     @Test
+    @Ignore
     public void Should_wait_2_sec_before_trying_to_reconnect_when_there_is_a_connection_error() {
         // given
         TestScheduler scheduler = Schedulers.test();
