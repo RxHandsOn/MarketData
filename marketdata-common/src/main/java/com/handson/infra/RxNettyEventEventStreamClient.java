@@ -11,6 +11,7 @@ import rx.Observable;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 public class RxNettyEventEventStreamClient implements EventStreamClient {
@@ -50,10 +51,5 @@ public class RxNettyEventEventStreamClient implements EventStreamClient {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        Observable<String> fx = new RxNettyEventEventStreamClient(8098).readServerSideEvents();
-
-        fx.toBlocking().forEach(System.out::println);
-    }
 
 }
