@@ -18,7 +18,7 @@ Il n'y aura pas encore grand chose d'intéressant à l'écran, il faudra attendr
 
 # Exercice 2 - on ne prend que le premier !
  Toujours dans la classe **ForexServer**, il faut maintenant modifier le code pour qu'à chaque souscription on ne
- renvoie qu'une seule valeur.
+ renvoie qu'une seule valeur.  
  Test d'acceptance: Test 2 dans **ForexServerTest**  
  Opérateurs Rx: take  
 
