@@ -62,6 +62,7 @@ Opérateurs Rx: distinct & map
 # Exercice 8 - on coupe au bout de 10 secondes
 Le code écrit jusqu'à maintenant fonctionne mais on a un souci: la connection HTTP utilisée pour récupérer les descriptions des stocks n'est jamais coupée. Pour s'en convaincre vous pouvez ouvrir et fermer plusieurs fois l'application [WEB](http://localhost:8000) et regarder ce qui est loggé au niveau des process java.  
 On va donc modifier la classe **StockServer** pour que le flux soit coupé au bout de 10 secondes.  
+Attention il y a un piège, pour que le test passe il faut penser au scheduler...
 Test d'acceptance: Test 9 dans **StockServerTest**  
 Opérateurs Rx: takeUntil & Observable.timer() 
 
@@ -78,7 +79,7 @@ Opérateurs Rx: map, filter, skip & scan
  Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface
  web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de
  messages envoyés sur le web.  
- Attention il y a un piège, pour que le test passe il faut penser au scheduler...  
+ Comme précédemment, pensez au scheduler pour les tests...  
  Test d'acceptance: Test 12 dans **VwapServerTest**  
  Opérateurs Rx: sample
 
