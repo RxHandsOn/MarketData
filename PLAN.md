@@ -29,7 +29,7 @@ Il n'y aura pas encore grand chose d'intéressant à l'écran, il faudra attendr
  Opérateurs Rx: filter  
 
 # Exercice 4 -  premiers pas en Typescript
-Le code Typescript est localisé dans le module marketdata-web, dans les répertoires src/main/javascript et src/test/javascript. Pour lancer les tests, il suffit de se placer dans le module marketdata-web et de taper en ligne de commande **npm test**. 
+Le code Typescript est localisé dans le module marketdata-web, dans les répertoires src/main/javascript et src/test/javascript. Pour lancer les tests, il suffit de se placer dans le module marketdata-web et de taper en ligne de commande **npm test**. Les tests à jouer sont désactivés avec le préfix **it.skip(...)**. Pour activer un test, il suffit de supprimer le préfixe **skip** et d'écrire **it(...)**
 
 Dans le fichier  **Stock.ts**, modifier la méthode **parseRawStream** pour parser les messages json venant du server et renvoyer un flux d'objects **Quote**  
 Test d'acceptance: Test 4 dans **StockTest.ts**  
