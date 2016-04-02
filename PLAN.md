@@ -5,7 +5,13 @@ Il n'y aura pas encore grand chose d'intéressant à l'écran, il faudra attendr
 # Exercice 1 -  transformation simple
  On commence avec du java dans le module marketdata-web.  
  Le but est de rendre opérationnel la classe **ForexServer** pour quelle propage les taux de change euro / dollar
- sous forme de **Double** provenant du service ForexProvider (via forexEventStreamClient.readServerSideEvents()).  
+ sous forme de **Double** provenant du service ForexProvider. Il faut utiliser le client forecEventStreamClient comme ci-dessous:
+ ```java
+   protected Observable<Double> getEvents(HttpRequest request) {
+     Observable<String> rawEvents = forexEventStreamClient.readServerSideEvents();
+     ...
+ ```
+ Note: le paramètre *request* n'est pas utile pour cet exercice.    
  La méthode **Quote::fromJson** pourra être utilisée pour parser les données brutes obtenues et créer des DTOs **Quote**.  
  Test d'acceptance: Test 1 dans **ForexServerTest**  
  Opérateurs Rx: map  
