@@ -107,12 +107,12 @@ Opérateurs Rx: windowCount, flatMap, map, min & max
 # Exercice 16 - des souscriptions en double
 Si vous ouvrez plusieurs fois l'application WEB dans plusieurs onglets de votre navigateur, vous allez constater que la charge sur les serveurs va augmenter de manière significative (vous allez vite entendre le ventilo de votre portable).  
 Côté "market" les messages vont être envoyé en double et c'est dommage... Dans la classe **Market** justement, passez le flag **flaky** à true histoire de générer des erreurs lorsque plusieurs clients essayent de soucrire au même flux.  
-En fait le problème vient de la classe **MulticastEventStreamClient** qui est censée générer des flux "chauds"...
+En fait le problème vient de la classe **MulticastEventStreamClient** qui est censée générer des flux "chauds"...  
 Test d'acceptance: Test 21 dans **MulticastEventStreamClientTest**  
 Opérateurs Rx: publish & refcount  
 
 # Exercice 17 - réessayer en cas d'erreur
-Toujours dans la classe **MulticastEventStreamClient**, on va cette fois-ci mettre en place une politique de reconnection en cas d'erreur. Si jamais on reçoit un événement d'erreur, on attend 2 secondes puis on se reconnecte.
+Toujours dans la classe **MulticastEventStreamClient**, on va cette fois-ci mettre en place une politique de reconnection en cas d'erreur. Si jamais on reçoit un événement d'erreur, on attend 2 secondes puis on se reconnecte.  
 Test d'acceptance: Test 22 dans **MulticastEventStreamClientTest**  
 Opérateurs Rx: retryWhen & delay  
 
