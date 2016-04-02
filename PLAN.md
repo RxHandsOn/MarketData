@@ -27,7 +27,7 @@ Test d'acceptance: Test 4 dans **StockTest.ts**
 Opérateurs Rx: map  
 
 # Exercice 5 -  ça monte et ça baisse
-Ici le but est de détecter quand le cours monte et quand il baisse. Dans le flux renvoyé par **detectTrends** il y aura un un événement "vert" lorsque le cours augmente, un événement "rouge" lorsqu'il baisse. On va donc avoir besoin de comparer chaque cotation avec la cotation précédente. On va utiliser l'opérateur zip pour combiner 2 flux:
+Ici le but est de détecter quand le cours monte et quand il baisse. Dans le flux renvoyé par **detectTrends** il y aura un un événement "green" lorsque le cours augmente, un événement "red" lorsqu'il baisse. On va donc avoir besoin de comparer chaque cotation avec la cotation précédente. On va utiliser l'opérateur zip pour combiner 2 flux:
 
   1. le flux de cotations tel quel
   2. le même flux de cotations mais décalé d'un événement grâce à l'opérateur skip
