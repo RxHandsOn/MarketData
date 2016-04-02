@@ -54,7 +54,7 @@ Opérateurs Rx: distinct & map
 Le code écrit jusqu'à maintenant fonctionne mais on a un souci: la connection HTTP utilisée pour récupérer les descriptions des stocks n'est jamais coupée. Pour s'en convaincre vous pouvez ouvrir et fermer plusieurs fois l'application [WEB](http://localhost:8000) et regarder ce qui est loggé au niveau des process java.  
 On va donc modifier la classe **StockServer** pour que le flux soit coupé au bout de 10 secondes.  
 Test d'acceptance: Test 9 dans **StockServerTest**  
-Opérateurs Rx: distinct & map  
+Opérateurs Rx: takeUntil & Observable.timer() 
 
 # Exercice 8 -  gestion d'état et calcul d'un prix vwap
  On va maintenant consommer un flux de transactions pour calculer pour un titre, le volume d'actions échangées
