@@ -78,7 +78,7 @@ Opérateurs Rx: map, filter, skip & scan
 # Exercice 10 -  échantillonage
  Dans la vraie vie, énormément de transactions sont réalisées sur les marchés. Pour éviter d'envoyer vers l'interface
  web plus de prix vwap que nécessaire, nous allons maintenant utiliser l'opérateur Rx "sample" pour limiter le nombre de
- messages envoyés sur le web.  
+ messages envoyés sur le web. On veut envoyer vers le navigateur au maximum un message par seconde.  
  Comme précédemment, pensez au scheduler pour les tests...  
  Test d'acceptance: Test 12 dans **VwapServerTest**  
  Opérateurs Rx: sample
