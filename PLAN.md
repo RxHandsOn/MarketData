@@ -3,6 +3,7 @@ Depuis votre IDE, lancer la classe Market puis la classe Application avant d'aff
 Il n'y aura pas encore grand chose d'intéressant à l'écran, il faudra attendre l'exercice 6 pour voir des données à l'écran...
 
 # Exercice 1 -  transformation simple
+ On commence avec du java dans le module marketdata-web.  
  Le but est de rendre opérationnel la classe **ForexServer** pour quelle propage les taux de change euro / dollar
  sous forme de **Double** provenant du service ForexProvider (via forexEventStreamClient.readServerSideEvents()).  
  La méthode **Quote::fromJson** pourra être utilisée pour parser les données brutes obtenues et créer des DTOs **Quote**.  
@@ -22,6 +23,7 @@ Il n'y aura pas encore grand chose d'intéressant à l'écran, il faudra attendr
  Opérateurs Rx: filter  
 
 # Exercice 4 -  premiers pas en Typescript
+Le code Typescript est localisé dans le module marketdata-web, dans les répertoires src/main/javascript et src/test/javascript  
 Dans le fichier  **Stock.ts**, modifier la méthode **parseRawStream** pour parser les messages json venant du server et renvoyer un flux d'objects **Quote**  
 Test d'acceptance: Test 4 dans **StockTest.ts**  
 Opérateurs Rx: map  
@@ -38,6 +40,7 @@ Test d'acceptance: Test 5 et 6 dans **StockTest.ts**
 Opérateurs Rx: skip et zip  
 
 # Exercice 6 -  première combinaison avec flatmap
+Retour au code Java   
 C'est bien de pouvoir filtrer, faut-il encore savoir ce que l'on a sous la main... L'idée de cet exercice est de récupérer
 les informations sur les stocks qui sont actives, celles pour lesquelles il y a eu au moins une cotation depuis la souscription.  
 Dans la classe **StockServer**, pour chaque cotation, venant de **quoteEventStreamClient.readServerSideEvents()**, demander à partir du code de la cotation les infos sur la stock correspondante à l'aide de **stockClient.request()**.  
@@ -100,11 +103,13 @@ Test d'acceptance: Test 16 dans **StockQuoteServerTest**
 Opérateurs Rx: timeout
 
 # Exercice 15 - min/max glissants
-Retour sur le code Typescript. On va maintenant implémenter les méthodes **minFromPrevious** et **maxFromPrevious** dans **Stock.ts**. L'idée est d'avoir un flux contenant la valeur minimum/maximum des n dernières cotations.  
+Retour sur le code Typescript.  
+On va maintenant implémenter les méthodes **minFromPrevious** et **maxFromPrevious** dans **Stock.ts**. L'idée est d'avoir un flux contenant la valeur minimum/maximum des n dernières cotations.  
 Test d'acceptance: Tests 17, 18, 19 et 20 dans **StockTest.ts**  
 Opérateurs Rx: windowCount, flatMap, map, min & max  
 
 # Exercice 16 - des souscriptions en double
+De nouveau sur du Java...  
 Si vous ouvrez plusieurs fois l'application WEB dans plusieurs onglets de votre navigateur, vous allez constater que la charge sur les serveurs va augmenter de manière significative (vous allez vite entendre le ventilo de votre portable).  
 Côté "market" les messages vont être envoyé en double et c'est dommage... Dans la classe **Market** justement, passez le flag **flaky** à true histoire de générer des erreurs lorsque plusieurs clients essayent de soucrire au même flux.  
 En fait le problème vient de la classe **MulticastEventStreamClient** qui est censée générer des flux "chauds"...  
