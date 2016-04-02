@@ -13,6 +13,7 @@ There is 3 modules:
 The whole UI is written in Typescript. You can either 'transpile' the code using the command line or directly within the browser. Everything is already set up.
 
 ### Build
+Go in the marketdata-web directory.   
 First step is to retrieve the dependencies:
 
     npm install
