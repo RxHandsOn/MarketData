@@ -55,7 +55,7 @@ Dans la classe **StockServer**, pour chaque cotation, venant de **quoteEventStre
 Test d'acceptance: Test 7 dans **StockServerTest**  
 Opérateurs Rx: map & flatmap   
 
-À partir de maintenant, si vous relancez Market et Application, l'interface sur [index.html](http://localhost:8000) va commencer à afficher quelqe chose.
+À partir de maintenant, si vous relancez Market et Application, l'interface sur [index.html](http://localhost:8000) va commencer à afficher quelque chose.
 
 # Exercice 7 - pas de doublons
 On reprend l'exercice précédent et cette fois-ci on utilise l'opérateur distinct pour ne pas envoyer plusieurs fois les informations sur une même stock.  
