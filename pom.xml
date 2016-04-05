@@ -20,32 +20,22 @@
                 <groupId>io.reactivex</groupId>
                 <artifactId>rxjava</artifactId>
                 <version>1.0.14</version>
-                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
                 <version>4.1.0.Beta8</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-handler</artifactId>
-                <version>4.1.0.Beta8</version>
-                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-codec-http</artifactId>
                 <version>4.1.0.Beta8</version>
-                <scope>compile</scope>
             </dependency>
 
             <dependency>
                 <groupId>io.reactivex</groupId>
                 <artifactId>rxnetty</artifactId>
                 <version>0.4.15</version>
-                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
