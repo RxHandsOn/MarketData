@@ -58,9 +58,9 @@ public class StockQuoteServerTest {
         quoteSourceSubject.onNext(new Quote("APPLE", 98.18).toJson());
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
         // then
-        List<Quote> events = testSubscriber.getOnNextEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).code).isEqualTo("GOOGL");
+        assertThat(testSubscriber.getOnNextEvents())
+                .hasSize(1)
+                .extracting(event -> event.code).containsExactly("GOOGL");
     }
 
     /**
