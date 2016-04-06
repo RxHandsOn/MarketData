@@ -5,6 +5,7 @@ import com.handson.dto.Quote;
 import com.handson.infra.EventStreamClient;
 import com.handson.infra.HttpRequest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import rx.Subscription;
 import rx.observers.TestSubscriber;
@@ -46,6 +47,7 @@ public class StockQuoteServerTest {
      * Test 3
      */
     @Test
+    @Ignore
     public void should_filter_quotes_for_requested_stock() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
@@ -66,6 +68,7 @@ public class StockQuoteServerTest {
      * Test 13
      */
     @Test
+    @Ignore
     public void should_generate_one_quote_in_euro_for_one_quote_in_dollar() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
@@ -86,6 +89,7 @@ public class StockQuoteServerTest {
      * Test 14
      */
     @Test
+    @Ignore
     public void should_generate_quotes_in_euro_using_latest_known_foreign_exchange_rate() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
@@ -107,6 +111,7 @@ public class StockQuoteServerTest {
      * Test 15
      */
     @Test
+    @Ignore
     public void should_unsubscribe_to_forex_stream_when_unscribing_to_quote() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
@@ -125,6 +130,7 @@ public class StockQuoteServerTest {
      * Test 16
      */
     @Test
+    @Ignore
     public void should_send_an_error_when_no_forex_data_after_five_seconds() {
         // given
         TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
