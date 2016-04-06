@@ -100,6 +100,6 @@ public class StockServerTest {
         // when
         scheduler.advanceTimeBy(10, TimeUnit.SECONDS);
         // then
-        assertThat(testSubscriber.getOnCompletedEvents()).hasSize(1);
+        testSubscriber.assertCompleted();
     }
 }
