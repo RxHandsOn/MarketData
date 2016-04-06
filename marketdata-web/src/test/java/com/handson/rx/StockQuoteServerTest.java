@@ -55,13 +55,12 @@ public class StockQuoteServerTest {
         stockQuoteServer.getEvents(request).subscribe(testSubscriber);
         // when
         quoteSourceSubject.onNext(new Quote("GOOGL", 705.8673).toJson());
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1).toJson());
         quoteSourceSubject.onNext(new Quote("APPLE", 98.18).toJson());
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
         // then
-        List<Quote> events = testSubscriber.getOnNextEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).code).isEqualTo("GOOGL");
+        assertThat(testSubscriber.getOnNextEvents())
+                .hasSize(1)
+                .extracting(event -> event.code).containsExactly("GOOGL");
     }
 
     /**
