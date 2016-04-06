@@ -55,7 +55,6 @@ public class StockQuoteServerTest {
         stockQuoteServer.getEvents(request).subscribe(testSubscriber);
         // when
         quoteSourceSubject.onNext(new Quote("GOOGL", 705.8673).toJson());
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1).toJson());
         quoteSourceSubject.onNext(new Quote("APPLE", 98.18).toJson());
         scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
         // then
