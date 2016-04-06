@@ -67,14 +67,16 @@ Le code écrit jusqu'à maintenant fonctionne mais on a un souci: la connection 
 On va donc modifier la classe **StockServer** pour que le flux soit coupé au bout de 10 secondes.  
 Attention il y a un piège, pour que le test passe il faut penser au scheduler...  
 Test d'acceptance: Test 9 dans **StockServerTest**  
-Opérateurs Rx: takeUntil & Observable.timer() 
+Opérateurs Rx: takeUntil & Observable.timer()
 
 # Exercice 9 -  gestion d'état et calcul d'un prix vwap
  On va maintenant consommer un flux de transactions pour calculer pour un titre, le volume d'actions échangées
  ainsi qu'un prix vwap, c'est à dire une moyenne pondérée du prix.  
  En gros si 10 actions google ont été vendu à 7000$ puis 20 actions à 15200$, alors le prix vwap est égale à
  (7000 + 15200) / (10 + 20) = 740$    
-Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**  
+Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**.
+Pour chaque événement **Trade** reçu, le serveur **VwapServer** va envoyer un événement correspondant à un  nouveau prix **VWap**, calculé en fonction du prix **Vwap** précédent ainsi que du **Trade** reçu.  
+Dans cet exercice, et c'est nouveau, il faut donc gérer un état, le prix Vwap. Pour cette raison on va utiliser l'opérateur scan. Attention il y a plusieurs variantes de cet opérateurs, il faut utiliser celle qui propose de gérer un accumulateur...  
 Test d'acceptance: Test 10 et Test 11 dans **VwapServerTest**   
 Opérateurs Rx: map, filter, skip & scan  
 
