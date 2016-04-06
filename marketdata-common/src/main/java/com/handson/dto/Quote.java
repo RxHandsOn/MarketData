@@ -5,11 +5,8 @@ import com.google.gson.GsonBuilder;
 
 public class Quote {
 
-    public String code;
-    public double quote;
-
-    public Quote() {
-    }
+    public final String code;
+    public final double quote;
 
     public Quote(String code, double quote) {
         this.code = code;

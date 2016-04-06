@@ -1,7 +1,6 @@
 package com.handson.rx;
 
 
-import com.handson.dto.Quote;
 import com.handson.dto.Trade;
 import com.handson.dto.Vwap;
 import com.handson.infra.EventStreamClient;
@@ -10,8 +9,6 @@ import com.handson.infra.RxNettyEventServer;
 import rx.Observable;
 import rx.Scheduler;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class VwapServer extends RxNettyEventServer<Vwap> {
@@ -47,7 +44,7 @@ public class VwapServer extends RxNettyEventServer<Vwap> {
                 .readServerSideEvents()
                 .map(Trade::fromJson)
                 .filter(t -> t.code.equals(stockCode))
-                .scan(new Vwap(), (v, t) -> {
+                .scan(new Vwap(stockCode), (v, t) -> {
                     double volume = v.volume + t.quantity;
                     double vwap = (v.volume * v.vwap + t.nominal) / volume;
                     return new Vwap(t.code, vwap, volume);
@@ -59,7 +56,7 @@ public class VwapServer extends RxNettyEventServer<Vwap> {
                 .readServerSideEvents()
                 .map(Trade::fromJson)
                 .filter(t -> t.code.equals(stockCode))
-                .scan(new Vwap(), (v, t) -> v.addTrade(t))
+                .scan(new Vwap(stockCode), (v, t) -> v.addTrade(t))
                 .skip(1)
                 .sample(1, TimeUnit.SECONDS, scheduler);
     }

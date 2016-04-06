@@ -5,12 +5,9 @@ import com.google.gson.GsonBuilder;
 
 public class Trade {
 
-    public String code;
-    public int quantity;
-    public double nominal;
-
-    public Trade() {
-    }
+    public final String code;
+    public final int quantity;
+    public final double nominal;
 
     public Trade(String code, int quantity, double nominal) {
         this.code = code;
