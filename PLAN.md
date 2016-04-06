@@ -65,7 +65,7 @@ Opérateurs Rx: distinct & map
 # Exercice 8 - on coupe au bout de 10 secondes
 Le code écrit jusqu'à maintenant fonctionne mais on a un souci: la connection HTTP utilisée pour récupérer les descriptions des stocks n'est jamais coupée. Pour s'en convaincre vous pouvez ouvrir et fermer plusieurs fois l'application [WEB](http://localhost:8000) et regarder ce qui est loggé au niveau des process java.  
 On va donc modifier la classe **StockServer** pour que le flux soit coupé au bout de 10 secondes.  
-Attention il y a un piège, pour que le test passe il faut penser au scheduler...
+Attention il y a un piège, pour que le test passe il faut penser au scheduler...  
 Test d'acceptance: Test 9 dans **StockServerTest**  
 Opérateurs Rx: takeUntil & Observable.timer() 
 
