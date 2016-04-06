@@ -23,11 +23,23 @@ public class StaticServer {
     }
 
     public HttpServer<ByteBuf, ByteBuf> createServer() {
-        File rootDirectory = new File(rootDir);
-        return RxNetty.createHttpServer(8000,
-                RequestHandlerWithErrorMapper.from(
-                        new LocalDirectoryRequestHandler(rootDirectory),
-                        new FileErrorResponseMapper()));
+        try {
+            final String ideBasePath = new File(".").getCanonicalPath();
+            final File rootDirectory;
+            if (ideBasePath.contains(rootDir)) {
+                // for eclipse
+                rootDirectory = new File(".");
+            } else {
+                // for intellij
+                rootDirectory = new File(rootDir);
+            }
+            return RxNetty.createHttpServer(8000,
+                    RequestHandlerWithErrorMapper.from(
+                            new LocalDirectoryRequestHandler(rootDirectory),
+                            new FileErrorResponseMapper()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static class LocalDirectoryRequestHandler extends FileRequestHandler {
