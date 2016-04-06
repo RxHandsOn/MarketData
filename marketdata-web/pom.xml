@@ -8,18 +8,20 @@
   		<groupId>com.handson</groupId>
   		<version>1.0-SNAPSHOT</version>
   	</parent>
-    <groupId>com.handson</groupId>
     <artifactId>marketdata-web</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
-
 
     <dependencies>
         <dependency>
           <groupId>com.handson</groupId>
           <artifactId>marketdata-common</artifactId>
-          <version>1.0-SNAPSHOT</version>
-          <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxnetty</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

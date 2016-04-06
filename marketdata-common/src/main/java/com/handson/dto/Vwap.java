@@ -1,15 +1,17 @@
 package com.handson.dto;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class Vwap {
 
-    public String code;
-    public double vwap;
-    public double volume;
+    public final String code;
+    public final double vwap;
+    public final double volume;
 
-    public Vwap() {
+    public Vwap(String code) {
+        this.code = code;
+        this.vwap = 0;
+        this.volume = 0;
     }
 
     public Vwap(String code, double vwap, double volume) {

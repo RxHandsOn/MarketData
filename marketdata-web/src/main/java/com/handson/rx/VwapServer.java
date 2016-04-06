@@ -1,7 +1,6 @@
 package com.handson.rx;
 
 
-import com.handson.dto.Quote;
 import com.handson.dto.Trade;
 import com.handson.dto.Vwap;
 import com.handson.infra.EventStreamClient;
@@ -10,8 +9,6 @@ import com.handson.infra.RxNettyEventServer;
 import rx.Observable;
 import rx.Scheduler;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class VwapServer extends RxNettyEventServer<Vwap> {

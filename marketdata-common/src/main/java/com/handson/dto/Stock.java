@@ -4,14 +4,11 @@ import com.google.gson.Gson;
 
 public class Stock {
 
-    public String code;
+    public final String code;
 
-    public String companyName;
+    public final String companyName;
 
-    public String market;
-
-    public Stock() {
-    }
+    public final String market;
 
     public Stock(String code, String companyName, String market) {
         this.code = code;
