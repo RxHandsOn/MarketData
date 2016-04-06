@@ -45,6 +45,7 @@ public class ForexServerTest {
         forexSourceSubject.onNext(new Quote("EUR/USD", 1.4).toJson());
         scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
         // then
+        testSubscriber.assertNoErrors();
         List<Double> events = testSubscriber.getOnNextEvents();
         assertThat(events).hasSize(1);
         assertThat(events.get(0)).isEqualTo(1.4);
