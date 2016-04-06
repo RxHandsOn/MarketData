@@ -101,7 +101,7 @@ Opérateurs Rx: **map, filter, skip & scan**
  ```
  (ici on a en entré des prix en dollar, il faut donc faire une division)  
  Attention, il ne faut pas générer plus de cotations sur une stock que ce que l'on a en entrée. En gros si le taux
- de change fluctue alors que le cours de l'action en dollar ne varie pas, il ne faut pas générer d'événement.
+ de change fluctue alors que le cours de l'action en dollar ne varie pas, il ne faut pas générer d'événement.  
  Test d'acceptance: Test 13 dans **StockQuoteServerTest**  
  Opérateurs Rx: **map, take & flatMap !!**  
 
