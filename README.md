@@ -2,8 +2,8 @@
 
 # MarketData
 ## Java
-The project is based on Java8. As a prerequisite you also need maven3.
-There is 3 modules:
+The project is based on Java8. As a prerequisite you also need maven3.  
+There are 3 modules:
 
 1. marketdata-common: infrastructure code, mostly related to RxNetty. You do not need to change anything in this module
 2. marketdata-external: fake marketdata providers. You just need to run class **Market**. No code change required during the handson
