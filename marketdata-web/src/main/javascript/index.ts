@@ -16,7 +16,7 @@ window["toggle"]  = function(code : string) : void {
           .pluck<string>('data')
       );
 
-  const lineChart = new LineChart("#spotGraph", `${code} spot`);
+  const lineChart = new LineChart("#spotGraph", `${code} spot`, 2);
   const chartSubscription = quoteObservable.pluck('quote').subscribe(lineChart.getObserver());
   const labelSubscription = stock.detectTrends(quoteObservable).subscribe(q => {
     document.getElementById("currentStock").innerHTML = `Last quote: <span style="background: ${q.color}">${q.quote.quote.toFixed(4)}</span> EUR`
@@ -36,7 +36,7 @@ window["toggle"]  = function(code : string) : void {
           .pluck<string>('data')
       ).pluck<number>('vwap');
 
-  const vwapLineChart = new LineChart("#vwapGraph", `${code} vwap`);
+  const vwapLineChart = new LineChart("#vwapGraph", `${code} vwap`, 2);
   const vwapChartSubscription = vwapObservable.subscribe(vwapLineChart.getObserver());
   const vwapLabelSubscription = vwapObservable.subscribe(v => {
     document.getElementById("currentVwap").innerHTML = `Vwap: ${v.toFixed(4)}$`

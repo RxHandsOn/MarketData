@@ -7,7 +7,7 @@ interface Point {
 }
 
 export default class LineChart {
-    constructor(private svgSelector : string, private title : string) {
+    constructor(private svgSelector : string, private title : string, private chartsCount: number) {
         this.initChart();
     }
 
@@ -17,8 +17,8 @@ export default class LineChart {
     private xAxis:d3.svg.Axis;
     private yAxis:d3.svg.Axis;
     private maxNumberOfDataPoints = 100;
-    private line:any;
-    private lineFunc: d3.svg.Line<any>;
+    private lines:any[] = [];
+    private lineFuncs: d3.svg.Line<any>[] = [];
     private updatesOverTime:Point[] = [];
 
     initChart() {
@@ -78,10 +78,12 @@ export default class LineChart {
             .text(this.title);
 
         // Define our line series
-        this.lineFunc = d3.svg.line()
-            .x(function(d:any) { return this.xRange(d.x); })
-            .y(function(d:any) { return this.yRange(d.y); })
-            .interpolate("linear");
+        for(var i = 0; i < this.chartsCount; i++) {
+            this.lineFuncs[i] = d3.svg.line()
+                .x((d:any) => { return this.xRange(d.x); })
+                .y((d:any) => { return this.yRange(d.y); })
+                .interpolate("linear");
+        }
 
         this.svg.append("defs").append("clipPath")
             .attr("id", "clip")
@@ -91,11 +93,14 @@ export default class LineChart {
             .attr("width", width)
             .attr("height", height);
 
-        this.line = this.svg.append("g")
-            .attr("clip-path", "url(#clip)")
-            .append("path")
-            .attr("stroke", "blue")
-            .attr("fill", "none");
+        for(var i = 0; i < this.chartsCount; i++) {
+            const color = i === 0 ? 'blue' : 'red';
+            this.lines[i] = this.svg.append("g")
+                .attr("clip-path", "url(#clip)")
+                .append("path")
+                .attr("stroke", color)
+                .attr("fill", "none");
+        }
 
         // Add a text element below the chart, which will display the subject of new edits
         this.svg.append("text")
@@ -104,51 +109,25 @@ export default class LineChart {
             .attr("width", width - margins.left);
     }
 
-    private update(updates:Point[]) {
+    private update(updates:Point[], updates2: Point[]) {
         // Update the ranges of the chart to reflect the new data
         if (updates.length > 0)   {
-            this.xRange.domain(d3.extent(updates, function(d:any) { return d.x; }));
-            this.yRange.domain([d3.min(updates, function(d) { return d.y; }),
-                d3.max(updates, function(d) { return d.y; })]);
+            this.xRange.domain(d3.extent(updates.concat(updates2), (d:any) => d.x));
+            this.yRange.domain(d3.extent(updates.concat(updates2), (d:any) => d.y));
         }
 
-        // Until we have filled up our data window, we just keep adding data
-        // points to the end of the chart.
-        if (updates.length < this.maxNumberOfDataPoints) {
-            this.line.transition()
+        for(var i = 0; i < this.chartsCount; i++) {
+            const updatesToUse = i == 0 ? updates : updates2;
+            this.lines[i].transition()
                 .ease("linear")
-                .attr("d", this.lineFunc(updates));
-
-            this.svg.selectAll("g.x.axis")
-                .transition()
-                .ease("linear")
-                .call(this.xAxis);
+                .attr("d", this.lineFuncs[i](updatesToUse));
         }
-        // Once we have filled up the window, we then remove points from the
-        // start of the chart, and move the data over so the chart looks
-        // like it is scrolling forwards in time
-        else    {
-            // Calculate the amount of translation on the x axis which equates to the
-            // time between two samples
-            var xTranslation = this.xRange(updates[0].x) - this.xRange(updates[1].x);
 
-            // Transform our line series immediately, then translate it from
-            // right to left. This gives the effect of our chart scrolling
-            // forwards in time
-            this.line
-                .attr("d", this.lineFunc(updates))
-                .attr("transform", null)
-                .transition()
-                .duration(200)
-                .ease("linear")
-                .attr("transform", "translate(" + xTranslation + ", 0)");
+        this.svg.selectAll("g.x.axis")
+            .transition()
+            .ease("linear")
+            .call(this.xAxis);
 
-            this.svg.selectAll("g.x.axis")
-                .transition()
-                .duration(200)
-                .ease("linear")
-                .call(this.xAxis);
-        }
 
         this.svg.selectAll("g.y.axis")
             .transition()
@@ -164,7 +143,10 @@ export default class LineChart {
             if (this.updatesOverTime.length > this.maxNumberOfDataPoints) {
                 this.updatesOverTime.shift();
             }
-            this.update(this.updatesOverTime);
+            const updates2 = this.updatesOverTime.map((p: Point) => {
+                return {x: p.x, y: p.y + 0.25};
+            });
+            this.update(this.updatesOverTime, updates2);
         };
     }
 }
