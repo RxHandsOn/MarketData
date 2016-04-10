@@ -140,7 +140,5 @@ Toujours dans la classe **MulticastEventStreamClient**, on va cette fois-ci mett
 Test d'acceptance: Test 22 dans **MulticastEventStreamClientTest**  
 Opérateurs Rx: **retryWhen & delay**  
 
-
-TODO - idées pour la suite    
-Typescript : plus grosse progression / baisse (combineLatest)
-Typescript: gestion des reconnections avec retryWhen  
+# Bonus
+Reprendre l'exercice précédent et faire en sorte d'attendre 2, 4, 6 secondes puis abandonner
