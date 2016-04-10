@@ -7,8 +7,13 @@ interface Point {
 }
 
 export default class LineChart {
-    constructor(private svgSelector : string, private title : string, private chartsCount: number) {
+    constructor(private svgSelector: string,
+                private title: string,
+                private chartsCount: number) {
         this.initChart();
+        for(var i = 0; i < chartsCount; i++) {
+            this.updatesOverTime.push([]);
+        }
     }
 
     private svg:d3.Selection<SVGElement>;
@@ -16,10 +21,9 @@ export default class LineChart {
     private yRange:d3.scale.Linear<number, number>;
     private xAxis:d3.svg.Axis;
     private yAxis:d3.svg.Axis;
-    private maxNumberOfDataPoints = 100;
     private lines:any[] = [];
     private lineFuncs: d3.svg.Line<any>[] = [];
-    private updatesOverTime:Point[] = [];
+    private updatesOverTime:Point[][] = [];
 
     initChart() {
         const width = 480;
@@ -109,18 +113,18 @@ export default class LineChart {
             .attr("width", width - margins.left);
     }
 
-    private update(updates:Point[], updates2: Point[]) {
+    private update(updatesArrays:Point[][]) {
+        const updatesConcat = updatesArrays.reduce((a, b) => a.concat(b), []);
         // Update the ranges of the chart to reflect the new data
-        if (updates.length > 0)   {
-            this.xRange.domain(d3.extent(updates.concat(updates2), (d:any) => d.x));
-            this.yRange.domain(d3.extent(updates.concat(updates2), (d:any) => d.y));
+        if (updatesConcat.length > 0)   {
+            this.xRange.domain(d3.extent(updatesConcat, (d:any) => d.x));
+            this.yRange.domain(d3.extent(updatesConcat, (d:any) => d.y));
         }
 
         for(var i = 0; i < this.chartsCount; i++) {
-            const updatesToUse = i == 0 ? updates : updates2;
             this.lines[i].transition()
                 .ease("linear")
-                .attr("d", this.lineFuncs[i](updatesToUse));
+                .attr("d", this.lineFuncs[i](updatesArrays[i]));
         }
 
         this.svg.selectAll("g.x.axis")
@@ -136,17 +140,20 @@ export default class LineChart {
 
     getObserver():((value: number) => void) {
         return (value) => {
-            this.updatesOverTime.push({
+            this.updatesOverTime[0].push({
                 x: new Date(),
                 y: (value)
             });
-            if (this.updatesOverTime.length > this.maxNumberOfDataPoints) {
-                this.updatesOverTime.shift();
-            }
-            const updates2 = this.updatesOverTime.map((p: Point) => {
+            const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
+            this.updatesOverTime[0] = this.updatesOverTime[0].filter((point: Point) =>
+                new Date().getTime() - point.x.getTime() < FIVE_MINUTES_IN_MS);
+            const updates2 = this.updatesOverTime[0].map((p: Point) => {
                 return {x: p.x, y: p.y + 0.25};
             });
-            this.update(this.updatesOverTime, updates2);
+            window.requestAnimationFrame(() => {
+                this.update([this.updatesOverTime[0], updates2]);
+            });
+
         };
     }
 }
