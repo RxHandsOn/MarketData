@@ -70,4 +70,5 @@ const stockStaticDataObservable
 
 stockStaticDataObservable.subscribe(st => {
   document.getElementById("activeStocks").innerHTML += `<a href="#" onclick="toggle('${st.code}')">${st.code}</a> - ${st.companyName} - ${st.market}<br/>`
-});
+},
+error => console.log("Stocks connection stopped"));
