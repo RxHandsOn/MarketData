@@ -5,7 +5,7 @@ Vous n'aurez pas à modifier la structure des classes, la signature des méthode
 
 # Exercice 1 -  transformation simple
  On commence avec du java dans le module marketdata-web.  
- Le but est de rendre opérationnelle la classe **ForexServer** pour quelle propage les taux de change euro / dollar
+ Le but est de rendre opérationnelle la classe **ForexServer** pour qu'elle propage les taux de change euro / dollar
  sous forme de **Double** provenant du service ForexProvider. Il faut utiliser le client forexEventStreamClient comme ci-dessous:
  ```java
    protected Observable<Double> getEvents(HttpRequest request) {
