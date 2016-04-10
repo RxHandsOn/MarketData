@@ -46,6 +46,7 @@ export default class LineChart {
         this.xAxis = d3.svg.axis()
             .scale(this.xRange)
             .tickSize(5)
+            .ticks(d3.time.minute, 1)
             .tickFormat(d3.time.format("%X"));
         this.yAxis = d3.svg.axis()
             .scale(this.yRange)
