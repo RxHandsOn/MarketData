@@ -77,7 +77,7 @@ Opérateurs Rx: **takeUntil & Observable.timer()**
  (7000 + 15200) / (10 + 20) = 740$    
 Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**.
 Pour chaque événement **Trade** reçu, le serveur **VwapServer** va envoyer un événement correspondant à un  nouveau prix **VWap**, calculé en fonction du prix **Vwap** précédent ainsi que du **Trade** reçu.  
-Dans cet exercice, et c'est nouveau, il faut donc gérer un état, le prix Vwap. Pour cette raison on va utiliser l'opérateur scan. Attention il y a plusieurs variantes de cet opérateurs, il faut utiliser celle qui propose de gérer un accumulateur...  
+Dans cet exercice, et c'est nouveau, il faut donc gérer un état, le prix Vwap. Pour cette raison on va utiliser l'opérateur scan. Attention il y a plusieurs variantes de cet opérateur, il faut utiliser celle qui propose de gérer un accumulateur...  
 Test d'acceptance: Test 10 et Test 11 dans **VwapServerTest**   
 Opérateurs Rx: **map, filter, skip & scan**  
 
