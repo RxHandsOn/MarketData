@@ -5,6 +5,7 @@
     <title></title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <script type="text/javascript" src="node_modules/systemjs/dist/system.js"></script>
     <script type="text/javascript" src="node_modules/eventsource/example/eventsource-polyfill.js"></script>
     <script type="text/javascript">
@@ -42,41 +43,60 @@
         display: inline-block;
         vertical-align: top;
       }
-      .label {
-        margin-left: 100px;
-      }
     </style>
   </head>
   <body>
-    <div>
-      <p>
-        Active stocks:
-      </p>
-      <div id="activeStocks">
-
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>
+            Active stocks
+          </h2>
+          <div id="activeStocks">
+          </div>
+          <div id="allStocks">
+          </div>
+        </div>
       </div>
-      <div id="allStocks">
+      <div class="row">
+        <div class="col-md-6">
+          <div id="spot">
+            <svg id="spotGraph"></svg>
+            <div id="currentStock" class="label-value">
 
-      </div>
-    </div>
-    <div>
-      &nbsp;
-    </div>
-    <div id="spot">
-      <svg id="spotGraph"></svg>
-      <div id="currentStock" class="label">
+            </div>
+            <div id="minStock" class="label-value">
 
-      </div>
-      <div id="minStock" class="label">
+            </div>
+            <div id="maxStock" class="label-value">
 
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div id="vwap">
+            <svg id="vwapGraph"></svg>
+            <div id="currentVwap" class="label-value">
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="maxStock" class="label">
-
-      </div>
-    </div>
-    <div id="vwap">
-      <svg id="vwapGraph"></svg>
-      <div id="currentVwap" class="label">
+      <div class="row">
+        <div class="col-md-12">
+          <table id="quotesTable" class="table table-striped" style="display:none">
+            <thead>
+              <tr>
+                <th>Stock</th>
+                <th>Last Quote</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>VWap</th>
+              </tr>
+            </thead>
+            <tbody id="quotesBody">
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </body>

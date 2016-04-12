@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import * as rx from 'rxjs/Rx';
 
+import {getColor} from './colors';
+
 interface Point {
     x: Date;
     y: number;
@@ -99,11 +101,10 @@ export default class LineChart {
             .attr("height", height);
 
         for(var i = 0; i < this.chartsCount; i++) {
-            const color = i === 0 ? 'blue' : 'red';
             this.lines[i] = this.svg.append("g")
                 .attr("clip-path", "url(#clip)")
                 .append("path")
-                .attr("stroke", color)
+                .attr("stroke", getColor(i))
                 .attr("fill", "none");
         }
 
@@ -139,17 +140,21 @@ export default class LineChart {
             .call(this.yAxis);
     }
 
-    getObserver():((value: number) => void) {
+    getObserver(index: number):((value: number) => void) {
         return (value) => {
-            this.updatesOverTime[0].push({
+            this.updatesOverTime[index].push({
                 x: new Date(),
                 y: (value)
             });
-            const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
-            this.updatesOverTime[0] = this.updatesOverTime[0].filter((point: Point) =>
-                new Date().getTime() - point.x.getTime() < FIVE_MINUTES_IN_MS);
+
+            for(var i = 0; i < this.chartsCount; i++) {
+                const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
+                this.updatesOverTime[i] = this.updatesOverTime[i].filter((point: Point) =>
+                    new Date().getTime() - point.x.getTime() < FIVE_MINUTES_IN_MS);
+            }
+
             window.requestAnimationFrame(() => {
-                this.update([this.updatesOverTime[0]]);
+                this.update(this.updatesOverTime);
             });
 
         };

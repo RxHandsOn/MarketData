@@ -12,8 +12,8 @@ public class StockQuoteProvider extends RxNettyEventBroadcaster<Quote> {
 
     public static final int PORT = 8098;
 
-    private static final double GOOGLE_MIN = 695;
-    private static final double GOOGLE_MAX = 710;
+    private static final double GOOGLE_MIN = 116;
+    private static final double GOOGLE_MAX = 136;
     private static final double IBM_MIN = 120;
     private static final double IBM_MAX = 135;
     private static final double HP_MIN = 12.5;
