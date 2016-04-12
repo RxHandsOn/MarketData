@@ -4,10 +4,12 @@ import LineChart from './LineChart';
 import * as stock from './Stock';
 
 
-window["toggle"]  = function(code : string) : void {
+window["toggle"]  = function(codes: string[]) : void {
   if (window["cleanUp"]) {
     window["cleanUp"]();
   }
+
+  const code = codes[0];
 
   const quoteEventSource = new EventSource(`http://localhost:8081?code=${code}`);
   const quoteObservable
@@ -16,7 +18,7 @@ window["toggle"]  = function(code : string) : void {
           .pluck<string>('data')
       );
 
-  const lineChart = new LineChart("#spotGraph", `${code} spot`, 2);
+  const lineChart = new LineChart("#spotGraph", `${code} spot`, 1);
   const chartSubscription = quoteObservable.pluck('quote').subscribe(lineChart.getObserver());
   const labelSubscription = stock.detectTrends(quoteObservable).subscribe(q => {
     document.getElementById("currentStock").innerHTML = `Last quote: <span style="background: ${q.color}">${q.quote.quote.toFixed(4)}</span> EUR`
@@ -36,7 +38,7 @@ window["toggle"]  = function(code : string) : void {
           .pluck<string>('data')
       ).pluck<number>('vwap');
 
-  const vwapLineChart = new LineChart("#vwapGraph", `${code} vwap`, 2);
+  const vwapLineChart = new LineChart("#vwapGraph", `${code} vwap`, 1);
   const vwapChartSubscription = vwapObservable.subscribe(vwapLineChart.getObserver());
   const vwapLabelSubscription = vwapObservable.subscribe(v => {
     document.getElementById("currentVwap").innerHTML = `Vwap: ${v.toFixed(4)}$`
@@ -69,5 +71,11 @@ const stockStaticDataObservable
   );
 
 stockStaticDataObservable.subscribe(st => {
-  document.getElementById("activeStocks").innerHTML += `<a href="#" onclick="toggle('${st.code}')">${st.code}</a> - ${st.companyName} - ${st.market}<br/>`
+  document.getElementById("activeStocks").innerHTML += `<a href="#" onclick="toggle(['${st.code}'])">${st.code}</a> - ${st.companyName} - ${st.market}<br/>`
 });
+
+stockStaticDataObservable.scan((stockNames, stock) => stockNames.concat([stock.code]), [])
+  .subscribe(stocks => {
+    const stocksArray = stocks.map(stockName => `'${stockName}'`).join(', ');
+    document.getElementById("allStocks").innerHTML = `<a href="#" onclick="toggle([${stocksArray}])">ALL</a><br/>`
+  });

@@ -148,11 +148,8 @@ export default class LineChart {
             const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
             this.updatesOverTime[0] = this.updatesOverTime[0].filter((point: Point) =>
                 new Date().getTime() - point.x.getTime() < FIVE_MINUTES_IN_MS);
-            const updates2 = this.updatesOverTime[0].map((p: Point) => {
-                return {x: p.x, y: p.y + 0.25};
-            });
             window.requestAnimationFrame(() => {
-                this.update([this.updatesOverTime[0], updates2]);
+                this.update([this.updatesOverTime[0]]);
             });
 
         };
