@@ -14,10 +14,10 @@ window["toggle"]  = function(codes: string[]) : void {
   document.getElementById('quotesBody').innerHTML = codes.map((code, index) =>
     `<tr>
       <td style="color: ${getColor(index)}">${code}</td>
-      <td id="last-${code}"></td>
-      <td id="min-${code}"></td>
-      <td id="max-${code}"></td>
-      <td id="vwap-${code}"></td>
+      <td id="last-${code}" class="text-xs-right"></td>
+      <td id="min-${code}" class="text-xs-right"></td>
+      <td id="max-${code}" class="text-xs-right"></td>
+      <td id="vwap-${code}" class="text-xs-right"></td>
     </tr>`).join('');
 
   const spotLineChart = new LineChart("#spotGraph", 'Spot', codes.length);
@@ -36,7 +36,8 @@ window["toggle"]  = function(codes: string[]) : void {
 
     subscriptions.push(quoteObservable.pluck('quote').subscribe(spotLineChart.getObserver(index)));
     subscriptions.push(stock.detectTrends(quoteObservable).subscribe(q => {
-      document.getElementById(`last-${code}`).innerHTML = `<span style="background: ${q.color}">${q.quote.quote.toFixed(4)}</span> EUR`
+      const color = q.color === 'green' ? '#5cb85c' : '#d9534f';
+      document.getElementById(`last-${code}`).innerHTML = `<span style="background: ${color}">${q.quote.quote.toFixed(4)}</span> EUR`
     }));
 
     subscriptions.push(stock.minFromPrevious(quoteObservable, 10).subscribe(q => {
@@ -78,12 +79,24 @@ const stockStaticDataObservable
         .pluck<string>('data')
   );
 
-stockStaticDataObservable.subscribe(st => {
-  document.getElementById("activeStocks").innerHTML += `<a href="#" onclick="toggle(['${st.code}'])">${st.code}</a> - ${st.companyName} - ${st.market}<br/>`
-}, error => console.log("Stocks connection stopped"));
-
-stockStaticDataObservable.scan((stockNames, stock) => stockNames.concat([stock.code]), [])
+stockStaticDataObservable.scan((stockNames, stock) => stockNames.concat([stock]), [])
   .subscribe(stocks => {
-    const stocksArray = stocks.map(stockName => `'${stockName}'`).join(', ');
-    document.getElementById("allStocks").innerHTML = `<a href="#" onclick="toggle([${stocksArray}])">Display all stocks</a><br/>`
+    const stockLinks = stocks.map(st =>
+      `<div class="col-md-2">
+        <a href="#" onclick="toggle(['${st.code}'])">
+          ${st.code}
+        </a><br/> <small>${st.companyName} - ${st.market}</small>
+      </div>`);
+
+    const stocksArray = stocks.map(stock => `'${stock.code}'`).join(', ');
+    stockLinks.push(`
+      <div class="col-md-2">
+        <a href="#" onclick="toggle([${stocksArray}])">All stocks</a><br/>
+      </div>
+    `);
+
+    document.getElementById("activeStocks").innerHTML = `
+    <div class="row">
+      ${stockLinks.join('')}
+    </div>`;
   }, error => console.log("Stocks connection stopped"));
