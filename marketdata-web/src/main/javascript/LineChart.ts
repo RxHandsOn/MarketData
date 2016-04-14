@@ -148,9 +148,12 @@ export default class LineChart {
             });
 
             for(var i = 0; i < this.chartsCount; i++) {
-                const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
-                this.updatesOverTime[i] = this.updatesOverTime[i].filter((point: Point) =>
-                    new Date().getTime() - point.x.getTime() < FIVE_MINUTES_IN_MS);
+                const ONE_MINUTE_IN_MS = 60 * 1000;
+                const points = this.updatesOverTime[i]; 
+                while(points.length > 0 && new Date().getTime() - points[0].x.getTime() > ONE_MINUTE_IN_MS) {
+                    points.shift();
+                }
+                    
             }
 
             window.requestAnimationFrame(() => {
