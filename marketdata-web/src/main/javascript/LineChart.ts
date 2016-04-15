@@ -1,14 +1,21 @@
 import * as d3 from 'd3';
 import * as rx from 'rxjs/Rx';
 
+import {getColor} from './colors';
+
 interface Point {
     x: Date;
     y: number;
 }
 
 export default class LineChart {
-    constructor(private svgSelector : string, private title : string) {
+    constructor(private svgSelector: string,
+                private title: string,
+                private chartsCount: number) {
         this.initChart();
+        for(var i = 0; i < chartsCount; i++) {
+            this.updatesOverTime.push([]);
+        }
     }
 
     private svg:d3.Selection<SVGElement>;
@@ -16,10 +23,9 @@ export default class LineChart {
     private yRange:d3.scale.Linear<number, number>;
     private xAxis:d3.svg.Axis;
     private yAxis:d3.svg.Axis;
-    private maxNumberOfDataPoints = 100;
-    private line:any;
-    private lineFunc: d3.svg.Line<any>;
-    private updatesOverTime:Point[] = [];
+    private lines:any[] = [];
+    private lineFuncs: d3.svg.Line<any>[] = [];
+    private updatesOverTime:Point[][] = [];
 
     initChart() {
         const width = 480;
@@ -42,6 +48,7 @@ export default class LineChart {
         this.xAxis = d3.svg.axis()
             .scale(this.xRange)
             .tickSize(5)
+            .ticks(d3.time.minute, 1)
             .tickFormat(d3.time.format("%X"));
         this.yAxis = d3.svg.axis()
             .scale(this.yRange)
@@ -78,10 +85,12 @@ export default class LineChart {
             .text(this.title);
 
         // Define our line series
-        this.lineFunc = d3.svg.line()
-            .x(function(d:any) { return this.xRange(d.x); })
-            .y(function(d:any) { return this.yRange(d.y); })
-            .interpolate("linear");
+        for(var i = 0; i < this.chartsCount; i++) {
+            this.lineFuncs[i] = d3.svg.line()
+                .x((d:any) => { return this.xRange(d.x); })
+                .y((d:any) => { return this.yRange(d.y); })
+                .interpolate("linear");
+        }
 
         this.svg.append("defs").append("clipPath")
             .attr("id", "clip")
@@ -91,11 +100,13 @@ export default class LineChart {
             .attr("width", width)
             .attr("height", height);
 
-        this.line = this.svg.append("g")
-            .attr("clip-path", "url(#clip)")
-            .append("path")
-            .attr("stroke", "blue")
-            .attr("fill", "none");
+        for(var i = 0; i < this.chartsCount; i++) {
+            this.lines[i] = this.svg.append("g")
+                .attr("clip-path", "url(#clip)")
+                .append("path")
+                .attr("stroke", getColor(i))
+                .attr("fill", "none");
+        }
 
         // Add a text element below the chart, which will display the subject of new edits
         this.svg.append("text")
@@ -104,67 +115,51 @@ export default class LineChart {
             .attr("width", width - margins.left);
     }
 
-    private update(updates:Point[]) {
+    private update(updatesArrays:Point[][]) {
+        const updatesConcat = updatesArrays.reduce((a, b) => a.concat(b), []);
         // Update the ranges of the chart to reflect the new data
-        if (updates.length > 0)   {
-            this.xRange.domain(d3.extent(updates, function(d:any) { return d.x; }));
-            this.yRange.domain([d3.min(updates, function(d) { return d.y; }),
-                d3.max(updates, function(d) { return d.y; })]);
+        if (updatesConcat.length > 0)   {
+            this.xRange.domain(d3.extent(updatesConcat, (d:any) => d.x));
+            this.yRange.domain(d3.extent(updatesConcat, (d:any) => d.y));
         }
 
-        // Until we have filled up our data window, we just keep adding data
-        // points to the end of the chart.
-        if (updates.length < this.maxNumberOfDataPoints) {
-            this.line.transition()
+        for(var i = 0; i < this.chartsCount; i++) {
+            this.lines[i].transition()
                 .ease("linear")
-                .attr("d", this.lineFunc(updates));
-
-            this.svg.selectAll("g.x.axis")
-                .transition()
-                .ease("linear")
-                .call(this.xAxis);
+                .attr("d", this.lineFuncs[i](updatesArrays[i]));
         }
-        // Once we have filled up the window, we then remove points from the
-        // start of the chart, and move the data over so the chart looks
-        // like it is scrolling forwards in time
-        else    {
-            // Calculate the amount of translation on the x axis which equates to the
-            // time between two samples
-            var xTranslation = this.xRange(updates[0].x) - this.xRange(updates[1].x);
 
-            // Transform our line series immediately, then translate it from
-            // right to left. This gives the effect of our chart scrolling
-            // forwards in time
-            this.line
-                .attr("d", this.lineFunc(updates))
-                .attr("transform", null)
-                .transition()
-                .duration(200)
-                .ease("linear")
-                .attr("transform", "translate(" + xTranslation + ", 0)");
+        this.svg.selectAll("g.x.axis")
+            .transition()
+            .ease("linear")
+            .call(this.xAxis);
 
-            this.svg.selectAll("g.x.axis")
-                .transition()
-                .duration(200)
-                .ease("linear")
-                .call(this.xAxis);
-        }
 
         this.svg.selectAll("g.y.axis")
             .transition()
             .call(this.yAxis);
     }
 
-    getObserver():((value: number) => void) {
+    getObserver(index: number):((value: number) => void) {
         return (value) => {
-            this.updatesOverTime.push({
+            this.updatesOverTime[index].push({
                 x: new Date(),
                 y: (value)
             });
-            if (this.updatesOverTime.length > this.maxNumberOfDataPoints) {
-                this.updatesOverTime.shift();
+
+            for(var i = 0; i < this.chartsCount; i++) {
+                const ONE_MINUTE_IN_MS = 60 * 1000;
+                const points = this.updatesOverTime[i]; 
+                while(points.length > 0 && new Date().getTime() - points[0].x.getTime() > ONE_MINUTE_IN_MS) {
+                    points.shift();
+                }
+                    
             }
-            this.update(this.updatesOverTime);
+
+            window.requestAnimationFrame(() => {
+                this.update(this.updatesOverTime);
+            });
+
         };
     }
 }

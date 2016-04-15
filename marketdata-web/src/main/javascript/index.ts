@@ -2,64 +2,75 @@ import * as rx from 'rxjs/Rx';
 import {fromEventSource} from './rx-sse';
 import LineChart from './LineChart';
 import * as stock from './Stock';
+import {getColor} from './colors';
 
 
-window["toggle"]  = function(code : string) : void {
+window["toggle"]  = function(codes: string[]) : void {
   if (window["cleanUp"]) {
     window["cleanUp"]();
   }
 
-  const quoteEventSource = new EventSource(`http://localhost:8081?code=${code}`);
-  const quoteObservable
-    = stock.parseRawStream(
+  document.getElementById('quotesTable').style.display = 'table';
+  document.getElementById('quotesBody').innerHTML = codes.map((code, index) =>
+    `<tr>
+      <td style="color: ${getColor(index)}">${code}</td>
+      <td id="last-${code}" class="text-xs-right"></td>
+      <td id="min-${code}" class="text-xs-right"></td>
+      <td id="max-${code}" class="text-xs-right"></td>
+      <td id="vwap-${code}" class="text-xs-right"></td>
+    </tr>`).join('');
+
+  const spotLineChart = new LineChart("#spotGraph", 'Spot', codes.length);
+  const vwapLineChart = new LineChart("#vwapGraph", 'Vwap', codes.length);
+
+  const subscriptions = [];
+  const eventSources = [];
+
+  codes.forEach((code, index) => {
+    const quoteEventSource = new EventSource(`http://localhost:8081?code=${code}`);
+    const quoteObservable
+        = stock.parseRawStream(
         fromEventSource(quoteEventSource, 'message')
-          .pluck<string>('data')
-      );
+            .pluck<string>('data')
+    );
 
-  const lineChart = new LineChart("#spotGraph", `${code} spot`);
-  const chartSubscription = quoteObservable.pluck('quote').subscribe(lineChart.getObserver());
-  const labelSubscription = stock.detectTrends(quoteObservable).subscribe(q => {
-    document.getElementById("currentStock").innerHTML = `Last quote: <span style="background: ${q.color}">${q.quote.quote.toFixed(4)}</span> EUR`
-  })
+    subscriptions.push(quoteObservable.pluck('quote').subscribe(spotLineChart.getObserver(index)));
+    subscriptions.push(stock.detectTrends(quoteObservable).subscribe(q => {
+      const color = q.color === 'green' ? '#5cb85c' : '#d9534f';
+      document.getElementById(`last-${code}`).innerHTML = `<span style="background: ${color}">${q.quote.quote.toFixed(4)}</span> EUR`
+    }));
 
-  const minSubscription = stock.minFromPrevious(quoteObservable, 10).subscribe(q => {
-    document.getElementById("minStock").innerHTML = `Min: ${q.toFixed(4)} EUR`
-  })
-  const maxSubscription = stock.maxFromPrevious(quoteObservable, 10).subscribe(q => {
-    document.getElementById("maxStock").innerHTML = `Max: ${q.toFixed(4)} EUR`
-  })
+    subscriptions.push(stock.minFromPrevious(quoteObservable, 10).subscribe(q => {
+      document.getElementById(`min-${code}`).innerHTML = `${q.toFixed(4)} EUR`
+    }));
+    subscriptions.push(stock.maxFromPrevious(quoteObservable, 10).subscribe(q => {
+      document.getElementById(`max-${code}`).innerHTML = `${q.toFixed(4)} EUR`
+    }));
 
-  const vwapEventSource = new EventSource(`http://localhost:8082?code=${code}`);
-  const vwapObservable
-    = stock.parseRawVwapStream(
+    const vwapEventSource = new EventSource(`http://localhost:8082?code=${code}`);
+    const vwapObservable
+        = stock.parseRawVwapStream(
         fromEventSource(vwapEventSource, 'message')
-          .pluck<string>('data')
-      ).pluck<number>('vwap');
+            .pluck<string>('data')
+    ).pluck<number>('vwap');
 
-  const vwapLineChart = new LineChart("#vwapGraph", `${code} vwap`);
-  const vwapChartSubscription = vwapObservable.subscribe(vwapLineChart.getObserver());
-  const vwapLabelSubscription = vwapObservable.subscribe(v => {
-    document.getElementById("currentVwap").innerHTML = `Vwap: ${v.toFixed(4)}$`
-  })
+    subscriptions.push(vwapObservable.subscribe(vwapLineChart.getObserver(index)));
+    subscriptions.push(vwapObservable.subscribe(v => {
+      document.getElementById(`vwap-${code}`).innerHTML = `${v.toFixed(4)}$`
+    }));
 
-  window["cleanUp"] = function() : void {
-    chartSubscription.unsubscribe();
-    labelSubscription.unsubscribe();
-    minSubscription.unsubscribe();
-    maxSubscription.unsubscribe();
-    vwapChartSubscription.unsubscribe();
-    vwapLabelSubscription.unsubscribe();
-    quoteEventSource.close();
-    vwapEventSource.close();
-    document.getElementById("currentStock").innerHTML = "";
-    document.getElementById("minStock").innerHTML = "";
-    document.getElementById("maxStock").innerHTML = "";
+    eventSources.push(quoteEventSource, vwapEventSource);
+  });
+
+
+  window["cleanUp"] = () => {
+    subscriptions.forEach(_ => _.unsubscribe());
+    eventSources.forEach(_ => _.close());
     document.getElementById("spotGraph").innerHTML = "";
     document.getElementById("vwapGraph").innerHTML = "";
-
+    document.getElementById('quotesTable').style.display = 'none';
   }
-
-}
+};
 
 const activeStocksEventSource = new EventSource('http://localhost:8083');
 const stockStaticDataObservable
@@ -68,6 +79,24 @@ const stockStaticDataObservable
         .pluck<string>('data')
   );
 
-stockStaticDataObservable.subscribe(st => {
-  document.getElementById("activeStocks").innerHTML += `<a href="#" onclick="toggle('${st.code}')">${st.code}</a> - ${st.companyName} - ${st.market}<br/>`
-});
+stockStaticDataObservable.scan((stockNames, stock) => stockNames.concat([stock]), [])
+  .subscribe(stocks => {
+    const stockLinks = stocks.map(st =>
+      `<div class="col-md-2">
+        <a href="#" onclick="toggle(['${st.code}'])">
+          ${st.code}
+        </a><br/> <small>${st.companyName} - ${st.market}</small>
+      </div>`);
+
+    const stocksArray = stocks.map(stock => `'${stock.code}'`).join(', ');
+    stockLinks.push(`
+      <div class="col-md-2">
+        <a href="#" onclick="toggle([${stocksArray}])">All stocks</a><br/>
+      </div>
+    `);
+
+    document.getElementById("activeStocks").innerHTML = `
+    <div class="row">
+      ${stockLinks.join('')}
+    </div>`;
+  }, error => console.log("Stocks connection stopped"));

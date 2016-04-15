@@ -5,7 +5,7 @@ Vous n'aurez pas à modifier la structure des classes, la signature des méthode
 
 # Exercice 1 -  transformation simple
  On commence avec du java dans le module marketdata-web.  
- Le but est de rendre opérationnelle la classe **ForexServer** pour quelle propage les taux de change euro / dollar
+ Le but est de rendre opérationnelle la classe **ForexServer** pour qu'elle propage les taux de change euro / dollar
  sous forme de **Double** provenant du service ForexProvider. Il faut utiliser le client forexEventStreamClient comme ci-dessous:
  ```java
    protected Observable<Double> getEvents(HttpRequest request) {
@@ -77,7 +77,7 @@ Opérateurs Rx: **takeUntil & Observable.timer()**
  (7000 + 15200) / (10 + 20) = 740$    
 Comme on est gentil, ce petit calcul est déjà implémenté dans la classe **VWap**, il suffit d'utiliser la méthode **Vwap::addTrade**.
 Pour chaque événement **Trade** reçu, le serveur **VwapServer** va envoyer un événement correspondant à un  nouveau prix **VWap**, calculé en fonction du prix **Vwap** précédent ainsi que du **Trade** reçu.  
-Dans cet exercice, et c'est nouveau, il faut donc gérer un état, le prix Vwap. Pour cette raison on va utiliser l'opérateur scan. Attention il y a plusieurs variantes de cet opérateurs, il faut utiliser celle qui propose de gérer un accumulateur...  
+Dans cet exercice, et c'est nouveau, il faut donc gérer un état, le prix Vwap. Pour cette raison on va utiliser l'opérateur scan. Attention il y a plusieurs variantes de cet opérateur, il faut utiliser celle qui propose de gérer un accumulateur...  
 Test d'acceptance: Test 10 et Test 11 dans **VwapServerTest**   
 Opérateurs Rx: **map, filter, skip & scan**  
 
@@ -101,7 +101,7 @@ Opérateurs Rx: **map, filter, skip & scan**
  ```
  (ici on a en entré des prix en dollar, il faut donc faire une division)  
  Attention, il ne faut pas générer plus de cotations sur une stock que ce que l'on a en entrée. En gros si le taux
- de change fluctue alors que le cours de l'action en dollar ne varie pas, il ne faut pas générer d'événement.
+ de change fluctue alors que le cours de l'action en dollar ne varie pas, il ne faut pas générer d'événement.  
  Test d'acceptance: Test 13 dans **StockQuoteServerTest**  
  Opérateurs Rx: **map, take & flatMap !!**  
 
@@ -140,7 +140,5 @@ Toujours dans la classe **MulticastEventStreamClient**, on va cette fois-ci mett
 Test d'acceptance: Test 22 dans **MulticastEventStreamClientTest**  
 Opérateurs Rx: **retryWhen & delay**  
 
-
-TODO - idées pour la suite    
-Typescript : plus grosse progression / baisse (combineLatest)
-Typescript: gestion des reconnections avec retryWhen  
+# Bonus
+Reprendre l'exercice précédent et faire en sorte d'attendre 2, 4, 6 secondes puis abandonner
