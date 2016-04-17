@@ -33,7 +33,7 @@ public class StaticServer {
                 // for intellij
                 rootDirectory = new File(rootDir);
             }
-            return RxNetty.createHttpServer(8000,
+            return RxNetty.createHttpServer(port,
                     RequestHandlerWithErrorMapper.from(
                             new LocalDirectoryRequestHandler(rootDirectory),
                             new FileErrorResponseMapper()));

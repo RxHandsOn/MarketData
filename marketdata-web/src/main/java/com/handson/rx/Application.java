@@ -12,6 +12,9 @@ public class Application {
     public static void main(String[] args) throws IOException {
         new StaticServer("marketdata-web", 8000).createServer().start();
 
+        // if ever you need a static http server for the documentation...
+        // new StaticServer("reactivex.io-mirror", 8001).createServer().start();
+
         Scheduler scheduler = Schedulers.computation();
         EventStreamClient forexEventStreamClient
                 = new MulticastEventStreamClient(new RxNettyEventEventStreamClient(8096), scheduler);
