@@ -8,6 +8,12 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+#studio
+*.*proj.user
+/CSharp/**/bin
+/CSharp/**/obj
+/CSharp/NetCore/MarketData/.vs
+
 # idea
 *.iml
 .idea/
