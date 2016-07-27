@@ -8,4 +8,4 @@ install:
   - cd $TRAVIS_BUILD_DIR/Java/marketdata-web && npm install
 script:
   - cd $TRAVIS_BUILD_DIR/Java && mvn install
-  - cd $TRAVIS_BUILD_DIR//Java/marketdata-web && npm test
+  - cd $TRAVIS_BUILD_DIR/Java/marketdata-web && npm test
