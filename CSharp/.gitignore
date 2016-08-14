@@ -8,9 +8,13 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
-# idea
-*.iml
-.idea/
+#studio
+*.*proj.user
+*.sln.user
+*.sln.*.user
+/**/bin
+/**/obj
+/NetCore/MarketData/.vs
 
 node_modules
 output
