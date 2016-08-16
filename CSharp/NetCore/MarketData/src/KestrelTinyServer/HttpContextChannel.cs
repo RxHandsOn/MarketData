@@ -15,14 +15,14 @@ namespace KestrelTinyServer
 
         public HttpContext HttpContext { get; }
 
-        public HttpResponseChannel ResponseChannel { get; set; }
+        public HttpResponseChannel ResponseChannel { get; }
 
         public CancellationToken Token { get; }
 
         public async Task SendAsync(ServerSentEvent sse, CancellationToken token)
         {
-            await HttpContext.Response.WriteAsync($"{sse}\r\r").ConfigureAwait(false);
-            await HttpContext.Response.Body.FlushAsync().ConfigureAwait(false);
+            await HttpContext.Response.WriteAsync($"{sse}", token);
+            await HttpContext.Response.Body.FlushAsync(token).ConfigureAwait(false);
         }
 
         public void Dispose()

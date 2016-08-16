@@ -13,7 +13,7 @@ namespace KestrelTinyServerHost
         public static void Main(string[] args)
         {
             var factory = new ChannelFactory();
-            var channel = factory.Create(IPAddress.Loopback, 5000, 70);
+            var channel = factory.Create(IPAddress.Loopback, 5000, 5);
 
             string line;
 
@@ -23,7 +23,8 @@ namespace KestrelTinyServerHost
                 Console.WriteLine("Sending : " + line);
                 var t = Task.Run(async () =>
                 {
-                    await channel.SendAsync(new ServerSentEvent("sometype", line), CancellationToken.None).ConfigureAwait(false);
+                    var sse = new ServerSentEvent("sometype", line);
+                    await channel.SendAsync(sse, CancellationToken.None).ConfigureAwait(false);
                 });
                 t.Wait();
             }

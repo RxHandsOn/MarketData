@@ -23,7 +23,7 @@ namespace KestrelTinyServer
 
             var httpServer = new HttpServer(_host, _port, async contextChannel =>
             {
-                await HandleSseAsync(contextChannel).ConfigureAwait(false);
+                await HandleSseAsync(contextChannel);
                 channel.AddChannel(contextChannel, contextChannel.Token);
             });
             channel.AttachServer(httpServer);
@@ -37,14 +37,14 @@ namespace KestrelTinyServer
             var httpResponse = httpContextChannel.HttpContext.Response;
 
             httpResponse.StatusCode = 200;
-            httpResponse.Headers.Add("Content-Type", "text/event-stream");
-            httpResponse.Headers.Add("Cache-Control", "no-cache");
             httpResponse.Headers.Add("Connection", "keep-alive");
+            httpResponse.Headers.Add("Content-Type", "text/event-stream");
+            //httpResponse.Headers.Add("Transfer-Encoding", "chunked"); // seems already set to "chunked" in chrome, if uncommented prompt ERR_INVALID_CHUNKED_ENCODING
+            httpResponse.Headers.Add("Cache-Control", "no-cache");
             httpResponse.Headers.Add("Access-Control-Allow-Origin", "*");
 
-            await httpResponse.Body.FlushAsync().ConfigureAwait(false);
-            await httpContextChannel.SendAsync(new ServerSentEvent("INFO", "Connected successfully on LOG stream from " + _host + ":" + _port), CancellationToken.None)
-                                    .ConfigureAwait(false);
+            await httpResponse.Body.FlushAsync();
+            await httpContextChannel.SendAsync(new ServerSentEvent("INFO", "Connected successfully on LOG stream from " + _host + ":" + _port), CancellationToken.None).ConfigureAwait(false);
 
         }
     }

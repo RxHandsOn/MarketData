@@ -24,7 +24,7 @@ namespace KestrelTinyServer
             _channels.Add(channel);
             foreach (var message in _replayBuffer)
             {
-                var t = Task.Run(async () => await channel.SendAsync(message, token).ConfigureAwait(false));
+                var t = Task.Run(async () => await channel.SendAsync(message, token), token);
                 t.Wait(token);
             }
         }

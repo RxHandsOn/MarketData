@@ -18,20 +18,20 @@ namespace KestrelTinyServer
 
         public override string ToString()
         {
-            var lines = _data.Split(new[] { "\r\n" }, StringSplitOptions.None);
+            var lines = _data.Split(new[] { "\n" }, StringSplitOptions.None);
             var builder = new StringBuilder();
 
             if (LogLevels.Any(logLevels => logLevels.Contains(_type)))
             {
-                builder.Append("event: " + _type + "\r\n");
+                builder.Append("event: " + _type + "\n");
             }
 
             foreach (var line in lines)
             {
-                builder.Append("data: " + line + "\r\n");
+                builder.Append("data: " + line + "\n");
             }
 
-            builder.Append("\r\n");
+            builder.Append("\n");
             return builder.ToString();
         }
     }
