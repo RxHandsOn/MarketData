@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace KestrelTinyServer
 {
@@ -36,12 +38,19 @@ namespace KestrelTinyServer
             _host = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls(Url)
-                .Configure(app => app.Run(async context =>
+                .Configure(app =>
                 {
-                    var token = CancellationToken.None;
-                    await _handler(new HttpContextChannel(context, token)).ConfigureAwait(false);
-                    await token;
-                }))
+                    var env = app.ApplicationServices.GetService(typeof(IHostingEnvironment)) as IHostingEnvironment;
+                    app.Run(async context =>
+                    {
+                        if (env.IsDevelopment())
+                            Debug.WriteLine(context.Request.GetDisplayUrl());
+
+                        var token = CancellationToken.None;
+                        await _handler(new HttpContextChannel(context, token)).ConfigureAwait(false);
+                        await token;
+                    });
+                })
                 .Build();
 
             _host.Start();
