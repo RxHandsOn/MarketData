@@ -8,7 +8,6 @@ namespace KestrelTinyServer
     public class MulticastChannel : IEventChannel
     {
         private readonly IList<IEventChannel> _channels = new List<IEventChannel>();
-        private readonly object _syncRoot = new object();
         private readonly int _replayBufferSize;
         private readonly IList<ServerSentEvent> _replayBuffer;
         private HttpServer _httpServer;
@@ -24,7 +23,7 @@ namespace KestrelTinyServer
             _channels.Add(channel);
             foreach (var message in _replayBuffer)
             {
-                var t = Task.Run(async () => await channel.SendAsync(message, token), token);
+                var t = Task.Run(async () => await channel.SendAsync(message, token).ConfigureAwait(false), token);
                 t.Wait(token);
             }
         }
@@ -62,11 +61,11 @@ namespace KestrelTinyServer
 
         public void Dispose()
         {
-            _httpServer?.Dispose();
             foreach (var channel in _channels)
             {
                 channel.Dispose();
             }
+            _httpServer?.Dispose();
         }
     }
 }

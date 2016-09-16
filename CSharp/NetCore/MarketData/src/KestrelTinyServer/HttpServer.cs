@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Extensions;
 
 namespace KestrelTinyServer
 {
@@ -40,14 +37,12 @@ namespace KestrelTinyServer
                 .UseUrls(Url)
                 .Configure(app =>
                 {
-                    var env = app.ApplicationServices.GetService(typeof(IHostingEnvironment)) as IHostingEnvironment;
                     app.Run(async context =>
                     {
-                        if (env.IsDevelopment())
-                            Debug.WriteLine(context.Request.GetDisplayUrl());
+                        var token = context.RequestAborted;
 
-                        var token = CancellationToken.None;
                         await _handler(new HttpContextChannel(context, token)).ConfigureAwait(false);
+
                         await token;
                     });
                 })

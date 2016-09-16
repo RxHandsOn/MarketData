@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace KestrelTinyServer
 {
-    public class HttpContextChannel:IEventChannel
+    public class HttpContextChannel : IEventChannel
     {
         public HttpContextChannel(HttpContext context, CancellationToken token)
         {

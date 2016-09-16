@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using KestrelTinyServer;
 
 namespace KestrelTinyServerHost
@@ -21,13 +18,11 @@ namespace KestrelTinyServerHost
             while (!string.IsNullOrWhiteSpace(line = Console.ReadLine()))
             {
                 Console.WriteLine("Sending : " + line);
-                var t = Task.Run(async () =>
-                {
-                    var sse = new ServerSentEvent("sometype", line);
-                    await channel.SendAsync(sse, CancellationToken.None).ConfigureAwait(false);
-                });
-                t.Wait();
+                var sse = new ServerSentEvent("sometype", line);
+                channel.SendAsync(sse, CancellationToken.None).ConfigureAwait(false).GetAwaiter();
             }
+
+            channel.Dispose();
         }
     }
 }
