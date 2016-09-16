@@ -18,9 +18,9 @@ public class ForexProvider extends RxNettyEventBroadcaster<Quote> {
     }
 
     @Override
-    protected Observable<Quote> initializeEventStream() {
-        return new RandomSequenceGenerator(1.2, 1.3)
-                .create(INTERVAL, TimeUnit.MILLISECONDS)
-                .map(q -> new Quote("EUR/USD", q));
+        protected Observable<Quote> initializeEventStream() {
+            return new RandomSequenceGenerator(1.2, 1.3)
+                    .create(INTERVAL, TimeUnit.MILLISECONDS)
+                    .map(q -> new Quote("EUR/USD", q));
     }
 }
