@@ -20,6 +20,10 @@
             <artifactId>rxjava</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.alexvictoor</groupId>
+            <artifactId>marbletest4j</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxnetty</artifactId>
         </dependency>
