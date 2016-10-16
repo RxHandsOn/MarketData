@@ -1,47 +1,27 @@
 package com.handson.rx;
 
-
 import com.handson.dto.Quote;
 import com.handson.infra.EventStreamClient;
 import com.handson.infra.HttpRequest;
-import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
-import rx.Subscription;
-import rx.observers.TestSubscriber;
-import rx.schedulers.Schedulers;
-import rx.schedulers.TestScheduler;
-import rx.subjects.TestSubject;
+import rx.Observable;
+import rx.marble.HotObservable;
+import rx.marble.junit.MarbleRule;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static rx.marble.MapHelper.of;
+import static rx.marble.junit.MarbleRule.*;
 
 public class StockQuoteServerTest {
 
-    private EventStreamClient stockQuoteEventStreamClient;
-    private EventStreamClient forexEventStreamClient;
-    private TestScheduler scheduler;
-    private StockQuoteServer stockQuoteServer;
-    private TestSubject<String> quoteSourceSubject;
-    private TestSubject<String> forexSourceSubject;
-
-    @Before
-    public void setUpServer() {
-        stockQuoteEventStreamClient = mock(EventStreamClient.class);
-        forexEventStreamClient = mock(EventStreamClient.class);
-        scheduler = Schedulers.test();
-        stockQuoteServer = new StockQuoteServer(42, stockQuoteEventStreamClient, forexEventStreamClient, scheduler);
-        quoteSourceSubject = TestSubject.create(scheduler);
-        when(stockQuoteEventStreamClient.readServerSideEvents()).thenReturn(quoteSourceSubject);
-        forexSourceSubject = TestSubject.create(scheduler);
-        when(forexEventStreamClient.readServerSideEvents()).thenReturn(forexSourceSubject);
-    }
+    @Rule
+    public MarbleRule marble = new MarbleRule(1000);
 
     /**
      * Test 3
@@ -50,18 +30,17 @@ public class StockQuoteServerTest {
     @Ignore
     public void should_filter_quotes_for_requested_stock() {
         // given
-        TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("code", "GOOGL");
-        stockQuoteServer.getEvents(request).subscribe(testSubscriber);
+        Observable<String> quoteSource
+                = hot("--(ga)--", of("g", new Quote("GOOGL", 705.8673).toJson(),
+                                     "a", new Quote("APPLE", 98.18).toJson()));
+        Observable<String> forexSource
+                = hot("--f--", of("f", new Quote("EUR/USD", 1).toJson()));
         // when
-        quoteSourceSubject.onNext(new Quote("GOOGL", 705.8673).toJson());
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1).toJson());
-        quoteSourceSubject.onNext(new Quote("APPLE", 98.18).toJson());
-        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
+        StockQuoteServer stockQuoteServer = createServer(quoteSource, forexSource);
+        HttpRequest request = createRequest("code", "GOOGL");
         // then
-        List<Quote> events = testSubscriber.getOnNextEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).code).isEqualTo("GOOGL");
+        expectObservable(stockQuoteServer.getEvents(request).map(q -> q.code))
+                .toBe("--v--", of("v", "GOOGL"));
     }
 
     /**
@@ -71,18 +50,17 @@ public class StockQuoteServerTest {
     @Ignore
     public void should_generate_one_quote_in_euro_for_one_quote_in_dollar() {
         // given
-        TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("code", "GOOGL");
-        stockQuoteServer.getEvents(request).subscribe(testSubscriber);
+        Observable<String> quoteSource
+                = hot("--g----", of("g", new Quote("GOOGL", 1300).toJson()));
+        Observable<String> forexSource
+                = hot("--f-x--", of("f", new Quote("EUR/USD", 1.3).toJson(),
+                                    "x", new Quote("EUR/USD", 1.4).toJson()));
         // when
-        quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson());
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson());
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1.4).toJson());
-        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
+        StockQuoteServer stockQuoteServer = createServer(quoteSource, forexSource);
+        HttpRequest request = createRequest("code", "GOOGL");
         // then
-        List<Quote> events = testSubscriber.getOnNextEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).quote).isEqualTo(1000);
+        expectObservable(stockQuoteServer.getEvents(request).map(q -> q.quote))
+                .toBe("--v----", of("v", 1000d));
     }
 
     /**
@@ -92,20 +70,18 @@ public class StockQuoteServerTest {
     @Ignore
     public void should_generate_quotes_in_euro_using_latest_known_foreign_exchange_rate() {
         // given
-        TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("code", "GOOGL");
-        stockQuoteServer.getEvents(request).subscribe(testSubscriber);
+        Observable<String> quoteSource
+                = hot("----g-", of("g", new Quote("GOOGL", 1300).toJson()));
+        Observable<String> forexSource
+                = hot("-f-x--", of("f", new Quote("EUR/USD", 1.2).toJson(),
+                                    "x", new Quote("EUR/USD", 1.3).toJson()));
         // when
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1.2).toJson(), 80);
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson(), 90);
-        quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson(), 100);
-        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
+        StockQuoteServer stockQuoteServer = createServer(quoteSource, forexSource);
+        HttpRequest request = createRequest("code", "GOOGL");
         // then
-        List<Quote> events = testSubscriber.getOnNextEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0).quote).isEqualTo(1000);
+        expectObservable(stockQuoteServer.getEvents(request).map(q -> q.quote))
+                .toBe("----v-", of("v", 1000d));
     }
-
 
     /**
      * Test 15
@@ -114,16 +90,19 @@ public class StockQuoteServerTest {
     @Ignore
     public void should_unsubscribe_to_forex_stream_when_unscribing_to_quote() {
         // given
-        TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("code", "GOOGL");
-        Subscription subscription = stockQuoteServer.getEvents(request).subscribe(testSubscriber);
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1.3).toJson(), 90);
-        quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson(), 100);
-        scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
+        Observable<String> quoteSource
+                = hot("----g---", of("g", new Quote("GOOGL", 1300).toJson()));
+        HotObservable<String> forexSource
+                = hot("---f----", of("f", new Quote("EUR/USD", 1.2).toJson()));
+        Observable<String> stopSource
+                = hot("------s-");
         // when
-        subscription.unsubscribe();
+        StockQuoteServer stockQuoteServer = createServer(quoteSource, forexSource);
+        HttpRequest request = createRequest("code", "GOOGL");
+        stockQuoteServer.getEvents(request).takeUntil(stopSource).subscribe();
         // then
-        assertThat(forexSourceSubject.hasObservers()).isFalse();
+        expectSubscriptions(forexSource.getSubscriptions())
+                .toBe("^-----!-");
     }
 
     /**
@@ -133,17 +112,29 @@ public class StockQuoteServerTest {
     @Ignore
     public void should_send_an_error_when_no_forex_data_after_five_seconds() {
         // given
-        TestSubscriber<Quote> testSubscriber = new TestSubscriber<>();
-        HttpRequest request = createRequest("code", "GOOGL");
-        stockQuoteServer.getEvents(request).subscribe(testSubscriber);
-        quoteSourceSubject.onNext(new Quote("GOOGL", 1300).toJson(), 100);
+        Observable<String> quoteSource
+                = hot("-g-----", of("g", new Quote("GOOGL", 1300).toJson()));
+        Observable<String> forexSource
+                = hot("-------");
         // when
-        scheduler.advanceTimeBy(5100, TimeUnit.MILLISECONDS);
+        StockQuoteServer stockQuoteServer = createServer(quoteSource, forexSource);
+        HttpRequest request = createRequest("code", "GOOGL");
         // then
-        assertThat(testSubscriber.getOnErrorEvents()).hasSize(1);
+        expectObservable(stockQuoteServer.getEvents(request))
+                .toBe("------#");
     }
 
     public HttpRequest createRequest(String name, String value) {
         return new HttpRequest(Collections.singletonMap(name, Arrays.asList(value)));
+    }
+
+    public StockQuoteServer createServer(Observable<String> quoteSource, Observable<String> forexSource) {
+        EventStreamClient stockQuoteEventStreamClient = mock(EventStreamClient.class);
+        EventStreamClient forexEventStreamClient = mock(EventStreamClient.class);
+        StockQuoteServer stockQuoteServer
+                = new StockQuoteServer(42, stockQuoteEventStreamClient, forexEventStreamClient, marble.scheduler);
+        when(stockQuoteEventStreamClient.readServerSideEvents()).thenReturn(quoteSource);
+        when(forexEventStreamClient.readServerSideEvents()).thenReturn(forexSource);
+        return stockQuoteServer;
     }
 }

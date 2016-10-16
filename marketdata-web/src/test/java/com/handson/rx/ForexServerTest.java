@@ -3,36 +3,23 @@ package com.handson.rx;
 
 import com.handson.dto.Quote;
 import com.handson.infra.EventStreamClient;
-import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
-import rx.observers.TestSubscriber;
-import rx.schedulers.Schedulers;
-import rx.schedulers.TestScheduler;
-import rx.subjects.TestSubject;
+import rx.Observable;
+import rx.marble.junit.MarbleRule;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static rx.marble.MapHelper.of;
+import static rx.marble.junit.MarbleRule.expectObservable;
+import static rx.marble.junit.MarbleRule.hot;
+
 
 public class ForexServerTest {
 
-    private EventStreamClient eventStreamClient;
-    private TestScheduler scheduler;
-    private ForexServer forexServer;
-    private TestSubject<String> forexSourceSubject;
-
-    @Before
-    public void setUpServer() {
-        eventStreamClient = mock(EventStreamClient.class);
-        scheduler = Schedulers.test();
-        forexServer = new ForexServer(42, eventStreamClient);
-        forexSourceSubject = TestSubject.create(scheduler);
-        when(eventStreamClient.readServerSideEvents()).thenReturn(forexSourceSubject);
-    }
+    @Rule
+    public MarbleRule marble = new MarbleRule();
 
     /**
      * Test 1
@@ -41,16 +28,13 @@ public class ForexServerTest {
     @Ignore
     public void should_forward_forex_data() {
         // given
-        TestSubscriber<Double> testSubscriber = new TestSubscriber<>();
-        forexServer.getEvents(null).subscribe(testSubscriber);
+        Observable<String> forexSource
+                = hot("--f--", of("f", new Quote("EUR/USD", 1.4).toJson()));
         // when
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1.4).toJson());
-        scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
+        ForexServer forexServer = create(forexSource);
         // then
-        testSubscriber.assertNoErrors();
-        List<Double> events = testSubscriber.getOnNextEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0)).isEqualTo(1.4);
+        expectObservable(forexServer.getEvents(null))
+                .toBe("--(v|)", of("v", 1.4));
     }
 
     /**
@@ -60,16 +44,21 @@ public class ForexServerTest {
     @Ignore
     public void should_forward_only_one_forex_data() {
         // given
-        TestSubscriber<Double> testSubscriber = new TestSubscriber<>();
-        forexServer.getEvents(null).subscribe(testSubscriber);
+        Observable<String> forexSource
+                = hot("--f-x-", of("f", new Quote("EUR/USD", 1.4).toJson(),
+                                   "x", new Quote("EUR/USD", 1.4).toJson()));
         // when
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1.4).toJson());
-        forexSourceSubject.onNext(new Quote("EUR/USD", 1.42).toJson());
-        scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
+        ForexServer forexServer = create(forexSource);
         // then
-        List<Double> events = testSubscriber.getOnNextEvents();
-        assertThat(events).hasSize(1);
-        assertThat(events.get(0)).isEqualTo(1.4);
+        expectObservable(forexServer.getEvents(null))
+                .toBe("--(v|)", of("v", 1.4));
+    }
+
+    public ForexServer create(Observable<String> forexSource) {
+        EventStreamClient eventStreamClient = mock(EventStreamClient.class);
+        ForexServer forexServer = new ForexServer(42, eventStreamClient);
+        when(eventStreamClient.readServerSideEvents()).thenReturn(forexSource);
+        return forexServer;
     }
 
 }
