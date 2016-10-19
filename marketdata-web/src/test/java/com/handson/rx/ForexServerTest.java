@@ -38,7 +38,7 @@ public class ForexServerTest {
         // when
         ForexServer forexServer = create(forexSource);
         // then
-        expectObservable(forexServer.getEvents(null))
+        expectObservable(forexServer.getEvents(null).take(1))
                 .toBe("--(v|)", of("v", 1.4));
     }
 
@@ -50,7 +50,7 @@ public class ForexServerTest {
         // given
         Observable<String> forexSource
                 = hot("--f-x-", of("f", new Quote("EUR/USD", 1.4).toJson(),
-                                   "x", new Quote("EUR/USD", 1.4).toJson()));
+                                   "x", new Quote("EUR/USD", 1.5).toJson()));
         // when
         ForexServer forexServer = create(forexSource);
         // then
