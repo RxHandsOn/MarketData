@@ -24,7 +24,7 @@
             <dependency>
                 <groupId>com.github.alexvictoor</groupId>
                 <artifactId>marbletest4j</artifactId>
-                <version>1.1.1</version>
+                <version>1.1.2</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
