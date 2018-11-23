@@ -41,47 +41,20 @@ function parseRawVwapStream(raw$: rx.Observable<string>) : rx.Observable<Vwap>  
 }
 
 function parseRawStream(raw$: rx.Observable<string>) : rx.Observable<Quote>  {
-  // Etape 0
-  // return rx.Observable.empty<Quote>();
-  return raw$.map(Quote.parse);
+  return rx.Observable.empty<Quote>();
 }
 
 function detectTrends(quote$: rx.Observable<Quote>) : rx.Observable<Trend>  {
-  // Etape 0
-  // return rx.Observable.empty<string>();
-  return quote$.zip(quote$.skip(1),
-    (q1, q2) => {
-      let color : string;
-      if (q2.quote > q1.quote) {
-        color = "green"
-      } else {
-        color = "red"
-      }
-       return new Trend(q2, color);
-     });
+  return rx.Observable.empty<Trend>();
 }
 
 
 function maxFromPrevious(quote$: rx.Observable<Quote>, nbQuotes : number) : rx.Observable<number>  {
-  // Etape 0
-  // return rx.Observable.empty<number>();
-  return quote$
-    .windowCount(nbQuotes, 1)
-    .flatMap(
-      q$ => q$.map(q => q.quote)
-              .max()
-    )
+  return rx.Observable.empty<number>();
 }
 
 function minFromPrevious(quote$: rx.Observable<Quote>, nbQuotes : number) : rx.Observable<number>  {
-  // Etape 0
-  // return rx.Observable.empty<number>();
-  return quote$
-    .windowCount(nbQuotes, 1)
-    .flatMap(
-      q$ => q$.map(q => q.quote)
-              .min()
-    )
+  return rx.Observable.empty<number>();
 }
 
 export {
